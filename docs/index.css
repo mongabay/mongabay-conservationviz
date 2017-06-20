@@ -1,0 +1,44 @@
+/*index.css*/
+
+table {
+}
+
+table td {
+  padding:5px;
+}
+
+td.chart span {
+  transition: visibility 0s linear 300ms;
+  display:inline-block;
+  width:19px; height: 19px;
+  margin:1px;
+}
+
+td.chart span.invisible {
+  visibility: hidden;
+}
+
+td.chart span.plus {
+  background: #309223;
+}
+
+td.chart span.minus {
+  background: #D7067C;
+}
+
+td.chart span.neutral {
+  background: #FACB57;
+}
+
+td.chart div.minus-div {
+  margin-top: -4px;
+}
+
+table {table-layout: fixed;}
+table td:first-child {max-width:200px;}
+
+/*.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}*/
