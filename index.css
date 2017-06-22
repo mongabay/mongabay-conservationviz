@@ -1,6 +1,11 @@
 /*index.css*/
 
-table {
+
+table.summary {
+  
+}
+
+table.main {
 }
 
 table td {
@@ -30,8 +35,12 @@ td.chart span.neutral {
   background: #FACB57;
 }
 
-td.chart div.minus-div {
-  margin-top: -4px;
+td.chart div.minus-div, td.chart div.plus-div {
+  line-height: 4px;
+}
+
+td.chart div.plus-div {
+  margin-bottom: 3px;
 }
 
 table {table-layout: fixed;}
