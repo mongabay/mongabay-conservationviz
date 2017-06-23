@@ -12,16 +12,12 @@ var primary_chart = d3.select("body").append("table").attr("class","main");
 
 // Get the data and, when ready, create the charts
 d3.csv("data.csv", function(data) {
-  // pre-processing....
-  // filter data to get just the current theme?
-  // var filtered = data.filter(function(d) {return d.theme == 'ENV'});
   
-  // First, the summary chart, by theme
+  // First, make the summary chart, by theme
   makeChart(data, 'theme', summary_chart)
 
-  // Next, the "primary chart", by variable
+  // Next, make the "primary chart", by variable
   makeChart(data, 'variable', primary_chart, true)
-
 
 }); // d3.csv
   
@@ -37,6 +33,10 @@ d3.csv("data.csv", function(data) {
  * @param tooltip: When true, tooltips will be added to the chart elements
  */
 function makeChart(data, group, chart, tooltip=false) {
+  // pre-processing....
+  // filter data to get just the current theme?
+  // var filtered = data.filter(function(d) {return d.theme == 'ENV'});
+
   // Start by getting a distinct list of the groups that make up the rows in the chart
   var groups = get_distinct(data, group);
   var summaries = [];

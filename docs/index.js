@@ -1,5 +1,4 @@
-// index.js
-
+// initial D3 setup
 var width = 1000,
     barHeight = 20;
 
@@ -7,34 +6,55 @@ var x = d3.scale.linear()
     .domain([0, 10])
     .range([0, width]);
 
+// Select and append DOM elements to hold the chart viz
 var summary_chart = d3.select("body").append("table").attr("class","summary");
 var primary_chart = d3.select("body").append("table").attr("class","main");
 
+// Get the data and, when ready, create the charts
 d3.csv("data.csv", function(data) {
+  
+  // First, make the summary chart, by theme
+  makeChart(data, 'theme', summary_chart)
+
+  // Next, make the "primary chart", by variable
+  makeChart(data, 'variable', primary_chart, true)
+
+}); // d3.csv
+  
+////////////////////////////////////////////////////
+// Utility functions
+////////////////////////////////////////////////////
+
+/**
+ * makes a chart of squares
+ * @param data:    An array of data
+ * @param group:   An item in the data array on which to base chart rows
+ * @param chart:   The chart DOM element returned from a d3.select().append()
+ * @param tooltip: When true, tooltips will be added to the chart elements
+ */
+function makeChart(data, group, chart, tooltip=false) {
   // pre-processing....
   // filter data to get just the current theme?
   // var filtered = data.filter(function(d) {return d.theme == 'ENV'});
-  
-  // get a distinct list of themes for this dataset
-  // and generate the summary totals for the top of the app
-  var themes = get_distinct(data, 'theme');
+
+  // Start by getting a distinct list of the groups that make up the rows in the chart
+  var groups = get_distinct(data, group);
   var summaries = [];
-  themes.forEach(function(theme){
+  groups.forEach(function(g){
     out = {};
-    out["name"]  = theme;
+    out["name"]  = g;
     out["plus"]  = [];
     out["minus"] = [];
     out["count"] = 0;
     data.forEach(function(row){
-      if (row.theme == theme) {
+      if (row[group] == g) {
         out.count += 1;
         row.valence > 0 ? out["plus"].push(row) : out["minus"].push(row);
       }
     });
-    summaries.push(out);  	
+    summaries.push(out);    
   });
-
-  var tr = summary_chart.selectAll("tr")
+  var tr = chart.selectAll("tr")
     .data(summaries).enter()
     .append("tr");
 
@@ -51,17 +71,16 @@ d3.csv("data.csv", function(data) {
   var minus = cell.append("div")
     .attr('class','minus-div');
 
-  plus.selectAll("span")
+  plusItems = plus.selectAll("span")
     .data(function(d) {
-      updateTooltip(d); 
       // map just the values we need for each individual chart square
       var raw = d.plus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
       return raw;
     })
     .enter().append('span')
-    .attr('class','plus')
+    .attr('class','plus');
 
-  minus.selectAll("span")
+  minusItems = minus.selectAll("span")
     .data(function(d) {
       // map just the values we need for each individual chart square
       var raw = d.minus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
@@ -72,94 +91,42 @@ d3.csv("data.csv", function(data) {
     .attr('class','minus')
     .classed('neutral',function(d){
       return d.valence == '' || d.valence == 0; 
-    })
-
-  // get a distinct list of variables from this subset
-  var variables = get_distinct(data, 'variable');
-  // create an array of objects keyed by variable, with data for that variable collected within
-  var primary = [];
-  variables.forEach(function(variable){
-    out = {};
-    out["name"]  = variable;
-    out["plus"]  = [];
-    out["minus"] = [];
-    out["count"] = 0;
-    data.forEach(function(row){
-      if (row.variable == variable) {
-        out.count += 1;
-        row.valence > 0 ? out["plus"].push(row) : out["minus"].push(row);
-      }
     });
-    primary.push(out);
-  });
 
-  var tr = primary_chart.selectAll("tr")
-    .data(primary).enter()
-    .append("tr");
+    if (tooltip == true) {
+      [plusItems, minusItems].forEach(function(item){
+        item.on("mouseover", mouseoverTooltip);
+        item.on("mousemove", mousemoveTooltip);
+        item.on("mouseout", mouseoutTooltip);
+      });
+    }
 
-  tr.append('td')
-    .attr('class', 'name')
-    .html(function(d) { return d.name; });
+  // return something? Why not
+  return [plus, minus];
+}
 
-  var cell = tr.append("td")
-    .attr('class','chart');
-  
-  var plus = cell.append("div")
-    .attr('class','plus-div');
-
-  var minus = cell.append("div")
-    .attr('class','minus-div');
-
-  plus.selectAll("span")
-    .data(function(d) {
-      updateTooltip(d); 
-      // map just the values we need for each individual chart square
-      var raw = d.plus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
-      return raw;
-    })
-    .enter().append('span')
-    .attr('class','plus')
-    .on("mouseover", function(d){updateTooltip(d);return tooltip.style("visibility", "visible");})
-    .on("mousemove", function(){return tooltip.style("top",
-        (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px").style("top",(d3.event.pageY-30)+"px");})
-    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
-
-  minus.selectAll("span")
-    .data(function(d) {
-      // map just the values we need for each individual chart square
-      var raw = d.minus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
-      var sorted = _.sortBy(raw, 'valence');
-      return sorted;
-    })
-    .enter().append('span')
-    .attr('class','minus')
-    .classed('neutral',function(d){
-      return d.valence == '' || d.valence == 0; 
-    })
-    .on("mouseover", function(d){updateTooltip(d); return tooltip.style("visibility", "visible");})
-    .on("mousemove", function(){return tooltip.style("top",
-        (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px").style("top",(d3.event.pageY-30)+"px");})
-    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
-
-
-}); // d3.csv
-  
-
-// Utility functions
-
-function updateTooltip(d) {
+// define tooltip behavior on mouseover
+function mouseoverTooltip(d) {
   tooltip.text("study: " + d.id);
+  tooltip.style("visibility","visible");
+}
+
+// define tooltip behavior on mousemove
+function mousemoveTooltip(d) {
+  tooltip
+    .style("top",(d3.event.pageY-10)+"px")
+    .style("left",(d3.event.pageX+10)+"px")
+    .style("top",(d3.event.pageY-30)+"px");
+}
+
+// define tooltip behavior on mouseout
+function mouseoutTooltip(d) {
+  tooltip.style("visibility", "hidden");
 }
 
 var tooltip = d3.select("body")
     .append("div")
-    .style("background","rgba(255,255,255,0.75)")
-    .style("box-shadow","1px 2px 4px rgba(0,0,0,0.25)")
-    .style("padding","4px")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden");
-
+    .attr("class","tooltip");
 
 // utility function to turn an integer into an array from 0 to n
 function range(n) {
@@ -189,5 +156,3 @@ function compare(a,b) {
     return 1;
   return 0;
 }
-
-

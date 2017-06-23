@@ -51,3 +51,13 @@ table td:first-child {max-width:200px;}
   font: 10px sans-serif;
   text-anchor: end;
 }*/
+
+div.tooltip {
+  background: rgba(255,255,255,0.75);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
+  padding: 4px;
+  position: absolute;
+  z-index: 10;
+}
+
+}
