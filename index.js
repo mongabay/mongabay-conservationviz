@@ -24,14 +24,6 @@ function initDOM() {
 }
 
 function initD3() {
-  // initial D3 setup
-  var width = 1000,
-      barHeight = 20;
-
-  var x = d3.scale.linear()
-      .domain([0, 10])
-      .range([0, width]);
-
   // structure county centoids for use below
   d3.csv("data/countries.csv", function(countries){
       countries.forEach(function(country){
@@ -49,6 +41,9 @@ function initD3() {
   // Get the data and, when ready, create the charts
   d3.csv("data/data.csv", function(data) {
     data.forEach(function(d){
+      // keep a reference to data
+      DATA = data;
+
       var countries = d.country.split(',');
       // at present, sum all - so studies with multiple countries will get multiple icons
       countries.forEach(function(country) {
@@ -109,7 +104,8 @@ function initMap() {
       var marker = L.marker([country.lat, country.lng], {icon: icon}).addTo(markers);
       marker.data = country.data;
       marker.on('click',function(e) { 
-        console.log(e.target.data) 
+        // console.log(e.target.data);
+        handleMarkerClick(e.target.data); 
       });
     }
 
@@ -119,6 +115,16 @@ function initMap() {
 
 }
 
+function handleMarkerClick(markerdata) {
+  console.log('aqui');
+  
+  // remove existing selections
+
+  // make the summary chart, by theme
+  makeChart(markerdata, 'theme', d3.select("table.summary"));
+  // Next, make the "primary chart", by variable
+  makeChart(markerdata, 'variable', d3.select("table.primary"), true);
+}
 
 /**
  * makes a chart of squares
@@ -149,17 +155,20 @@ function makeChart(data, group, chart, tooltip=false) {
     });
     summaries.push(out);    
   });
+  
   var tr = chart.selectAll("tr")
-    .data(summaries).enter()
+    .data(summaries);
+
+  trEnter = tr.enter()
     .append("tr");
 
-  tr.append('td')
+  trEnter.append('td')
     .attr('class', 'name')
     .html(function(d) { return d.name; });
 
-  var cell = tr.append("td")
+  var cell = trEnter.append("td")
     .attr('class','chart');
-  
+
   var plus = cell.append("div")
     .attr('class','plus-div');
 
@@ -171,9 +180,14 @@ function makeChart(data, group, chart, tooltip=false) {
       // map just the values we need for each individual chart square
       var raw = d.plus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
       return raw;
-    })
+    });
+
+  plusItems
     .enter().append('span')
     .attr('class','plus');
+
+  plusItems
+    .exit().remove();
 
   minusItems = minus.selectAll("span")
     .data(function(d) {
@@ -188,6 +202,8 @@ function makeChart(data, group, chart, tooltip=false) {
       return d.valence == '' || d.valence == 0; 
     });
 
+  tr.exit().remove();
+
     if (tooltip == true) {
       [plusItems, minusItems].forEach(function(item){
         item.on("mouseover", mouseoverTooltip);
@@ -195,6 +211,7 @@ function makeChart(data, group, chart, tooltip=false) {
         item.on("mouseout", mouseoutTooltip);
       });
     }
+
 
   // return something? Why not
   return [plus, minus];
