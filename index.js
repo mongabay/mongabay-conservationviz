@@ -40,6 +40,7 @@ function initD3() {
           lng: country.longitude,
           abbreviation: country.country,
           count: 0,
+          data: []
         }
         DATA_COUNTRIES[country.name] = c;
       });
@@ -49,11 +50,12 @@ function initD3() {
   d3.csv("data/data.csv", function(data) {
     data.forEach(function(d){
       var countries = d.country.split(',');
-      // at present, sum all - so stuides with multiple countries will get multiple icons
+      // at present, sum all - so studies with multiple countries will get multiple icons
       countries.forEach(function(country) {
         // skip bad matches
         if (DATA_COUNTRIES[country] === undefined) return;
         DATA_COUNTRIES[country]["count"] = DATA_COUNTRIES[country]["count"] += 1;
+        DATA_COUNTRIES[country]["data"].push(d);
       })
     })
 
@@ -105,6 +107,10 @@ function initMap() {
         html: '<span class="icon-text">'+ country.count +'</span>'
       });
       var marker = L.marker([country.lat, country.lng], {icon: icon}).addTo(markers);
+      marker.data = country.data;
+      marker.on('click',function(e) { 
+        console.log(e.target.data) 
+      });
     }
 
   });

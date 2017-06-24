@@ -79,6 +79,9 @@ span.icon-text {
   margin:0 auto;
   text-align:center;
   color:#fff;
+  font-weight:bold;
 }
 
+div.country-icon:hover {
+  background:red;
 }
