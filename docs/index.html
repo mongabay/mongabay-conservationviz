@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 
-<link rel="stylesheet" href="index.css" type="text/css" media="all" />
+<head>
+	<link rel="stylesheet" href="index.css" type="text/css" media="all" />
+
+    <!-- Leaflet CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+
+    <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
+    <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
+
+    <!-- D3, jQuery, lodash, papa parse -->
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.3/papaparse.min.js"></script>
+	<!-- Local Javascript -->
+	<script src="./index.js"></script>
+</head>
 
 <body></body>
-
-<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
-<script src="./index.js"></script>
 
 </html>
 
