@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+	<link rel="stylesheet" href="index.css" type="text/css" media="all" />
+
+    <!-- Leaflet CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+
+    <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
+    <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
+
+    <!-- D3, jQuery, lodash, papa parse -->
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.3/papaparse.min.js"></script>
+	<!-- Local Javascript -->
+	<!-- <script src="./index.js"></script> -->
+
+
+</head>
+
+<body>
+	<svg class="main"></svg>
+
+	<script>
+
+		var fieldHeight = 30;
+		var fieldWidth = 90;
+
+		var cellHeight = 19;
+		var cellWidth = 19;
+
+		var margin = {top: 20, right: 30, bottom: 30, left: 40},
+		width = 960 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
+
+		var data = [
+			['row1',[1,2,3]],
+			['row2',[1,2,3]],
+			['row3',[1,2,3]],
+		];
+
+		var canvas = d3.select("svg.main")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		    .append("g")
+		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		rowsGrp = canvas.append("g").attr("class","rowsGrp");
+
+		var rows = rowsGrp.selectAll("g.row")
+			.data(data, function(d){ return d[0]; });
+  
+		// create rows  
+		var rowsEnter = rows.enter().append("svg:g")
+			.attr("class","row")
+			.attr("transform", function (d, i){
+		  	return "translate(0," + (i+1) * (fieldHeight+1) + ")";
+		});
+
+		rows.exit().remove();
+
+		// create "cells"
+		var cells = rowsEnter.selectAll('rect')
+			.data(function(d) {console.log(d)});
+
+
+	</script>
+
+</body>
+
+</html>
+

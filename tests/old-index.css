@@ -1,6 +1,8 @@
 /*index.css*/
 
-table.summary {  
+
+table.summary {
+  
 }
 
 table.main {
@@ -72,13 +74,14 @@ div.country-icon {
   border: none;
 }
 
-div.country-icon:hover {
-  background:red;
-}
-
 span.icon-text {
   display:block;
   margin:0 auto;
   text-align:center;
   color:#fff;
+  font-weight:bold;
+}
+
+div.country-icon:hover {
+  background:red;
 }

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+	<link rel="stylesheet" href="index.css" type="text/css" media="all" />
+
+    <!-- Leaflet CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+
+    <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
+    <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
+
+    <!-- D3, jQuery, lodash, papa parse -->
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.3/papaparse.min.js"></script>
+	<!-- Local Javascript -->
+	<!-- <script src="./index.js"></script> -->
+</head>
+
+<body>
+	<table id="summary"></table>
+	<div id="map"></div>
+	<table id="primary"></table>
+
+
+	<div class="container"></div>
+
+	<style>
+
+		body {margin:0; padding: 0;}
+
+		.deleted {color: #ff0000;}
+
+		div.container {
+			width: 500px; height: 500px;
+			position:relative;
+		}
+
+		div.row {
+			position: absolute;
+		  width: 100%;
+		  background: cornflowerblue;
+		  height: 60px;
+		  overflow: hidden;
+		}
+
+		div.cell {
+			position: absolute;
+			width: 68px;
+			height: 56px;
+			text-align:center;
+			line-height: 56px;
+			background: yellow;
+		}
+
+		div.cell.chart {
+			width:400px;
+		}
+
+		div.chartcells.minus {
+			background: red;
+			position:absolute;
+			width: 19px; height: 19px;
+		}
+
+		div.chartcells.plus {
+			background: green;
+			position:absolute;
+			width: 19px; height: 19px;
+		}
+
+	</style>
+
+
+	<script>
+		
+
+		// TO DO: chart should actually be an array of objects as well
+		var data = [
+			{'name': 'mpkone', 'chart': {"plus": [1,2,2,6,4,3,4],"minus": [3,34,2,4]} },
+			{'name': 'aa7one', 'chart': {"plus":[1,2,3,7,3,5,3,3,4],"minus": [1,3,2,33,2,4]} },
+			{'name': 'ner7one', 'chart': {"plus":[1,2,3,4],"minus": [2543,4,2,2343,2,4]} },
+			{'name': 'fouone', 'chart': {"plus":[1,2,4],"minus": [2,3,2,4]} },
+			{'name': 'lilbit', 'chart': {"plus":[2,3,3,4],"minus": [2,4]} },
+			{'name': 'ztwo', 'chart': {"plus":[1,2,3,4,5,6],"minus": [3,5,2,4,53]} },
+			{'name': 'ethree', 'chart': {"plus":[1,2], "minus": [3,2,4]} }
+		];
+
+
+		function draw() {
+			var container = d3.select("div.container");
+			var rows = container.selectAll("div.row")
+				.data(data, function(d) {return d.name});
+
+			// create the rows
+			var rowsenter = rows.enter()
+				.append("div")
+				.attr("class","row")
+				.style("top", function(d,i) {return (i * 60) + "px"});
+
+			// create cells
+			rowsenter
+				.selectAll("div.cell")
+				.data(function(d) { return d3.entries(d) })
+				.enter()
+				.append("div")
+				.attr("class","cell")
+				.classed("chart",function(d) {return d.key == "chart"})
+				.style("top","2px")
+				.style("left",function(d,i) {return ((i * 70) + 2) + "px"})
+				.text(function(d) { return d.key == "name" ? d.value : "" })
+				// .attr("class", function(d) { return d.key == "chart" ? "chart" : "" });
+
+			var rowsexit = rows.exit()
+						// .attr("class","deleted")
+		    .style("background", "red")
+			  .transition()
+		    .duration(750)
+		    .style("opacity", 0)
+		    .remove();
+
+			rowsenter.selectAll("div.chart").selectAll("div.chartcells.plus")
+				.data(function(d) { return d.value.plus })
+				.enter()
+				.append("div")
+				.classed("chartcells","true")
+				.classed("plus","true")
+				.style("top","6px")
+				.style("left",function(d,i) {return (i * 20)+ "px"})
+
+			rowsenter.selectAll("div.chart").selectAll("div.chartcells.minus")
+				.data(function(d) { return d.value.minus })
+				.enter()
+				.append("div")
+				.classed("chartcells","true")
+				.classed("minus","true")
+				.style("top","28px")
+				.style("left",function(d,i) {return (i * 20)+ "px"})
+
+		}
+
+
+		draw();
+
+		// ex:
+		// setTimeout(function() {
+		// 	data.splice(0,1);
+		// 	draw();	
+		// },2000);
+
+		// Things to try to see animation:
+		// data.splice(0,1)
+		// draw();
+		// resetSheet();
+
+		function resetSheet() {
+      d3.selectAll("div.row")
+        .transition()
+        .duration(300)
+        .style("top", function(d,i) {return (i * 60) + "px"});
+    };
+
+		function sortSheet() {
+      var data = d3.selectAll("div.row").data();
+
+			// sort
+			data = _.sortBy(data, function(o) { return o.name; })
+
+			d3.selectAll("div.row").data(data, function(d) {return d.name})
+        .transition()
+        .duration(500)
+				.style("top", function(d,i) {return (i * 60) + "px"});
+
+    };
+
+	</script>
+
+</body>
+
+</html>
+

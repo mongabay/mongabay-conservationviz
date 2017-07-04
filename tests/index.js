@@ -1,3 +1,6 @@
+// checkout
+// http://bl.ocks.org/LeeMendelowitz/11383724
+
 // globals
 var MAP, LABELS, DATA;
 DATA_COUNTRIES = {};
@@ -24,14 +27,6 @@ function initDOM() {
 }
 
 function initD3() {
-  // initial D3 setup
-  var width = 1000,
-      barHeight = 20;
-
-  var x = d3.scale.linear()
-      .domain([0, 10])
-      .range([0, width]);
-
   // structure county centoids for use below
   d3.csv("data/countries.csv", function(countries){
       countries.forEach(function(country){
@@ -40,6 +35,7 @@ function initD3() {
           lng: country.longitude,
           abbreviation: country.country,
           count: 0,
+          data: []
         }
         DATA_COUNTRIES[country.name] = c;
       });
@@ -48,12 +44,16 @@ function initD3() {
   // Get the data and, when ready, create the charts
   d3.csv("data/data.csv", function(data) {
     data.forEach(function(d){
+      // keep a reference to data
+      DATA = data;
+
       var countries = d.country.split(',');
-      // at present, sum all - so stuides with multiple countries will get multiple icons
+      // at present, sum all - so studies with multiple countries will get multiple icons
       countries.forEach(function(country) {
         // skip bad matches
         if (DATA_COUNTRIES[country] === undefined) return;
         DATA_COUNTRIES[country]["count"] = DATA_COUNTRIES[country]["count"] += 1;
+        DATA_COUNTRIES[country]["data"].push(d);
       })
     })
 
@@ -110,8 +110,6 @@ function initMap() {
         // console.log(e.target.data);
         handleMarkerClick(e.target.data); 
       });
-
-
     }
 
   });
@@ -120,6 +118,16 @@ function initMap() {
 
 }
 
+function handleMarkerClick(markerdata) {
+  // console.log('aqui');
+  
+  // remove existing selections
+
+  // make the summary chart, by theme
+  makeChart(markerdata, 'theme', d3.select("table.summary"));
+  // Next, make the "primary chart", by variable
+  makeChart(markerdata, 'variable', d3.select("table.primary"), true);
+}
 
 /**
  * makes a chart of squares
@@ -150,17 +158,95 @@ function makeChart(data, group, chart, tooltip=false) {
     });
     summaries.push(out);    
   });
+  
+  // ROWS
+
   var tr = chart.selectAll("tr")
-    .data(summaries).enter()
+    .data(summaries);
+
+  trEnter = tr.enter()
     .append("tr");
 
-  tr.append('td')
-    .attr('class', 'name')
-    .html(function(d) { return d.name; });
+  tr.exit()
+    .transition()
+    .delay(200)
+    .duration(500)
+    .style('opacity', 0.0)
+    .remove();
 
-  var cell = tr.append("td")
-    .attr('class','chart');
+  // CELLS
+
+  var cells = tr.selectAll("td")
+    .data(function(d){ 
+      var a = [d, d];
+      return a;
+    });
+
+  var cellsenter = cells.enter()
+    .append("td")
+    // first <td> gets text, second <td> will be the chart
+    .classed("chart", function(d, i) { 
+      return i == 1
+    })
+    .text(function(d, i) { return i == 0 ? d.name : "" })
+
+  // CHART CELLS
+
+  var chartcells = cellsenter.selectAll("td.chart")
+    .data(function(d,i) { 
+        console.log(i)
+        return [ {"plus": d.plus}, {"minus": d.minus} ] 
+    });
+
+  chartcells.selectAll("div")
+    .data(function(d) {return d});
+
+  chartcells.enter()
+    .append("div")
+    .classed("plus-div", function(d) { return Object.keys(d)[0] == "plus" })
+    .classed("minus-div", function(d) { return Object.keys(d)[0] == "minus" });
+
+  // CHART SPANS
   
+  var plus = chartcells.selectAll("div.plus-div")
+    .data(function(d) {
+      // map just the values we need for each individual chart square
+      var raw = d.plus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
+      return raw;
+    });
+
+  plus.selectAll("span")
+    .data(function(d) {return (d)});
+
+  var plusenter = plus.enter()
+    .append('span')
+    .attr('class','plus');
+
+  var minus = chartcells.select("div.minus")    
+    .data(function(d) {
+      // map just the values we need for each individual chart square
+      var raw = d.minus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
+      var sorted = _.sortBy(raw, 'valence');
+      return sorted;
+    })
+    .enter().append('span')
+    .attr('class','minus')
+    .classed('neutral',function(d){
+      return d.valence == '' || d.valence == 0; 
+    });
+
+  var minusenter = plus.enter()
+    .append('span')
+    .attr('class','plus');
+
+
+
+
+  var chartcell = d3.selectAll("td.chart")
+    .data(function(d) {
+      debugger;
+    });
+
   var plus = cell.append("div")
     .attr('class','plus-div');
 
@@ -172,9 +258,14 @@ function makeChart(data, group, chart, tooltip=false) {
       // map just the values we need for each individual chart square
       var raw = d.plus.map(function(g) { return {"valence": g.valence, "id": g.zb_id} });
       return raw;
-    })
+    });
+
+  plusItems
     .enter().append('span')
     .attr('class','plus');
+
+  plusItems
+    .exit().remove();
 
   minusItems = minus.selectAll("span")
     .data(function(d) {
@@ -197,7 +288,8 @@ function makeChart(data, group, chart, tooltip=false) {
       });
     }
 
-  // return something? Why not
+
+  // // return something? Why not
   return [plus, minus];
 }
 
@@ -223,20 +315,6 @@ function mouseoutTooltip(d) {
 var tooltip = d3.select("body")
     .append("div")
     .attr("class","tooltip");
-
-
-function handleMarkerClick(markerdata) {
-  console.log('aqui');
-  
-  // remove existing selections
-
-  // make the summary chart, by theme
-  makeChart(markerdata, 'theme', d3.select("table.summary"));
-  // Next, make the "primary chart", by variable
-  makeChart(markerdata, 'variable', d3.select("table.primary"), true);
-}
- 
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////
