@@ -18,15 +18,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.3/papaparse.min.js"></script>
 	<!-- Local Javascript -->
 	<!-- <script src="./index.js"></script> -->
-</head>
-
-<body>
-	<table id="summary"></table>
-	<div id="map"></div>
-	<table id="primary"></table>
-
-
-	<div class="container"></div>
 
 	<style>
 
@@ -35,7 +26,7 @@
 		.deleted {color: #ff0000;}
 
 		div.container {
-			width: 500px; height: 500px;
+			width: 1200px; height: 500px;
 			position:relative;
 		}
 
@@ -49,7 +40,7 @@
 
 		div.cell {
 			position: absolute;
-			width: 68px;
+			width: 70px;
 			height: 56px;
 			text-align:center;
 			line-height: 56px;
@@ -57,7 +48,7 @@
 		}
 
 		div.cell.chart {
-			width:400px;
+			width:1130px;
 		}
 
 		div.chartcells.minus {
@@ -74,9 +65,28 @@
 
 	</style>
 
+</head>
+
+<body>
+	<div style="margin:1em;">
+		<button onClick="sortSheet('name')" style="margin-right:0.5em;">Sort by name</button>
+		<button onClick="sortSheet('chart.minus',true)" style="margin-right:0.5em;">Sort by neg evidence</button>
+		<button onClick="sortSheet('chart.plus',true)" style="margin-right:0.5em;">Sort by pos evidence</button>
+		<button onClick="resetSheet()">Reset</button>
+	</div>
+	<table id="summary"></table>
+	<div id="map"></div>
+	<table id="primary"></table>
+
+	<div class="container"></div>
+
+
+
+
 
 	<script>
 		
+	var DATA_COUNTRIES = {};
 
 		// TO DO: chart should actually be an array of objects as well
 		var data = [
@@ -90,10 +100,56 @@
 		];
 
 
-		function draw() {
+
+  // structure county centoids for use below
+  d3.csv("data/countries.csv", function(countries){
+    countries.forEach(function(country){
+      var c = {
+        lat: country.latitude,
+        lng: country.longitude,
+        abbreviation: country.country,
+        count: 0,
+      }
+      DATA_COUNTRIES[country.name] = c;
+    });
+	  
+	  // Get the data and, when ready, create the charts
+	  d3.csv("data/data.csv", function(data) {
+	    data.forEach(function(d){
+	      var countries = d.country.split(',');
+	      // at present, sum all - so stuides with multiple countries will get multiple icons
+	      countries.forEach(function(country) {
+	        // skip bad matches
+	        if (DATA_COUNTRIES[country] === undefined) return;
+	        DATA_COUNTRIES[country]["count"] = DATA_COUNTRIES[country]["count"] += 1;
+	      })
+	    });
+
+	    draw(data, "theme");
+
+	  });
+  });
+
+
+
+		function draw(data, group) {
+
+		  // Start by getting a distinct list of the groups that make up the rows in the chart
+		  var groups = get_distinct(data, group);
+		  var summaries = [];
+		  groups.forEach(function(g){
+		    out = {"name": g, "chart": {"plus": [], "minus": []}};
+		    data.forEach(function(row){
+		      if (row[group] == g) {
+		        row.valence > 0 ? out["chart"]["plus"].push(row) : out["chart"]["minus"].push(row);
+		      }
+		    });
+		    summaries.push(out);    
+		  });
+
 			var container = d3.select("div.container");
 			var rows = container.selectAll("div.row")
-				.data(data, function(d) {return d.name});
+				.data(summaries, function(d) {return d.name});
 
 			// create the rows
 			var rowsenter = rows.enter()
@@ -115,7 +171,6 @@
 				// .attr("class", function(d) { return d.key == "chart" ? "chart" : "" });
 
 			var rowsexit = rows.exit()
-						// .attr("class","deleted")
 		    .style("background", "red")
 			  .transition()
 		    .duration(750)
@@ -143,7 +198,6 @@
 		}
 
 
-		draw();
 
 		// ex:
 		// setTimeout(function() {
@@ -156,25 +210,54 @@
 		// draw();
 		// resetSheet();
 
+		// supports a single field name e.g. "name"
+		// or a subfield in the form of "chart.minus" (no more dimensions than 2 for a subfield)
+		function custom_sort(data, field, desc=false) {
+			var subfield = false, subfields = [];
+			if (field.indexOf(".") > -1) {
+				subfield = true;
+				var subfields = field.split('.');
+			}
+			// 
+			var sorted = _.sortBy(data, function(o) { 
+				return subfield ? o[subfields[0]][subfields[1]] : o[field]; 
+			})
+			return desc ? sorted.reverse() : sorted;
+		}
+
 		function resetSheet() {
-      d3.selectAll("div.row")
-        .transition()
-        .duration(300)
-        .style("top", function(d,i) {return (i * 60) + "px"});
+      	d3.selectAll("div.row")
+        	.transition()
+        	.duration(300)
+        	.style("top", function(d,i) {return (i * 60) + "px"});
     };
 
-		function sortSheet() {
+		function sortSheet(field, reverse=false) {
       var data = d3.selectAll("div.row").data();
-
+			
 			// sort
-			data = _.sortBy(data, function(o) { return o.name; })
+			data = custom_sort(data, field, reverse);
 
 			d3.selectAll("div.row").data(data, function(d) {return d.name})
         .transition()
         .duration(500)
 				.style("top", function(d,i) {return (i * 60) + "px"});
-
     };
+
+		// get distinct list by key from an array of objects 
+		function get_distinct(array, key) {
+		  var unique = {};
+		  var distinct = [];
+		  for( var i in array ){
+		    if( typeof(unique[array[i][key]]) == "undefined"){
+		      distinct.push(array[i][key]);
+		    }
+		    unique[array[i][key]] = 0;
+		  }
+		  return distinct;
+		}
+
+
 
 	</script>
 
