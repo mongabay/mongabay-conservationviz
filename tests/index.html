@@ -67,8 +67,7 @@
 		}
 
 		div.chartcells.weak {
-			opacity: 0.65;
-			border: 1px solid blue;
+			opacity: 0.5;
 		}
 
 	</style>
@@ -84,12 +83,18 @@
 		<button onClick="resetSheet()">Reset</button>
 	</div>
 
+	<div style="margin:1em;">
+		<button onClick="draw(DATA,'variable','div.container')">Switch to data by variable</button>
+		<button onClick="draw(DATA,'theme','div.container')">Switch to data by theme</button>
+	</div>
+
 	<div class="container"></div>
 	<div id="map"></div>
 
 	<script>
 		
 	var DATA_COUNTRIES = {};
+	var DATA;
 
   // structure county centoids for use below
   d3.csv("data/countries.csv", function(countries){
@@ -115,7 +120,10 @@
 	      })
 	    });
 
-	    draw(data, "theme");
+	    // keep a ref to data
+	    DATA = data;
+
+	    draw(data, "theme", "div.container");
 
 	  });
   });
@@ -137,7 +145,7 @@
 	  });
 
 	  // get the container
-		var container = d3.select("div.container");
+		var container = d3.select(container);
 		var rows = container.selectAll("div.row")
 			.data(summaries, function(d) {return d.name});
 
