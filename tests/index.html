@@ -129,7 +129,7 @@
   });
 
 
-	function draw(data, group, container) {
+	function draw(data, group, container, strength=false) {
 
 	  // Start by getting a distinct list of the groups that make up the rows in the chart
 	  var groups = get_distinct(data, group);
@@ -137,6 +137,7 @@
 	  groups.forEach(function(g){
 	    out = {"name": g, "chart": {"plus": [], "minus": []}};
 	    data.forEach(function(row){
+	    	if (strength && row.strength != "Direct correlation") { console.log('yo'); return} ;
 	      if (row[group] == g) {
 	        row.valence > 0 ? out["chart"]["plus"].push(row) : out["chart"]["minus"].push(row);
 	      }
@@ -176,7 +177,7 @@
 	    .remove();
 
 		var plus = rowsenter.selectAll("div.chart").selectAll("div.chartcells.plus")
-			.data(function(d) { return d.value.plus })
+			.data(function(d) { return d.value.plus }, function(d) { return d.zb_id });
 
 		var plusenter = plus.enter()
 			.append("div")
@@ -194,7 +195,7 @@
 	    .remove();
 
 		var minus = rowsenter.selectAll("div.chart").selectAll("div.chartcells.minus")
-			.data(function(d) { return _.sortBy(d.value.minus, "valence") })
+			.data(function(d) { return _.sortBy(d.value.minus, "valence") }, function(d) { return d.zb_id });
 			
 		var minusenter = minus.enter()
 			.append("div")
@@ -262,22 +263,28 @@
 
     function filterByEvidence() {
 
+    	// TO DO
+    	// read about transition and applying data
+    	// what if filter here was just applying an entirely new dataset? 
+
     	// plus first
       var plus = d3.selectAll("div.chartcells.plus").data();
-    	plus = plus.filter(function(d) {return d.strength == "Direct correlation"});
+    	plus = plus.filter(function(d) {return d.strength != "Direct correlation"});
 
-			var minus = d3.selectAll("div.chartcells.plus").data();
-			minus = minus.filter(function(d) {return d.strength == "Direct correlation"});
+			var minus = d3.selectAll("div.chartcells.minus").data();
+			minus = minus.filter(function(d) {return d.strength != "Direct correlation"});
 
-			d3.selectAll("div.chartcells.plus").data(plus, function(d) {return d.name})
+			d3.selectAll("div.chartcells.plus").data(plus, function(d) {return d.zb_id})
         .transition()
         .duration(500)
-				.style("left",function(d,i) {return (i * 20)+ "px"});
+				// .style("left",function(d,i) {return (i * 20)+ "px"});
+				.style("opacity",0);
 
-			d3.selectAll("div.chartcells.minus").data(minus, function(d) {return d.name})
+			d3.selectAll("div.chartcells.minus").data(minus, function(d) {return d.zb_id})
         .transition()
         .duration(500)
-				.style("left",function(d,i) {return (i * 20)+ "px"});
+				// .style("left",function(d,i) {return (i * 20)+ "px"});
+				.style("opacity",0);
 
     }
 
