@@ -33,7 +33,6 @@
 		div.row {
 			position: absolute;
 		  width: 100%;
-		  background: cornflowerblue;
 		  height: 60px;
 		  overflow: hidden;
 		}
@@ -44,23 +43,31 @@
 			height: 56px;
 			text-align:center;
 			line-height: 56px;
-			background: yellow;
 		}
 
 		div.cell.chart {
 			width:1130px;
 		}
 
-		div.chartcells.minus {
-			background: red;
+		div.chartcells {
 			position:absolute;
 			width: 19px; height: 19px;
 		}
 
+		div.chartcells.minus {
+		  background: #D7067C;
+		}
+
 		div.chartcells.plus {
-			background: green;
-			position:absolute;
-			width: 19px; height: 19px;
+		  background: #309223;
+		}
+
+		div.chartcells.neutral {
+		  background: #FACB57;
+		}
+
+		div.chartcells.weak {
+			opacity: 0.5;
 		}
 
 	</style>
@@ -72,34 +79,22 @@
 		<button onClick="sortSheet('name')" style="margin-right:0.5em;">Sort by name</button>
 		<button onClick="sortSheet('chart.minus',true)" style="margin-right:0.5em;">Sort by neg evidence</button>
 		<button onClick="sortSheet('chart.plus',true)" style="margin-right:0.5em;">Sort by pos evidence</button>
+		<button onClick="filterByEvidence()" style="margin-right:0.5em;">Filter by best evidence</button>
 		<button onClick="resetSheet()">Reset</button>
 	</div>
-	<table id="summary"></table>
-	<div id="map"></div>
-	<table id="primary"></table>
+
+	<div style="margin:1em;">
+		<button onClick="draw(DATA,'variable','div.container')">Switch to data by variable</button>
+		<button onClick="draw(DATA,'theme','div.container')">Switch to data by theme</button>
+	</div>
 
 	<div class="container"></div>
-
-
-
-
+	<div id="map"></div>
 
 	<script>
 		
 	var DATA_COUNTRIES = {};
-
-		// TO DO: chart should actually be an array of objects as well
-		var data = [
-			{'name': 'mpkone', 'chart': {"plus": [1,2,2,6,4,3,4],"minus": [3,34,2,4]} },
-			{'name': 'aa7one', 'chart': {"plus":[1,2,3,7,3,5,3,3,4],"minus": [1,3,2,33,2,4]} },
-			{'name': 'ner7one', 'chart': {"plus":[1,2,3,4],"minus": [2543,4,2,2343,2,4]} },
-			{'name': 'fouone', 'chart': {"plus":[1,2,4],"minus": [2,3,2,4]} },
-			{'name': 'lilbit', 'chart': {"plus":[2,3,3,4],"minus": [2,4]} },
-			{'name': 'ztwo', 'chart': {"plus":[1,2,3,4,5,6],"minus": [3,5,2,4,53]} },
-			{'name': 'ethree', 'chart': {"plus":[1,2], "minus": [3,2,4]} }
-		];
-
-
+	var DATA;
 
   // structure county centoids for use below
   d3.csv("data/countries.csv", function(countries){
@@ -125,79 +120,100 @@
 	      })
 	    });
 
-	    draw(data, "theme");
+	    // keep a ref to data
+	    DATA = data;
+
+	    draw(data, "theme", "div.container");
 
 	  });
   });
 
 
+	function draw(data, group, container, strength=false) {
 
-		function draw(data, group) {
+	  // Start by getting a distinct list of the groups that make up the rows in the chart
+	  var groups = get_distinct(data, group);
+	  var summaries = [];
+	  groups.forEach(function(g){
+	    out = {"name": g, "chart": {"plus": [], "minus": []}};
+	    data.forEach(function(row){
+	    	if (strength && row.strength != "Direct correlation") { console.log('yo'); return} ;
+	      if (row[group] == g) {
+	        row.valence > 0 ? out["chart"]["plus"].push(row) : out["chart"]["minus"].push(row);
+	      }
+	    });
+	    summaries.push(out);    
+	  });
 
-		  // Start by getting a distinct list of the groups that make up the rows in the chart
-		  var groups = get_distinct(data, group);
-		  var summaries = [];
-		  groups.forEach(function(g){
-		    out = {"name": g, "chart": {"plus": [], "minus": []}};
-		    data.forEach(function(row){
-		      if (row[group] == g) {
-		        row.valence > 0 ? out["chart"]["plus"].push(row) : out["chart"]["minus"].push(row);
-		      }
-		    });
-		    summaries.push(out);    
-		  });
+	  // get the container
+		var container = d3.select(container);
+		var rows = container.selectAll("div.row")
+			.data(summaries, function(d) {return d.name});
 
-			var container = d3.select("div.container");
-			var rows = container.selectAll("div.row")
-				.data(summaries, function(d) {return d.name});
+		// create the rows
+		var rowsenter = rows.enter()
+			.append("div")
+			.attr("class","row")
+			.style("top", function(d,i) {return (i * 60) + "px"});
 
-			// create the rows
-			var rowsenter = rows.enter()
-				.append("div")
-				.attr("class","row")
-				.style("top", function(d,i) {return (i * 60) + "px"});
+		// create cells
+		rowsenter
+			.selectAll("div.cell")
+			.data(function(d) { return d3.entries(d) })
+			.enter()
+			.append("div")
+			.attr("class","cell")
+			.classed("chart",function(d) {return d.key == "chart"})
+			.style("top","2px")
+			.style("left",function(d,i) {return ((i * 70) + 2) + "px"})
+			.text(function(d) { return d.key == "name" ? d.value : "" })
+			// .attr("class", function(d) { return d.key == "chart" ? "chart" : "" });
 
-			// create cells
-			rowsenter
-				.selectAll("div.cell")
-				.data(function(d) { return d3.entries(d) })
-				.enter()
-				.append("div")
-				.attr("class","cell")
-				.classed("chart",function(d) {return d.key == "chart"})
-				.style("top","2px")
-				.style("left",function(d,i) {return ((i * 70) + 2) + "px"})
-				.text(function(d) { return d.key == "name" ? d.value : "" })
-				// .attr("class", function(d) { return d.key == "chart" ? "chart" : "" });
+		var rowsexit = rows.exit()
+	    .style("background", "red")
+		  .transition()
+	    .duration(750)
+	    .style("opacity", 0)
+	    .remove();
 
-			var rowsexit = rows.exit()
-		    .style("background", "red")
-			  .transition()
-		    .duration(750)
-		    .style("opacity", 0)
-		    .remove();
+		var plus = rowsenter.selectAll("div.chart").selectAll("div.chartcells.plus")
+			.data(function(d) { return d.value.plus }, function(d) { return d.zb_id });
 
-			rowsenter.selectAll("div.chart").selectAll("div.chartcells.plus")
-				.data(function(d) { return d.value.plus })
-				.enter()
-				.append("div")
-				.classed("chartcells","true")
-				.classed("plus","true")
-				.style("top","6px")
-				.style("left",function(d,i) {return (i * 20)+ "px"})
+		var plusenter = plus.enter()
+			.append("div")
+			.classed("chartcells","true")
+			.classed("plus","true")
+			.classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false})
+			.style("top","6px")
+			.style("left",function(d,i) {return (i * 20)+ "px"});
 
-			rowsenter.selectAll("div.chart").selectAll("div.chartcells.minus")
-				.data(function(d) { return d.value.minus })
-				.enter()
-				.append("div")
-				.classed("chartcells","true")
-				.classed("minus","true")
-				.style("top","28px")
-				.style("left",function(d,i) {return (i * 20)+ "px"})
+		plusexit = plus.exit()
+	    .style("background", "red")
+		  .transition()
+	    .duration(750)
+	    .style("opacity", 0)
+	    .remove();
 
-		}
+		var minus = rowsenter.selectAll("div.chart").selectAll("div.chartcells.minus")
+			.data(function(d) { return _.sortBy(d.value.minus, "valence") }, function(d) { return d.zb_id });
+			
+		var minusenter = minus.enter()
+			.append("div")
+			.classed("chartcells","true")
+			.classed("minus", function(d) { return d.valence < 0 ? true : false })
+			.classed("neutral",function(d) { return d.valence * 1 == 0 ? true : false })
+			.classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false})
+			.style("top","28px")
+			.style("left",function(d,i) {return (i * 20)+ "px"})
 
+		var minusexit = minus.exit()
+	    .style("background", "red")
+		  .transition()
+	    .duration(750)
+	    .style("opacity", 0)
+	    .remove();
 
+	} // draw
 
 		// ex:
 		// setTimeout(function() {
@@ -232,6 +248,7 @@
         	.style("top", function(d,i) {return (i * 60) + "px"});
     };
 
+    // called by buttons
 		function sortSheet(field, reverse=false) {
       var data = d3.selectAll("div.row").data();
 			
@@ -243,6 +260,34 @@
         .duration(500)
 				.style("top", function(d,i) {return (i * 60) + "px"});
     };
+
+    function filterByEvidence() {
+
+    	// TO DO
+    	// read about transition and applying data
+    	// what if filter here was just applying an entirely new dataset? 
+
+    	// plus first
+      var plus = d3.selectAll("div.chartcells.plus").data();
+    	plus = plus.filter(function(d) {return d.strength != "Direct correlation"});
+
+			var minus = d3.selectAll("div.chartcells.minus").data();
+			minus = minus.filter(function(d) {return d.strength != "Direct correlation"});
+
+			d3.selectAll("div.chartcells.plus").data(plus, function(d) {return d.zb_id})
+        .transition()
+        .duration(500)
+				// .style("left",function(d,i) {return (i * 20)+ "px"});
+				.style("opacity",0);
+
+			d3.selectAll("div.chartcells.minus").data(minus, function(d) {return d.zb_id})
+        .transition()
+        .duration(500)
+				// .style("left",function(d,i) {return (i * 20)+ "px"});
+				.style("opacity",0);
+
+    }
+
 
 		// get distinct list by key from an array of objects 
 		function get_distinct(array, key) {
