@@ -170,11 +170,21 @@
       .attr("transform", function(d,i) { return "translate(30,25)" })
       .text(function(d) { return d.key })
 
-    groups.exit()
-      .remove();      
 
     var subgroups = groups.selectAll("g")
       .data(function(d){ return d.values }, function(d) {return d.key});
+
+    // subgroups.exit()
+    //     .selectAll("rect")
+    //       .transition()
+    //         .duration(250)
+    //         .attr("opacity", 0)
+    
+
+    // subgroups.exit()
+    //   .transition()
+    //   .duration(350)
+    //   .remove();      
 
     subgroups.enter()
       .append("g")
@@ -182,17 +192,30 @@
       .attr("transform", function(d,i) { return "translate(100," + i * subh + ")" });
 
     var chart = subgroups.selectAll("rect")
-      .data(function(d) {return d.values;})
+      .data(function(d) {return d.values;}, function(d) {return d.zb_id})
 
       // TO DO: resize SVG based on length?
 
     // EXIT old elements not present in new data.
-    // but has no effect
+    // duration seems to have no effect
+    chart.exit()
+      .transition()
+      .duration(1000)
+      .style("opacity", 1e-6)
+      .remove();
 
+    // UPDATE old elements present in new data.
+    chart
+      .attr("y", 0)
+      .style("fill-opacity", 1)
+      .transition(t)
+      .attr("x",function(d, i) { return i * rectw})
 
+    // ENTER new elements not present in old
     var chartenter = chart.enter()
       .append("rect")
-      .attr("transform", function(d,i) { return "translate(" + i * rectw + ",0)" })
+      // .attr("transform", function(d,i) { return "translate(" + i * rectw + ",0)" })
+      .attr("x",function(d, i) { return i * rectw})
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
