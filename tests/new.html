@@ -1,6 +1,4 @@
 <!-- new.html -->
-
-
 <!DOCTYPE html>
 <meta charset="utf-8">
 
@@ -37,6 +35,10 @@
       opacity: 1;
     }
 
+    svg g.groups {
+      border: 1px solid #ccc;
+    }
+
     rect {
       width:19px; height: 19px;
       fill: cornflowerblue;
@@ -62,9 +64,9 @@
 <body>
 
   <div style="margin:1em;">
-    <button onClick="draw(getNestedData(rawdata,'variable'))">Switch to data by variable</button>
-    <button onClick="draw(getNestedData(rawdata,'theme'))">Switch to data by theme</button>
-    <button onClick="draw(getNestedData(rawdata,'theme',{key:'strength',value:'Direct correlation'}))">Filter by strength</button>
+    <button onClick="draw(nest(rawdata,'variable'))">Switch to data by variable</button>
+    <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button>
+    <button onClick="draw(nest(rawdata, curr_field, {key:'strength',value:'Direct correlation'}))">Filter by strength</button>
   </div>
 
   <svg></svg>
@@ -74,6 +76,7 @@
   var countriesKeyed;
   var dataNested;
   var rawdata;
+  var curr_field;
 
   d3.queue()
       .defer(d3.csv, 'data/countries.csv')
@@ -104,7 +107,7 @@
     });
     
     // unique list of themes
-    // not sure if this is needed
+    // not needed at this time
     var themes = data.reduce(function(acc, d) {
       if (acc.indexOf(d.theme) === -1) {
         acc.push(d.theme);
@@ -117,14 +120,15 @@
     // keep a reference to rawdata
     rawdata = data;
 
-    var dataNested = getNestedData(data,"theme");
+    var dataNested = nest(data,"theme");
     draw(dataNested);
 
   }
 
   // nest our data on selected field, then either "plus" or "minus" depending on value of "valence"
   // optionally pass a filter object in the form of {key: "fieldname to filter", value: "value to match"}
-  function getNestedData(data,field,filter) {
+  function nest(data,field,filter) {
+    curr_field = field; // keep a reference to the current field displayed
 
     if (filter) {
       data = data.filter(function(d) {
@@ -142,7 +146,7 @@
   // get the container in global scope
   var svg = d3.select("svg")
     .attr("width",1200) // updated on enter, see below
-    .attr("height",200);
+    .attr("height",1200);
 
   var rowh = 55;
   var subh = 20;
@@ -156,48 +160,46 @@
   //
   function draw(data) {
 
-    console.log("data ",data);
+    console.log("data passed to draw() ",data);
 
-    var groups = svg.selectAll("g")
+    var rows = svg.selectAll("g")
       .data(data, function(d){return d.key});
 
-    var groupsenter = groups.enter()
+    // EXIT rows
+    rows.exit()
+      .selectAll("g")
+      .transition()
+      .duration(1000)
+      .style("opacity", 1e-6)
+      .remove();
+
+    // ENTER rows
+    var rowsenter = rows.enter()
       .append("g")
-      .style('opacity',1)
-      .attr("transform", function(d,i) { return "translate(0," + i * rowh + ")" })
-    
-    groups.append("text")
-      .attr("transform", function(d,i) { return "translate(30,25)" })
-      .text(function(d) { return d.key })
+        .style('opacity',1)
+        .classed("rows",true)
+        .attr("transform", function(d,i) { return "translate(0," + i * rowh + ")" })
 
+    rows.append("g")
+        .append("text")
+          .attr("transform", function(d,i) { return "translate(30,25)" })
+          .text(function(d) { return d.key });
 
-    var subgroups = groups.selectAll("g")
+    // create two sub-groups for charts
+    var subgroups = rows.selectAll("g")
       .data(function(d){ return d.values }, function(d) {return d.key});
 
-    // subgroups.exit()
-    //     .selectAll("rect")
-    //       .transition()
-    //         .duration(250)
-    //         .attr("opacity", 0)
-    
-
-    // subgroups.exit()
-    //   .transition()
-    //   .duration(350)
-    //   .remove();      
-
+    // ENTER subgroups
     subgroups.enter()
       .append("g")
-      .attr("class","chartcells")
+      .attr("class","subgroups")
       .attr("transform", function(d,i) { return "translate(100," + i * subh + ")" });
 
+    // charts
     var chart = subgroups.selectAll("rect")
       .data(function(d) {return d.values;}, function(d) {return d.zb_id})
 
-      // TO DO: resize SVG based on length?
-
     // EXIT old elements not present in new data.
-    // duration seems to have no effect
     chart.exit()
       .transition()
       .duration(1000)
@@ -220,8 +222,8 @@
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
       .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false});
-  }
-
+    
+  } // draw()
 
   </script>
 
