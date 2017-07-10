@@ -78,6 +78,19 @@
   var rawdata;
   var curr_field;
 
+  // get the container in global scope
+  var svg = d3.select("svg")
+    .attr("width",1200) // updated on enter, see below
+    .attr("height",1200);
+
+  var rowh = 55;
+  var subh = 20;
+  var subw = 300;
+  var rectw = 20;
+  var t = d3.transition()
+      .duration(750);
+
+
   d3.queue()
       .defer(d3.csv, 'data/countries.csv')
       .defer(d3.csv, 'data/data.csv')
@@ -138,22 +151,9 @@
 
     return d3.nest()
         .key(function(d) { return d[field] })
-        .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; })
+        .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
         .entries(data);
   }
-
-
-  // get the container in global scope
-  var svg = d3.select("svg")
-    .attr("width",1200) // updated on enter, see below
-    .attr("height",1200);
-
-  var rowh = 55;
-  var subh = 20;
-  var subw = 300;
-  var rectw = 20;
-  var t = d3.transition()
-      .duration(750);
 
   //
   // MAIN UPDATE FUNCTION
@@ -183,11 +183,19 @@
     rows.append("g")
         .append("text")
           .attr("transform", function(d,i) { return "translate(30,25)" })
-          .text(function(d) { return d.key });
+          .text(function(d) { return d.key })
 
     // create two sub-groups for charts
     var subgroups = rows.selectAll("g")
       .data(function(d){ return d.values }, function(d) {return d.key});
+
+    // EXIT subgroups
+    rows.exit()
+      .selectAll("g")
+      .transition()
+      .duration(1000)
+      .style("opacity", 1e-6)
+      .remove();
 
     // ENTER subgroups
     subgroups.enter()
@@ -199,7 +207,7 @@
     var chart = subgroups.selectAll("rect")
       .data(function(d) {return d.values;}, function(d) {return d.zb_id})
 
-    // EXIT old elements not present in new data.
+    // EXIT chart
     chart.exit()
       .transition()
       .duration(1000)
@@ -224,6 +232,33 @@
       .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false});
     
   } // draw()
+
+function wrap(text, width) {
+  text.each(function() {
+    var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+      }
+    }
+  });
+}
+
+
+
 
   </script>
 
