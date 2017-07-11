@@ -229,8 +229,8 @@
 
 
     // define a transition, will occur over 750 milliseconds
-    var t = svg.transition().duration(750);
-
+    var tfast = svg.transition().duration(750);
+    var tslow = svg.transition().duration(1250);
 
     // register a callback to be invoked which updates the chart when "statechange" occurs
     dispatch.on("statechange.chart", function(data) {
@@ -321,18 +321,18 @@
 
       // bind data
       var squares = charts.selectAll("rect")
-        .data(function(d) { return d.values; });
+        .data(function(d) { return d.values; }, function(d) {return d.zb_id});
 
       // get rid of ones we don't need anymore, fade them out
       squares.exit()
-        .transition(t)
+        .transition(tslow)
         .style("opacity", 1e-6)
         .remove();
 
       // update existing squares, transition
       squares
         .style("fill-opacity", 1)
-        .transition(t)
+        .transition(tfast)
           .attr("x",function(d, i) { return i * rectw});
 
       // make new squares
@@ -341,7 +341,7 @@
         .classed("plus",function(d) { return d.valence > 0 })
         .classed("minus",function(d) { return d.valence < 0 })
         .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false})
-        .transition(t)
+        .transition(tfast)
           .attr("x",function(d, i) { return i * rectw});
 
     }); // statechange.chart
