@@ -45,10 +45,10 @@ button:hover {
 }
 
 /* hide initially while loading to avoid FOUC */
-select#country {
+/*select#country {
   display:none;
 }
-
+*/
 
 /*SELECT2 STYLES AND OVERRIDES*/
 

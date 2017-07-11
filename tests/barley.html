@@ -96,6 +96,7 @@ index.html# -->
 
     // set the current dropdown option to value of last statechange
     dispatch.on("statechange.menu", function(site) {
+      debugger
       select.property("value", site.key);
     });
   });

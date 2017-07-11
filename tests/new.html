@@ -43,8 +43,6 @@
 
   </div>
 
-  <svg class="top"></svg>
-
   <script>
 
   // global declarations
@@ -93,10 +91,7 @@
       country = country.indexOf(",") ? country.split(",") : [country];
       countries = _.union(countries, country.map(function(c) { return c.trim() }));
     });
-
     countries = _.without(_.uniq(countries.sort()), "");
-    console.log(countries);
-
     countries.forEach(function(country) {
       d3.select("select#country")
         .append("option")
@@ -117,9 +112,12 @@
 
     // call our dispatch events with `this` context, and corresponding data
     dispatch.call("load", this, map);
+    
     // ulimately we want to get all the data, not a subset
-    // for now, send off the map and select as needed below
-    dispatch.call("statechange", this, map);
+    // TO DO: what version of data gets dispatched?
+    // console.log(nested[0]);
+    // dispatch.call("statechange", this, map);
+    dispatch.call("statechange", this, nested);
 
   }
 
@@ -136,7 +134,7 @@
           this,
           // TO DO: update for the country filter use case
           // map.get(site)
-          // TODO - filter data by country etc.
+          nest(rawdata,"theme",{key: "country", value: site})
         );
     });
 
@@ -149,49 +147,50 @@
 
     // set the current dropdown option to value of last statechange
     // ## TA TODO we don't actually want to trigger change yet on this
+    //     dont think this is relevant  at the moment
     // dispatch.on("statechange.menu", function(site) {
+    //   debugger;
     //   select.property("value", site.key);
     // });
 
     // hack: style the dropdown using Select2, then show
-    $("select#country").select2({
-      placeholder: "Select a country",
-      minimumResultsForSearch: Infinity
-    }).show();
+    // $("select#country").select2({
+    //   placeholder: "Select a country",
+    //   minimumResultsForSearch: Infinity
+    // }).show();
 
   }); // load.menu
 
   // inital chart setup after data load
   dispatch.on("load.chart", function(map) {
     // layout properties
-    var margin = { top: 20, right: 30, bottom: 30, left: 120 };
+    var margin = { top: 30, right: 30, bottom: 30, left: 50 };
     var width = 800 - margin.left - margin.right;
-    var height = 500 - margin.top - margin.bottom;
+    var height = 200 - margin.top - margin.bottom;
 
     // scales for x and y axes
-    var yScale = d3.scalePoint().padding(0.5); // ordinal scale for Y, these are simply category labels
-    var xScale = d3.scaleLinear(); // x direction is fixed width, from 0 to max > TO DO 
+    var yScaleInner = d3.scalePoint().padding(0.5); // ordinal scale for Y, these are simply category labels
+    var xScaleInner = d3.scaleLinear(); // x direction is fixed width, from 0 to max > TO DO 
 
-    // set up yScale, TO DO, this can vary considerably, depending on group
-    // and responsive layout (mobile v desktop) 
-    yScale
+    // set up yScaleInner, 
+    yScaleInner
       .range([0, height])
-      .round(true);
+      .domain(["plus", "minus"]);
 
     // domain for our x scale 0 to max, in our simplified case about 60
-    // (note, we have no need to display this, ever)
+    // (note, we have no need to display the ticks, labels, ever)
     // (also important to note that the client wants these to overflow in narrow cols)
-    xScale
+    xScaleInner
       .range([0, width])
       .domain([0, 60]);
 
-    // d3.v4 method of setting up axises: axisLeft, axisBottom, etc.
+    // d3.v4 method of setting up axes: axisLeft, axisBottom, etc.
     var yAxis = d3.axisLeft()
-      .scale(yScale);
+      .scale(yScaleInner);
 
     var xAxis = d3.axisBottom()
-      .ticks(0)
-      .scale(xScale);
+      // .ticks(0) TO DO ??
+      .scale(xScaleInner);
 
     // create an svg element to hold our chart parts
     var svg = d3.select("body").append('svg')
@@ -200,7 +199,7 @@
       .append('g')
         .attr('transform', 'translate(' + [margin.left, margin.top] + ')')
 
-    // append svg groups for the axises, then call their corresponding axis function
+    // append svg groups for the axes, then call their corresponding axis function
     svg.append("g")
       .attr("class", "y axis")
       .call(yAxis);
@@ -209,29 +208,30 @@
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
+    // our transition, will occur over 750 milliseconds
+    var t = svg.transition().duration(750);
 
 
     // register a callback to be invoked which updates the chart when "statechange" occurs
-    dispatch.on("statechange.chart", function(site) {
-      // our transition, will occur over 750 milliseconds
-      var t = svg.transition().duration(750);
-
+    dispatch.on("statechange.chart", function(data) {
 // initial switch: temporarily test a single row
-var site = site.get("ENV");
-console.log("statechange data: ", site);
+// var data = data.get("ENV"); // if using map OR
+var data = data[0]; // if using nested 
+console.log("statechange data: ", data);
 
-      // update our yScale & transition the yAxis, note the xAxis doesn't change
-      yScale.domain(site.values.map(function(d) { return d.key; }).sort());
-      yAxis.scale(yScale);
-      t.select("g.y.axis").call(yAxis);
+      // update our yScaleInner
+      // NOTE: we don't really change range for either, always showing single units of n by n dims
+      // yScaleInner.domain(data.values.map(function(d) { return d.key; }).sort());
+      yAxis.scale(yScaleInner);
+      // t.select("g.y.axis").call(yAxis); // this helps show whats happening, but not needed
 
       // bind our new piece of data to our svg element
-      // could also do `svg.data([site.values]);`
-      svg.datum(site.values); 
+      // could also do `svg.data([data.values]);`
+      svg.datum(data.values); 
 
-            // tell d3 we want svg groups for each of our gen categories
+      // tell d3 we want svg groups for each of our categories
       var charts = svg.selectAll("g.chart")
-        .data(function(d) { return d; });
+        .data(function(d) { return d; }, function(d) {return d.key});
 
       // get rid of the old ones we don't need when doing an update
       charts.exit().remove();
@@ -239,14 +239,14 @@ console.log("statechange data: ", site);
       // update existing ones left over
       charts.attr("class", "chart")
         .attr("transform", function(d) {
-          return "translate(0," + yScale(d.key) + ")"
+          return "translate(0," + yScaleInner(d.key) + ")"
         });
 
       // create new ones if our updated dataset has more then the previous
       charts.enter().append("g")
         .attr("class", "chart")
         .attr("transform", function(d) {
-          return "translate(0," + yScale(d.key) + ")"
+          return "translate(0," + yScaleInner(d.key) + ")"
         });
 
       // reselect the gen groups, so that we get any new ones that were made
@@ -276,12 +276,6 @@ console.log("statechange data: ", site);
         .classed("plus",function(d) { return d.valence > 0 })
         .classed("minus",function(d) { return d.valence < 0 })
         .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false});
-
-
-
-
-
-
 
     }); // statechange.chart
 
