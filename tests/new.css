@@ -1,0 +1,63 @@
+
+body {margin:0; padding: 0; font-size:14px; font-family: 'Roboto', sans-serif;}
+
+svg {
+  box-shadow:none;
+  background:#fff;
+}
+
+svg g {
+  opacity: 1;
+}
+
+rect {
+  width:19px; height: 19px;
+  fill: cornflowerblue;
+}
+
+rect.plus {
+  fill: #309223;
+}
+rect.neutral {
+  fill: #FACB57;
+}
+rect.minus {
+  fill: #D7067C;
+}
+rect.weak {
+  opacity: 0.5;
+}
+
+button {
+  color: #999;
+  height: 30px; 
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border: 1px solid #aaa;
+}
+
+button:hover {
+  color: #333;
+  background: #edeaea;
+  cursor:pointer;
+}
+
+select {
+	height: 30px;
+  border-radius: 0;
+}
+
+select:required:invalid {
+  color: gray;
+}
+select:required:invalid:hover {
+  color: #333;
+}
+
+option[value=""][disabled] {
+  display: none;
+}
+option {
+  color: black;
+}

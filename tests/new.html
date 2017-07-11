@@ -3,7 +3,6 @@
 <meta charset="utf-8">
 
 <head>
-  <link rel="stylesheet" href="index.css" type="text/css" media="all" />
 
   <!-- Leaflet CDN -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
@@ -12,76 +11,44 @@
   <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
   <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
 
-    <!-- D3, jQuery, lodash, papa parse -->
-  <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
-  <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+  <!-- D3, jQuery, lodash -->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.3/papaparse.min.js"></script>
+  
   <!-- Local Javascript -->
   <!-- <script src="./index.js"></script> -->
+  <link rel="stylesheet" href="new.css" type="text/css" media="all" />
 
-  <style>
+  <!-- select2, a select box enhancer for jquery -->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
-    body {margin:0; padding: 0;}
+  <!-- fonts/ -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
-    svg {
-      box-shadow:none;
-      background:#fff;
-    }
-
-    svg g {
-      opacity: 1;
-    }
-
-    svg g.groups {
-      border: 1px solid #ccc;
-    }
-
-    rect {
-      width:19px; height: 19px;
-      fill: cornflowerblue;
-    }
-
-    rect.plus {
-      fill: #309223;
-    }
-    rect.neutral {
-      fill: #FACB57;
-    }
-    rect.minus {
-      fill: #D7067C;
-    }
-    rect.weak {
-      opacity: 0.5;
-    }
-
-  </style>
 
 </head>
 
 <body>
 
   <div style="margin:1em;">
-    <button onClick="draw(nest(rawdata,'variable'))">Switch to data by variable</button>
-    <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button>
-    <button onClick="draw(nest(rawdata, curr_field, {key:'strength',value:'Direct correlation'}))">Filter by strength</button>
+    <!-- <button onClick="draw(nest(rawdata,'variable'))">Switch to data by variable</button> -->
+    <!-- <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button> -->
+    <button style="margin-right:4px;" onClick="draw(nest(rawdata, curr_field, {key:'strength',value:'Direct correlation'}),d3.select('svg.top'))">Filter by strength</button>
+
+    <select id="country" required>
+      <option value="" disabled selected>Select a country</option>
+    </select>
+
   </div>
 
-  <svg></svg>
+  <svg class="top"></svg>
 
   <script>
 
   var countriesKeyed;
   var dataNested;
   var rawdata;
-  var curr_field;
-
-  // get the container in global scope
-  var svg = d3.select("svg")
-    .attr("width",1200) // updated on enter, see below
-    .attr("height",1200);
 
   var rowh = 55;
   var subh = 20;
@@ -89,7 +56,6 @@
   var rectw = 20;
   var t = d3.transition()
       .duration(750);
-
 
   d3.queue()
       .defer(d3.csv, 'data/countries.csv')
@@ -110,42 +76,49 @@
       }
     });
     
+    // data setup
+    var countries = [];
     data.forEach(function(d) {
+      // transform string valence into intenger
       d.valence = +d.valence;
-    })
-    
-    // create a d3 map, not the same as Array.prototype.map
-    countriesKeyed = d3.map(countries, function(d) {
-      return d.name;
+      // generate list of countries present in data
+      // d.country can be a list of countries, so check for that, and split if so
+      var country = d.country;
+      country = country.indexOf(",") ? country.split(",") : [country];
+      countries = _.union(countries, country.map(function(c) { return c.trim() }));
     });
-    
-    // unique list of themes
-    // not needed at this time
-    var themes = data.reduce(function(acc, d) {
-      if (acc.indexOf(d.theme) === -1) {
-        acc.push(d.theme);
-      }
-      
-      return acc;
-    }, [])
-    .sort();
-    
+
+    countries = _.without(_.uniq(countries.sort()), "");
+    console.log(countries);
+
+    countries.forEach(function(country) {
+      d3.select("select#country")
+        .append("option")
+        .text(country)
+        .attr("value",country.trim())
+    });
+        
     // keep a reference to rawdata
     rawdata = data;
 
-    var dataNested = nest(data,"theme");
-    draw(dataNested);
+    // get the container for the top chart
+    var svg = d3.select("svg.top")
+      .attr("width",1200) 
+      .attr("height",1200);
+
+    var dataNested = nest(data,"theme",false);
+    draw(dataNested,svg);
 
   }
 
   // nest our data on selected field, then either "plus" or "minus" depending on value of "valence"
   // optionally pass a filter object in the form of {key: "fieldname to filter", value: "value to match"}
   function nest(data,field,filter) {
-    curr_field = field; // keep a reference to the current field displayed
 
     if (filter) {
       data = data.filter(function(d) {
-        return d[filter.key] == filter.value
+        // country requires more permissive filtering (match one country in a list)
+        return filter.key == "country" ? d["country"].indexOf(filter.value) > -1  : d[filter.key] == filter.value
       })
     }
 
@@ -158,43 +131,44 @@
   //
   // MAIN UPDATE FUNCTION
   //
-  function draw(data) {
+  function draw(data,container) {
 
     console.log("data passed to draw() ",data);
 
-    var rows = svg.selectAll("g")
+    // select rows
+    var rows = container.selectAll("g")
       .data(data, function(d){return d.key});
 
     // EXIT rows
     rows.exit()
       .selectAll("g")
-      .transition()
-      .duration(1000)
-      .style("opacity", 1e-6)
       .remove();
 
     // ENTER rows
     var rowsenter = rows.enter()
       .append("g")
-        .style('opacity',1)
+        .style("opacity",1)
         .classed("rows",true)
         .attr("transform", function(d,i) { return "translate(0," + i * rowh + ")" })
+    
+    // select text labels
+    var labels = rows.selectAll("g")
+      .data(function(d) {return [d.key]});
 
-    rows.append("g")
+    labels.enter()
+      .append("g")
         .append("text")
-          .attr("transform", function(d,i) { return "translate(30,25)" })
-          .text(function(d) { return d.key })
+        .style("opacity",1)
+        .attr("transform", function(d,i) { return "translate(30,25)" })
+        .text(String);
 
     // create two sub-groups for charts
     var subgroups = rows.selectAll("g")
       .data(function(d){ return d.values }, function(d) {return d.key});
 
     // EXIT subgroups
-    rows.exit()
+    subgroups.exit()
       .selectAll("g")
-      .transition()
-      .duration(1000)
-      .style("opacity", 1e-6)
       .remove();
 
     // ENTER subgroups
@@ -205,12 +179,11 @@
 
     // charts
     var chart = subgroups.selectAll("rect")
-      .data(function(d) {return d.values;}, function(d) {return d.zb_id})
+      .data(function(d) {return d.values});
 
     // EXIT chart
     chart.exit()
-      .transition()
-      .duration(1000)
+      .transition(t)
       .style("opacity", 1e-6)
       .remove();
 
@@ -233,29 +206,6 @@
     
   } // draw()
 
-function wrap(text, width) {
-  text.each(function() {
-    var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.1, // ems
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-    while (word = words.pop()) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-      }
-    }
-  });
-}
 
 
 

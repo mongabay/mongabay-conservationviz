@@ -44,23 +44,21 @@ function update(data) {
   var t = d3.transition()
       .duration(750);
 
-
   // JOIN new data with old elements.
   var incoming = data[0].values;
-  // var text = data[0].key;
 
-  var text = g.selectAll("text")
-    .data(data, function(d) {return d.key});
+  // var text = g.selectAll("text")
+  //   .data(data, function(d) {return d.key});
 
-  text.exit()
-    .style("fill","red")
-    .transition(t)
-      .style("opacity", 1e-6)
-      .remove();
+  // text.exit()
+  //   .style("fill","red")
+  //   .transition(t)
+  //     .style("opacity", 1e-6)
+  //     .remove();
 
-  text.enter()
-    .append("text")
-    .text(function(d) {return d.key })
+  // text.enter()
+  //   .append("text")
+  //   .text(function(d) {return d.key })
 
   var rect = g.selectAll("rect")
     .data(incoming, function(d) {return d; });
