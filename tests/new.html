@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="new.css" type="text/css" media="all" />
 
   <!-- select2, a select box enhancer for jquery -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
   <!-- fonts/ -->
@@ -46,17 +47,22 @@
 
   <script>
 
-  var countriesKeyed;
-  var dataNested;
-  var rawdata;
+  // global declarations
 
+  // data variables
+  var rawdata;
+  var countrylist;
+
+  // row heights and widths, rectangle withs
   var rowh = 55;
   var subh = 20;
   var subw = 300;
   var rectw = 20;
-  var t = d3.transition()
-      .duration(750);
 
+  // register events to emit & listen for via d3 dispatch
+  var dispatch = d3.dispatch("load", "statechange");
+
+  // get data and a callback when download is complete
   d3.queue()
       .defer(d3.csv, 'data/countries.csv')
       .defer(d3.csv, 'data/data.csv')
@@ -97,24 +103,200 @@
         .text(country)
         .attr("value",country.trim())
     });
-        
-    // keep a reference to rawdata
+    
+    // keep a global references to raw data
     rawdata = data;
+    countrylist = countries;
 
-    // get the container for the top chart
-    var svg = d3.select("svg.top")
-      .attr("width",1200) 
-      .attr("height",1200);
+    // nest the data based on a given attribute
+    var nested = nest(data,"theme",false);
 
-    var dataNested = nest(data,"theme",false);
-    draw(dataNested,svg);
+    // construct a new d3 map, not as in geographic map, but more like a "hash"
+    // TA Interesting structure, not sure if we'll use it here or not
+    var map = d3.map(nested, function(d) { return d.key; });
+
+    // call our dispatch events with `this` context, and corresponding data
+    dispatch.call("load", this, map);
+    // ulimately we want to get all the data, not a subset
+    // for now, send off the map and select as needed below
+    dispatch.call("statechange", this, map);
 
   }
 
-  // nest our data on selected field, then either "plus" or "minus" depending on value of "valence"
-  // optionally pass a filter object in the form of {key: "fieldname to filter", value: "value to match"}
-  function nest(data,field,filter) {
+  // register a listener for "load" and create a dropdown / select elem
+  // TO DO: this is quite different from the CH example,
+  // for now simply ignoring "map" and loading the global countries array
+  dispatch.on("load.menu", function(countries) {
+    // add listener to select#country that calls "statechange"
+    var select = d3.select("select#country")
+      .on("change", function() {
+        var site = this.value;
+        dispatch.call(
+          "statechange",
+          this,
+          // TO DO: update for the country filter use case
+          // map.get(site)
+          // TODO - filter data by country etc.
+        );
+    });
 
+    // append options to select dropdown
+    select.selectAll("option")
+        .data(countrylist)
+      .enter().append("option")
+        .attr("value", function(d) { return d; })
+        .text(function(d) { return d; });
+
+    // set the current dropdown option to value of last statechange
+    // ## TA TODO we don't actually want to trigger change yet on this
+    // dispatch.on("statechange.menu", function(site) {
+    //   select.property("value", site.key);
+    // });
+
+    // hack: style the dropdown using Select2, then show
+    $("select#country").select2({
+      placeholder: "Select a country",
+      minimumResultsForSearch: Infinity
+    }).show();
+
+  }); // load.menu
+
+  // inital chart setup after data load
+  dispatch.on("load.chart", function(map) {
+    // layout properties
+    var margin = { top: 20, right: 30, bottom: 30, left: 120 };
+    var width = 800 - margin.left - margin.right;
+    var height = 500 - margin.top - margin.bottom;
+
+    // scales for x and y axes
+    var yScale = d3.scalePoint().padding(0.5); // ordinal scale for Y, these are simply category labels
+    var xScale = d3.scaleLinear(); // x direction is fixed width, from 0 to max > TO DO 
+
+    // set up yScale, TO DO, this can vary considerably, depending on group
+    // and responsive layout (mobile v desktop) 
+    yScale
+      .range([0, height])
+      .round(true);
+
+    // domain for our x scale 0 to max, in our simplified case about 60
+    // (note, we have no need to display this, ever)
+    // (also important to note that the client wants these to overflow in narrow cols)
+    xScale
+      .range([0, width])
+      .domain([0, 60]);
+
+    // d3.v4 method of setting up axises: axisLeft, axisBottom, etc.
+    var yAxis = d3.axisLeft()
+      .scale(yScale);
+
+    var xAxis = d3.axisBottom()
+      .ticks(0)
+      .scale(xScale);
+
+    // create an svg element to hold our chart parts
+    var svg = d3.select("body").append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+        .attr('transform', 'translate(' + [margin.left, margin.top] + ')')
+
+    // append svg groups for the axises, then call their corresponding axis function
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+
+
+    // register a callback to be invoked which updates the chart when "statechange" occurs
+    dispatch.on("statechange.chart", function(site) {
+      // our transition, will occur over 750 milliseconds
+      var t = svg.transition().duration(750);
+
+// initial switch: temporarily test a single row
+var site = site.get("ENV");
+console.log("statechange data: ", site);
+
+      // update our yScale & transition the yAxis, note the xAxis doesn't change
+      yScale.domain(site.values.map(function(d) { return d.key; }).sort());
+      yAxis.scale(yScale);
+      t.select("g.y.axis").call(yAxis);
+
+      // bind our new piece of data to our svg element
+      // could also do `svg.data([site.values]);`
+      svg.datum(site.values); 
+
+            // tell d3 we want svg groups for each of our gen categories
+      var charts = svg.selectAll("g.chart")
+        .data(function(d) { return d; });
+
+      // get rid of the old ones we don't need when doing an update
+      charts.exit().remove();
+
+      // update existing ones left over
+      charts.attr("class", "chart")
+        .attr("transform", function(d) {
+          return "translate(0," + yScale(d.key) + ")"
+        });
+
+      // create new ones if our updated dataset has more then the previous
+      charts.enter().append("g")
+        .attr("class", "chart")
+        .attr("transform", function(d) {
+          return "translate(0," + yScale(d.key) + ")"
+        });
+
+      // reselect the gen groups, so that we get any new ones that were made
+      // our previous selection would not contain them
+      charts = svg.selectAll("g.chart");
+
+      // tell d3 we want some squares!
+      var squares = charts.selectAll("rect")
+        .data(function(d) { return d.values; });
+
+      // get rid of ones we don't need anymore, fade them out
+      squares.exit()
+        .transition(t)
+        .style("opacity", 1e-6)
+        .remove();
+
+      // update existing squares, transition size & fill
+      squares
+        .style("fill-opacity", 1)
+        .transition(t)
+        .attr("x",function(d, i) { return i * rectw})
+
+      // make new squares
+      squares.enter().append("rect")
+        .attr("x",function(d, i) { return i * rectw})
+        .classed("neutral",function(d) { return d.valence == 0 })
+        .classed("plus",function(d) { return d.valence > 0 })
+        .classed("minus",function(d) { return d.valence < 0 })
+        .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false});
+
+
+
+
+
+
+
+    }); // statechange.chart
+
+  }); // load.chart
+
+
+
+
+  // UTILITY FUNCTIONS
+
+  // nest our data on selected field, then either "plus" or "minus",
+  //   depending on value of "valence"
+  // optionally pass a filter object in the form of 
+  //   {key: "fieldname to filter", value: "value to match"}
+  function nest(data,field,filter) {
     if (filter) {
       data = data.filter(function(d) {
         // country requires more permissive filtering (match one country in a list)
@@ -126,86 +308,8 @@
         .key(function(d) { return d[field] })
         .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
         .entries(data);
-  }
-
-  //
-  // MAIN UPDATE FUNCTION
-  //
-  function draw(data,container) {
-
-    console.log("data passed to draw() ",data);
-
-    // select rows
-    var rows = container.selectAll("g")
-      .data(data, function(d){return d.key});
-
-    // EXIT rows
-    rows.exit()
-      .selectAll("g")
-      .remove();
-
-    // ENTER rows
-    var rowsenter = rows.enter()
-      .append("g")
-        .style("opacity",1)
-        .classed("rows",true)
-        .attr("transform", function(d,i) { return "translate(0," + i * rowh + ")" })
-    
-    // select text labels
-    var labels = rows.selectAll("g")
-      .data(function(d) {return [d.key]});
-
-    labels.enter()
-      .append("g")
-        .append("text")
-        .style("opacity",1)
-        .attr("transform", function(d,i) { return "translate(30,25)" })
-        .text(String);
-
-    // create two sub-groups for charts
-    var subgroups = rows.selectAll("g")
-      .data(function(d){ return d.values }, function(d) {return d.key});
-
-    // EXIT subgroups
-    subgroups.exit()
-      .selectAll("g")
-      .remove();
-
-    // ENTER subgroups
-    subgroups.enter()
-      .append("g")
-      .attr("class","subgroups")
-      .attr("transform", function(d,i) { return "translate(100," + i * subh + ")" });
-
-    // charts
-    var chart = subgroups.selectAll("rect")
-      .data(function(d) {return d.values});
-
-    // EXIT chart
-    chart.exit()
-      .transition(t)
-      .style("opacity", 1e-6)
-      .remove();
-
-    // UPDATE old elements present in new data.
-    chart
-      .attr("y", 0)
-      .style("fill-opacity", 1)
-      .transition(t)
-      .attr("x",function(d, i) { return i * rectw})
-
-    // ENTER new elements not present in old
-    var chartenter = chart.enter()
-      .append("rect")
-      // .attr("transform", function(d,i) { return "translate(" + i * rectw + ",0)" })
-      .attr("x",function(d, i) { return i * rectw})
-      .classed("neutral",function(d) { return d.valence == 0 })
-      .classed("plus",function(d) { return d.valence > 0 })
-      .classed("minus",function(d) { return d.valence < 0 })
-      .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false});
-    
-  } // draw()
-
+  
+  } // nest
 
 
 

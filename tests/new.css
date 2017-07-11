@@ -30,11 +30,12 @@ rect.weak {
 
 button {
   color: #999;
-  height: 30px; 
+  height:28px; 
   border-radius: 0;
   background: none;
   box-shadow: none;
   border: 1px solid #aaa;
+  /*position:relative; top:1px;*/
 }
 
 button:hover {
@@ -43,21 +44,47 @@ button:hover {
   cursor:pointer;
 }
 
-select {
-	height: 30px;
-  border-radius: 0;
+/* hide initially while loading to avoid FOUC */
+select#country {
+  display:none;
 }
 
-select:required:invalid {
-  color: gray;
-}
-select:required:invalid:hover {
-  color: #333;
+
+/*SELECT2 STYLES AND OVERRIDES*/
+
+span.select2-container:hover span.select2-selection__placeholder {
+  color:#333 !important;
 }
 
-option[value=""][disabled] {
-  display: none;
+.select2-dropdown {
+  z-index: 19001;
 }
-option {
-  color: black;
+
+
+.select2-selection--multiple, .select2-selection--single {
+    border-radius: 0 !important;
+}
+
+select:disabled, input:disabled { 
+    cursor:not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--multiple {
+    cursor:not-allowed; background:#e2e2e2;
+}
+
+input.select2-search__field:disabled { 
+    cursor:not-allowed;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder, .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-results__option {
+    font-size: 12px;
+}
+
+.select2-selection__rendered {
+  font-size: 12px;
+}
+
+.select2-container .select2-selection--single {
+    height: 31px;
 }
