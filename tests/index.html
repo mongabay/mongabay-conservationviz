@@ -171,52 +171,15 @@
     // INNER SCALES AND AXES
     //
     var yScaleInner = d3.scalePoint().padding(0.5); // ordinal scale for Y, these are simply category labels
-    // var xScaleInner = d3.scaleLinear(); // x direction is fixed width, from 0 to max > TO DO 
 
     // set up yScaleInner, 
     yScaleInner
       .range([0, innerHeight])
       .domain(["plus", "minus"]);
 
-    // domain for our x scale 0 to max, in our simplified case about 60
-    // (note, we have no need to display the ticks, labels, ever)
-    // (also important to note that the client wants these to overflow in narrow cols)
-    // xScaleInner
-      // .range([0, width])
-      // .domain([0, 60]);
-
     // d3.v4 method of setting up axes: axisLeft, axisBottom, etc.
     var yAxisInner = d3.axisLeft()
       .scale(yScaleInner);
-
-    // var xAxisInner = d3.axisBottom()
-      // .ticks(0) TO DO ??
-      // .scale(xScaleInner);
-
-    // 
-    // OUTER SCALES AND AXES
-    //
-    var yScaleOuter = d3.scalePoint().padding(0.5); 
-    // var xScaleOuter = d3.scaleLinear(); 
-
-    yScaleOuter
-      .domain(map.keys())
-      .range([0, height])
-
-    // domain for our x scale 0 to max, in our simplified case about 60
-    // (note, we have no need to display the ticks, labels, ever)
-    // (also important to note that the client wants these to overflow in narrow cols)
-    // xScaleOuter
-      // .range([0, width])
-      // .domain([0, 150]);
-
-    // d3.v4 method of setting up axes: axisLeft, axisBottom, etc.
-    var yAxisOuter = d3.axisLeft()
-      .scale(yScaleOuter);
-
-    // var xAxisOuter = d3.axisBottom()
-      // .ticks(0) TO DO ??
-      // .scale(xScaleOuter);
 
     // INITIAL SVG SETUP
     // create an svg element to hold our chart parts
@@ -234,7 +197,6 @@
 
     // register a callback to be invoked which updates the chart when "statechange" occurs
     dispatch.on("statechange.chart", function(data) {
-
 
       console.log("statechange data: ", data);
 
@@ -286,12 +248,10 @@
           .attr("transform", "translate(-90,35)");
 
 
-      // INNER AXES
-      // same select-again issue as below?  appears to be so
-      var rows = svg.selectAll("g.row")
-
       // tell d3 we want svg groups for each of our chart categories
       // there are currently only two: plus and minus
+      // same select-again issue as below?  appears to be so
+      var rows = svg.selectAll("g.row")
       var charts = rows.selectAll("g.chart")
         .data(function(d) { return d.values; }, function(d) {return d.key});
 
