@@ -67,7 +67,7 @@
     countrylist = countries;
 
     // nest the data based on a given attribute
-    var nested = nest(data,"theme",false);
+    var nested = nest(data,"theme");
 
     // construct a new d3 map, not as in geographic map, but more like a "hash"
     // TA Interesting structure, not sure if we'll use it here or not
@@ -89,13 +89,12 @@
     // add listener to select#country that calls "statechange"
     var select = d3.select("select#country")
       .on("change", function() {
-        var site = this.value;
+        // filter data for the selected country option
+        var data = filter(rawdata,{key: "country", value: this.value});
         dispatch.call(
           "statechange",
           this,
-          // TO DO: update for the country filter use case
-          // map.get(site)
-          nest(rawdata,"theme",{key: "country", value: site})
+          nest(data,"theme")
         );
     });
 
@@ -308,10 +307,11 @@
 
   // NAMED FUNCTIONS
   function handleMarkerClick(markerdata) {
+    var data = filter(rawdata, {key: "country", value: markerdata.name});
     dispatch.call(
       "statechange",
       this,
-      nest(rawdata,"theme",{key: "country", value: markerdata.name})
+      nest(data,"theme")
     );
   }
 
@@ -322,27 +322,21 @@
 
   // generic dispatch call
   function update(data, theme, key, value) {
+    var filtered = filter(data, {key: key, value: value});
     dispatch.call(
       "statechange",
       this,
-      nest(data,theme,{key: key, value: value})
+      nest(filtered,theme)
     );
   }
 
   // dispatch call from current data, to facilitate chaining filters
   function update_current(key, value) {
-    // get currently displayed data
+    // get the data as currently displayed
     var data = d3.select("svg").selectAll("g.row").data();
 
-//     data = _.filter(data, function(d) {
-//       _.filter(d.values, function(e){
-//         _.filter(e.values, function(f) {
-//           console.log(f["strength"]);
-//           return f[key] === value;
-//         })
-//       })
-//     })
-// console.log(data);
+    // check all filters 
+
 
     dispatch.call(
       "statechange",
@@ -353,19 +347,23 @@
 
   // nest our data on selected field, then either "plus" or "minus",
   //   depending on value of "valence"
-  // optionally pass a filter object in the form of 
-  //   {key: "fieldname to filter", value: "value to match"}
-  function nest(data,field,filter) {
-    if (filter) {
-      data = data.filter(function(d) {
-        // country requires more permissive filtering (match one country in a list)
-        return filter.key == "country" ? d["country"].indexOf(filter.value) > -1  : d[filter.key] == filter.value
-      })
-    }
-
+  function nest(data,field) { 
     return d3.nest()
         .key(function(d) { return d[field] })
         .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
         .entries(data);
   
   } // nest
+
+
+  // Filter data based on a filter object in the form of 
+  //   {key: "fieldname to filter", value: "value to match"}
+  function filter(data, filter) {
+      var filtered = data.filter(function(d) {
+        // country requires more permissive filtering (match one country in a list)
+        return filter.key == "country" ? d["country"].indexOf(filter.value) > -1  : d[filter.key] == filter.value
+      });
+      return filtered;
+  }
+
+
