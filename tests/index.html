@@ -41,6 +41,10 @@
       <option value="" disabled selected>Select a country</option>
     </select>
 
+    <svg class="top"></svg>
+    <div id="map"></div>
+    <svg class="bottom"></svg>
+
   </div>
 
   <script>
@@ -50,6 +54,11 @@
   // data variables
   var rawdata;
   var countrylist;
+  
+  // map
+  var MAP;
+  var MIN_ZOOM = 2;
+  var MAX_ZOOM = 18;
 
   // row heights and widths, rectangle withs
   var rowh = 55;
@@ -57,7 +66,7 @@
   var rectw = 20;
 
   // register events to emit & listen for via d3 dispatch
-  var dispatch = d3.dispatch("load", "statechange");
+  var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
   // get data and a callback when download is complete
   d3.queue()
@@ -68,28 +77,34 @@
   function main(error, countries, data) {
     if (error) throw error;
     
-    // parse country data
-    countries = countries.map(function(d) {
-      return {
-        lat: +d.latitude,
-        lon: +d.longitude,
-        abrev: d.country,
-        count: 0,
-        name: d.name
-      }
+    // parse country data, and add a count field, for use in Leaflet
+    var countries_keyed = _.keyBy(countries, o => o.name);
+    _.mapValues(countries_keyed, function(val) {
+      val.count = 0;
     });
     
-    // data setup
-    var countries = [];
+    // parse raw data
     data.forEach(function(d) {
       // transform string valence into intenger
       d.valence = +d.valence;
-      // generate list of countries present in data
+    });
+
+    // get a count of countries in the data, and save to countries_keyed
+    data.forEach(function(d) {
+      // skip bad matches 
+      if (countries_keyed[d.country] === undefined) return;
+      countries_keyed[d.country]["count"] = countries_keyed[d.country]["count"] += 1;
+    });
+
+    // generate list of countries present in data
+    var countries = [];
+    data.forEach(function(d) {
       // d.country can be a list of countries, so check for that, and split if so
       var country = d.country;
       country = country.indexOf(",") ? country.split(",") : [country];
       countries = _.union(countries, country.map(function(c) { return c.trim() }));
     });
+    // sort, remove duplicates, then create the country select options
     countries = _.without(_.uniq(countries.sort()), "");
     countries.forEach(function(country) {
       d3.select("select#country")
@@ -98,7 +113,7 @@
         .attr("value",country.trim())
     });
     
-    // keep a global references to raw data
+    // keep global references to raw data
     rawdata = data;
     countrylist = countries;
 
@@ -110,10 +125,10 @@
     var map = d3.map(nested, function(d) { return d.key; });
 
     // call our dispatch events with `this` context, and corresponding data
-    dispatch.call("load", this, map);
-    
     // TO DO: what version of data gets dispatched?
     // How to attach buttons? Other controls?
+    dispatch.call("load", this, map);
+    dispatch.call("leaflet", this, countries_keyed);
     dispatch.call("statechange", this, nested);
 
   }
@@ -158,16 +173,72 @@
 
   }); // load.menu
 
+  // 
+  // initial map setup after data load
+  //
+  dispatch.on("leaflet", function(countries_keyed) {
+
+    // init the map with some basic settings
+    MAP = L.map('map',{
+      minZoom: MIN_ZOOM,
+      maxZoom: MAX_ZOOM,
+      keyboard: false,
+    });
+    // add a positron basemap, without labels
+    var positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+      attribution: '©OpenStreetMap, ©CartoDB'
+    }).addTo(MAP);
+
+    // then create a tile pane for the labels, and add positron labels to it (only at high zoom)
+    MAP.createPane('labels');
+    MAP.getPane('labels').style.zIndex = 650;
+    MAP.getPane('labels').style.pointerEvents = 'none';
+    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png', {
+      attribution: '©OpenStreetMap, ©CartoDB',
+      pane: 'labels'
+    });
+
+    // add div icons to the map for each distinct country where count > 1 
+    var countries = Object.keys(countries_keyed);
+    var markers = L.featureGroup().addTo(MAP);
+    countries.forEach(function(name){
+      if (countries_keyed[name] === undefined) return;
+      if (countries_keyed[name].count === undefined) return;
+      if (countries_keyed[name].latitude === undefined || countries_keyed[name].longitude === undefined) return;
+      if (countries_keyed[name].count > 0) {
+        var country = countries_keyed[name];
+        var icon = L.divIcon({
+          className: 'country-icon',
+          html: '<span class="icon-text">'+ country.count +'</span>'
+        });
+        var marker = L.marker([country.latitude, country.longitude], {icon: icon}).addTo(markers);
+        marker.data = country;
+        marker.on('click',function(e) { 
+          // console.log(e.target.data);
+          handleMarkerClick(e.target.data); 
+        });
+
+      }
+
+    });
+
+    MAP.fitBounds(markers.getBounds());
+
+
+
+  });
+
+
   // inital chart setup after data load
   dispatch.on("load.chart", function(map) {
     // layout properties
     var margin      = { top: 0, right: 30, bottom: 0, left: 80 };
-    var svgwidth    = 800 - margin.left - margin.right;
+    var svgwidth    = 1200 - margin.left - margin.right;
     var svgheight   = 200; // TO DO: This will vary considerably between upper and lower charts
 
     // INITIAL SVG SETUP
     // create an svg element to hold our chart parts
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("svg.top")
       .attr("width", svgwidth)
       .attr("height", svgheight)
       .append("g")
@@ -231,7 +302,7 @@
 
       // update existing ones left over
       charts.attr("class", "chart")
-        .attr("transform", function(d) {
+        .attr("transform", function(d, i) {
           return "translate(-20," + ((i * grph) + 10) + ")"
         });
 
@@ -283,6 +354,15 @@
 
   }); // load.chart
 
+
+  // NAMED FUNCTIONS
+  function handleMarkerClick(markerdata) {
+    dispatch.call(
+      "statechange",
+      this,
+      nest(rawdata,"theme",{key: "country", value: markerdata.name})
+    );
+  }
 
 
 
