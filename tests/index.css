@@ -62,6 +62,14 @@ div.country-icon:hover {
   opacity:1;
 }
 
+div.country-icon:focus {
+  border:2px dotted #ff006e;
+  opacity: 1;
+  background: #0a75ef;
+  width: 20px !important; height: 20px !important;
+}
+
+
 span.icon-text {
   display:block;
   margin:0 auto;
