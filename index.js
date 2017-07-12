@@ -39,9 +39,13 @@
 
     // get a count of countries in the data, and save to countries_keyed
     data.forEach(function(d) {
-      // skip bad matches 
-      if (countries_keyed[d.country] === undefined) return;
-      countries_keyed[d.country]["count"] = countries_keyed[d.country]["count"] += 1;
+      var names = d.country.indexOf(",") ? d.country.split(",") : [d.country];
+      names.forEach(function(name){
+        // trim whitespace, and skip bad matches 
+        name = name.trim();
+        if (countries_keyed[name] === undefined) return;
+        countries_keyed[name]["count"] = countries_keyed[name]["count"] += 1;
+      });  
     });
 
     // generate list of countries present in data
@@ -186,7 +190,6 @@
         var marker = L.marker([country.latitude, country.longitude], {icon: icon}).addTo(markers);
         marker.data = country;
         marker.on('click',function(e) { 
-          // console.log(e.target.data);
           handleMarkerClick(e.target.data); 
         });
       }
@@ -333,8 +336,6 @@
     );
   }
 
-
-
   // UTILITY FUNCTIONS
 
   // additively apply a filter to rawdata
@@ -342,15 +343,11 @@
     // get the current filters
     var country = d3.select("select#country").node().value; 
     var strength = d3.select("select#strength").node().value; 
-console.log(country);
-console.log(strength);
-    // apply filters to the raw data
-    var data = country ? rawdata.filter(function(d) { return d.country == country }) : rawdata;
-    data = strength ? data.filter(function(d){ return d.strength == strength}) : data;
-
+    // apply filters to the raw data, and feed that result filter again
+    var data = country ? filter(rawdata, {key: "country", value: country}) : rawdata;
+    data = strength ? filter(data, {key: "strength", value: strength}) : data;
     return data;
   }
-
 
   // generic dispatch call
   function update(data, theme, key, value) {
@@ -361,19 +358,6 @@ console.log(strength);
       nest(filtered,theme)
     );
   }
-
-  // dispatch call from current data, to facilitate chaining filters
-  function update_current(key, value) {
-    // get the data as currently displayed
-    var data = d3.select("svg").selectAll("g.row").data();
-
-    // check all filters 
-    dispatch.call(
-      "statechange",
-      this,
-      data
-    );
-  }  
 
   // nest our data on selected field, then either "plus" or "minus",
   //   depending on value of "valence"
@@ -391,7 +375,13 @@ console.log(strength);
   function filter(data, filter) {
       var filtered = data.filter(function(d) {
         // country requires more permissive filtering (match one country in a list)
-        return filter.key == "country" ? d["country"].indexOf(filter.value) > -1  : d[filter.key] == filter.value
+        var match;
+        if (filter.key == "country") {
+          match = d["country"].indexOf(filter.value) > -1; 
+        } else {
+          match = (d[filter.key] == filter.value);
+        }
+        return match;
       });
       return filtered;
   }
