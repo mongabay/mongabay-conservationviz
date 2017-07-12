@@ -1,8 +1,7 @@
   // global declarations
 
   // data variables
-  var rawdata;
-  var countrylist;
+  var rawdata, countrylist, strengthlist;
   
   // map
   var MAP;
@@ -53,7 +52,7 @@
       country = country.indexOf(",") ? country.split(",") : [country];
       countries = _.union(countries, country.map(function(c) { return c.trim() }));
     });
-    // sort, remove duplicates, then create the country select options
+    // sort, remove duplicates, remove blanks, and then generate select options
     countries = _.without(_.uniq(countries.sort()), "");
     countries.forEach(function(country) {
       d3.select("select#country")
@@ -62,9 +61,24 @@
         .attr("value",country.trim())
     });
     
+    // generate list of strengths present in the data
+    var strengths = [];
+    data.forEach(function(d) {
+      strengths.push(d.strength.trim());
+    });
+    // sort and remove duplicates, then generate select options
+    strengths = _.without(_.uniq(strengths.sort()), "");
+    strengths.forEach(function(strength) {
+      d3.select("select#strength")
+        .append("option")
+        .text(strength)
+        .attr("value",strength.trim())
+    });
+
     // keep global references to raw data
     rawdata = data;
     countrylist = countries;
+    strengthlist = strengths;
 
     // nest the data based on a given attribute
     var nested = nest(data,"theme");
@@ -82,21 +96,13 @@
 
   }
 
-  // register a listener for "load" and create a dropdown / select elem
-  // TO DO: this is quite different from the CH example,
-  // for now simply ignoring "map" and loading the global countries array
-  dispatch.on("load.menu", function(countries) {
-    // add listener to select#country that calls "statechange"
-    var select = d3.select("select#country")
-      .on("change", function() {
-        // filter data for the selected country option
-        var data = filter(rawdata,{key: "country", value: this.value});
-        dispatch.call(
-          "statechange",
-          this,
-          nest(data,"theme")
-        );
-    });
+  // register a listener for "load" and create dropdowns for various fiters
+  dispatch.on("load.menus", function(countries) {
+    
+    // 
+    // COUNTRY FILTER
+    // 
+    var select = d3.select("select#country");
 
     // append options to select dropdown
     select.selectAll("option")
@@ -105,19 +111,35 @@
         .attr("value", function(d) { return d; })
         .text(function(d) { return d; });
 
-    // set the current dropdown option to value of last statechange
-    // ## TA TODO we don't actually want to trigger change yet on this
-    //     dont think this is relevant  at the moment
-    // dispatch.on("statechange.menu", function(site) {
-    //   debugger;
-    //   select.property("value", site.key);
-    // });
+    // hack: style the dropdowns using Select2, then show
+    $("select#country").select2({
+      placeholder: "Select a country",
+      minimumResultsForSearch: Infinity,
+      allowClear: true
+    }).show();
 
-    // hack: style the dropdown using Select2, then show
-    // $("select#country").select2({
-    //   placeholder: "Select a country",
-    //   minimumResultsForSearch: Infinity
-    // }).show();
+    // 
+    // STRENGTH FILTER
+    // 
+    var select = d3.select("select#strength");
+
+    // append options to select dropdown
+    select.selectAll("option")
+        .data(strengthlist)
+      .enter().append("option")
+        .attr("value", function(d) { return d; })
+        .text(function(d) { return d; });
+
+    // hack: style the dropdowns using Select2, then show
+    $("select#strength").select2({
+      placeholder: "Select a strength",
+      minimumResultsForSearch: Infinity,
+      allowClear: true
+    }).show();
+
+    // and use event delegation to listen for changes
+    delegate_event("select#strength")
+    delegate_event("select#country","country");
 
   }); // load.menu
 
@@ -146,10 +168,12 @@
       pane: 'labels'
     });
 
-    // add div icons to the map for each distinct country where count > 1 
+    // add div icons to the map for each distinct country where count > 1
+    // count is the number of studies in that country in the raw data 
     var countries = Object.keys(countries_keyed);
     var markers = L.featureGroup().addTo(MAP);
     countries.forEach(function(name){
+      // skip countries that don't have matching name, counts, lat/lngs, etc.
       if (countries_keyed[name] === undefined) return;
       if (countries_keyed[name].count === undefined) return;
       if (countries_keyed[name].latitude === undefined || countries_keyed[name].longitude === undefined) return;
@@ -165,16 +189,10 @@
           // console.log(e.target.data);
           handleMarkerClick(e.target.data); 
         });
-
       }
-
     });
-
     MAP.fitBounds(markers.getBounds());
-
-
-
-  });
+  }); // leaflet
 
 
   // inital chart setup after data load
@@ -319,6 +337,20 @@
 
   // UTILITY FUNCTIONS
 
+  // additively apply a filter to rawdata
+  function apply_filter() {
+    // get the current filters
+    var country = d3.select("select#country").node().value; 
+    var strength = d3.select("select#strength").node().value; 
+console.log(country);
+console.log(strength);
+    // apply filters to the raw data
+    var data = country ? rawdata.filter(function(d) { return d.country == country }) : rawdata;
+    data = strength ? data.filter(function(d){ return d.strength == strength}) : data;
+
+    return data;
+  }
+
 
   // generic dispatch call
   function update(data, theme, key, value) {
@@ -336,8 +368,6 @@
     var data = d3.select("svg").selectAll("g.row").data();
 
     // check all filters 
-
-
     dispatch.call(
       "statechange",
       this,
@@ -366,4 +396,17 @@
       return filtered;
   }
 
+  function delegate_event(elem) {
+    // use event delegation to dispatch change function from select2 options
+    $("body").on("change", elem, function() {
+        // filter data for the selected country option
+        var data = apply_filter();
+        dispatch.call(
+          "statechange",
+          this,
+          nest(data,"theme")
+        );
+    });
+    
 
+  }

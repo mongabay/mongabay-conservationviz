@@ -33,11 +33,22 @@
   <div style="margin:1em;">
     <!-- <button onClick="draw(nest(rawdata,'variable'))">Switch to data by variable</button> -->
     <!-- <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button> -->
-    <button style="margin-right:4px;" onClick="update(rawdata,'theme','strength','Direct correlation')">Filter by strength</button>
+    <!-- <button style="margin-right:4px;" onClick="update(rawdata,'theme','strength','Direct correlation')">Filter by strength</button> -->
 
-    <select id="country" required>
-      <option value="" disabled selected>Select a country</option>
+    <!-- country filter -->
+    <select id="country">
+      <option></option>
     </select>
+
+    <!-- strength filter -->
+    <select id="strength">
+      <option></option>
+    </select>
+
+    <!-- sort options -->
+    <!-- <select id="sort">
+      <option></option>
+    </select> -->
 
     <svg class="top"></svg>
     <div id="map"></div>
