@@ -53,8 +53,7 @@
 
   // row heights and widths, rectangle withs
   var rowh = 55;
-  var subh = 20;
-  var subw = 300;
+  var grph = 20;
   var rectw = 20;
 
   // register events to emit & listen for via d3 dispatch
@@ -162,34 +161,18 @@
   // inital chart setup after data load
   dispatch.on("load.chart", function(map) {
     // layout properties
-    var margin = { top: 0, right: 30, bottom: 0, left: 80 };
-    var width = 1200 - margin.left - margin.right;
-    var innerHeight = 40;
-    var height = 200; // TO DO: This will vary considerably between upper and lower charts
-
-    // 
-    // INNER SCALES AND AXES
-    //
-    var yScaleInner = d3.scalePoint().padding(0.5); // ordinal scale for Y, these are simply category labels
-
-    // set up yScaleInner, 
-    yScaleInner
-      .range([0, innerHeight])
-      .domain(["plus", "minus"]);
-
-    // d3.v4 method of setting up axes: axisLeft, axisBottom, etc.
-    var yAxisInner = d3.axisLeft()
-      .scale(yScaleInner);
+    var margin      = { top: 0, right: 30, bottom: 0, left: 80 };
+    var svgwidth    = 800 - margin.left - margin.right;
+    var svgheight   = 200; // TO DO: This will vary considerably between upper and lower charts
 
     // INITIAL SVG SETUP
     // create an svg element to hold our chart parts
     var svg = d3.select("body").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", svgwidth)
+      .attr("height", svgheight)
       .append("g")
         .attr("transform", "translate(" + margin.left + ",0)")
         .attr("class","outergroup")
-
 
     // define a transition, will occur over 750 milliseconds
     var tfast = svg.transition().duration(750);
@@ -200,28 +183,13 @@
 
       console.log("statechange data: ", data);
 
-      // update our yScaleInner
-      // NOTE: we don't really change range for either, always showing single units of n by n dims
-      // yScaleInner.domain(data.values.map(function(d) { return d.key; }).sort());
-      // yAxisInner.scale(yScaleInner);
-      // t.select("g.y.axis").call(yAxis); // this helps show whats happening, but not needed
-
       // bind our new piece of data to our svg element
       // could also do `svg.data([data.values]);`
       svg.datum(data);  
 
-      // OUTER AXES
-      // append svg groups for the y-axis
-      // var y = svg.selectAll(".y")
-      //   .data([true]);
-
-      // y.enter()
-      //   .append("g")
-      //   .attr("class", "y axis")
-      //   .call(yAxisOuter);
-
-      // y.exit().remove();
-
+      // 
+      // ROWS
+      //
       // create svg groups for each data grouping (the top level of nest())
       var rows = svg.selectAll("g.row")
         .data(function(d) {return d}, function(d) {return d.key});
@@ -243,11 +211,14 @@
           return "translate(50," + rowh * i + ")"
         })
 
+      // append label
       rowenter.append("text")
           .text(function(d) {return d.key})
           .attr("transform", "translate(-90,35)");
 
-
+      //
+      // CHART GROUPS
+      //
       // tell d3 we want svg groups for each of our chart categories
       // there are currently only two: plus and minus
       // same select-again issue as below?  appears to be so
@@ -261,21 +232,24 @@
       // update existing ones left over
       charts.attr("class", "chart")
         .attr("transform", function(d) {
-          return "translate(-20," + yScaleInner(d.key) + ")"
+          return "translate(-20," + ((i * grph) + 10) + ")"
         });
 
       // create new ones if our updated dataset has more then the previous
       charts.enter().append("g")
         .attr("class", "chart")
-        .attr("transform", function(d) {
-          return "translate(-20," + yScaleInner(d.key) + ")"
+        .attr("class","chart")
+        .attr("transform", function(d, i) {
+          return "translate(-20," + ((i * grph) + 10) + ")"
         });
 
       // reselect the chart groups, so that we get any new ones that were made
       // our previous selection would not contain them
       charts = rows.selectAll("g.chart");
 
+      //
       // SQUARES: bind data
+      //
       var squares = charts.selectAll("rect")
         .data(function(d) { return d.values; }, function(d) {return d.zb_id});
 
@@ -289,7 +263,10 @@
       squares
         .style("fill-opacity", 1)
         .transition(tfast)
-          .attr("x",function(d, i) { return i * rectw});
+          .attr("x",function(d, i) {
+            var x = i * rectw;  
+            return i * rectw
+          });
 
       // make new squares
       squares.enter().append("rect")
@@ -298,7 +275,9 @@
         .classed("minus",function(d) { return d.valence < 0 })
         .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false})
         .transition(tfast)
-          .attr("x",function(d, i) { return i * rectw});
+          .attr("x",function(d, i) { 
+            return i * rectw
+          });
 
     }); // statechange.chart
 
@@ -310,7 +289,6 @@
   // UTILITY FUNCTIONS
 
   // generic dispatch call
-
   function update(data, theme, key, value) {
     dispatch.call(
       "statechange",
@@ -318,6 +296,28 @@
       nest(data,theme,{key: key, value: value})
     );
   }
+
+  // dispatch call from current data, to facilitate chaining filters
+  function update_current(key, value) {
+    // get currently displayed data
+    var data = d3.select("svg").selectAll("g.row").data();
+
+//     data = _.filter(data, function(d) {
+//       _.filter(d.values, function(e){
+//         _.filter(e.values, function(f) {
+//           console.log(f["strength"]);
+//           return f[key] === value;
+//         })
+//       })
+//     })
+// console.log(data);
+
+    dispatch.call(
+      "statechange",
+      this,
+      data
+    );
+  }  
 
   // nest our data on selected field, then either "plus" or "minus",
   //   depending on value of "valence"
