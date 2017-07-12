@@ -1,78 +1,74 @@
-/*index.css*/
 
+body {margin:0; padding: 0; font-size:14px; font-family: 'Roboto', sans-serif;}
 
-table.summary {
-  
+svg {
+  box-shadow:none;
+  background:#fff;
 }
 
-table.main {
+svg g {
+  opacity: 1;
 }
 
-table td {
-  padding:5px;
-}
-
-td.chart span {
-  transition: visibility 0s linear 300ms;
-  display:inline-block;
+rect {
   width:19px; height: 19px;
-  margin:1px;
+  fill: cornflowerblue;
 }
 
-td.chart span.invisible {
-  visibility: hidden;
+rect.plus {
+  fill: #309223;
+}
+rect.neutral {
+  fill: #FACB57;
+}
+rect.minus {
+  fill: #D7067C;
+}
+rect.weak {
+  opacity: 0.5;
 }
 
-td.chart span.plus {
-  background: #309223;
+button {
+  color: #999;
+  height:28px; 
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border: 1px solid #aaa;
+  /*position:relative; top:1px;*/
 }
 
-td.chart span.minus {
-  background: #D7067C;
+button:hover {
+  color: #333;
+  background: #edeaea;
+  cursor:pointer;
 }
 
-td.chart span.neutral {
-  background: #FACB57;
-}
-
-td.chart div.minus-div, td.chart div.plus-div {
-  line-height: 4px;
-}
-
-td.chart div.plus-div {
-  margin-bottom: 3px;
-}
-
-table {table-layout: fixed;}
-table td:first-child {max-width:200px;}
-
-/*.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}*/
-
-/*the map*/
+/* the map */
 div#map {
     width: 100%;
     /* height will be set dynamically with a resize on load*/
     height: 500px; 
 }
 
-/*d3 tooltips on the chart*/
-div.tooltip {
-  background: rgba(255,255,255,0.75);
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
-  padding: 4px;
-  position: absolute;
-  z-index: 10;
-}
-
 div.country-icon {
   width: 19px !important; height: 19px !important;
   background: #0b1ff0;
   border: none;
+  opacity:0.7;
 }
+
+div.country-icon:hover {
+  opacity:1;
+}
+
+div.country-icon:focus {
+  border:2px dotted #ff006e;
+  opacity: 1;
+  background: #0a75ef;
+  width: 20px !important; height: 20px !important;
+}
+
 
 span.icon-text {
   display:block;
@@ -81,4 +77,47 @@ span.icon-text {
   color:#fff;
 }
 
+/* hide initially while loading to avoid FOUC */
+/*select#country {
+  display:none;
+}
+*/
+
+/*SELECT2 STYLES AND OVERRIDES*/
+
+span.select2-container:hover span.select2-selection__placeholder {
+  color:#333 !important;
+}
+
+.select2-dropdown {
+  z-index: 19001;
+}
+
+
+.select2-selection--multiple, .select2-selection--single {
+    border-radius: 0 !important;
+}
+
+select:disabled, input:disabled { 
+    cursor:not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--multiple {
+    cursor:not-allowed; background:#e2e2e2;
+}
+
+input.select2-search__field:disabled { 
+    cursor:not-allowed;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder, .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-results__option {
+    font-size: 12px;
+}
+
+.select2-selection__rendered {
+  font-size: 12px;
+}
+
+.select2-container .select2-selection--single {
+    height: 31px;
 }
