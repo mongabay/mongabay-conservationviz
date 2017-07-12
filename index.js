@@ -271,7 +271,9 @@
       // SQUARES: bind data
       //
       var squares = charts.selectAll("rect")
-        .data(function(d) { return d.values; }, function(d) {return d.zb_id});
+        .data(function(d) { return _.sortBy(d.values,"valence","strength") }, function(d) {return d.zb_id});
+
+
 
       // get rid of ones we don't need anymore, fade them out
       squares.exit()
@@ -316,6 +318,7 @@
 
 
   // UTILITY FUNCTIONS
+
 
   // generic dispatch call
   function update(data, theme, key, value) {
