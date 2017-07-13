@@ -145,9 +145,9 @@ dispatch.on("load.menus", function(countries) {
   });
 
   // and use event delegation to listen for changes
-  delegate_event("select#country", nest(apply_filters(),"theme"));
-  delegate_event("select#strength", nest(apply_filters(),"theme"));
-  delegate_event("select#sort", _.sortBy(d3.selectAll("g.row").data(),"minuscount"));
+  delegate_event("select#country");
+  delegate_event("select#strength");
+  delegate_event("select#sort");
 
   // SORT OPTIONS
 
@@ -410,12 +410,19 @@ function filter(data, filter) {
     return filtered;
 }
 
-function delegate_event(elem, data) {
+function delegate_event(elem) {
   // use event delegation to dispatch change function from select2 options
   $("body").on("change", elem, function() {
-    dispatch.call("statechange",this,data);
+      // apply all filters
+      var data = apply_filters();
+      dispatch.call(
+        "statechange",
+        this,
+        nest(data,"theme")
+      );
   });
 }
+
 
 // calculate row offsets given length of chart arrays and overflow
 function calcRowOffsets(data,width) {
