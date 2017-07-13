@@ -135,15 +135,22 @@ dispatch.on("load.menus", function(countries) {
       .text(function(d) { return d; });
 
   // hack: style the dropdowns using Select2, then show
-  $("select#strength").select2({
-    placeholder: "Select a strength",
-    minimumResultsForSearch: Infinity,
-    allowClear: true
-  }).show();
+  $("select").each(function() {
+    var select = $(this);
+    select.select2({
+      placeholder: select.attr("placeholder"),
+      minimumResultsForSearch: Infinity,
+      allowClear: true
+    }).show();
+  });
 
   // and use event delegation to listen for changes
-  delegate_event("select#strength")
-  delegate_event("select#country","country");
+  delegate_event("select#country", nest(apply_filters(),"theme"));
+  delegate_event("select#strength", nest(apply_filters(),"theme"));
+  delegate_event("select#sort", _.sortBy(d3.selectAll("g.row").data(),"minuscount"));
+
+  // SORT OPTIONS
+
 
 }); // load.menu
 
@@ -204,7 +211,8 @@ dispatch.on("load.chart", function(map) {
   var margin      = { top: 0, right: 30, bottom: 0, left: 40 };
   var svgwidth    = 700 - margin.left;
   var svgwidthscaled = svgwidth - 70; // TO DO, why are <g>s bigger than SVG?
-  var svgheight   = 200; // TO DO: This will vary considerably between upper and lower charts
+  var svgheight   = 230; // TO DO: This will vary considerably between upper and lower charts
+                         // and needs to be updated depending on content
 
   // INITIAL SVG SETUP
   // create an svg element to hold our chart parts
@@ -353,11 +361,13 @@ function handleMarkerClick(markerdata) {
 
 // UTILITY FUNCTIONS
 
-// additively apply a filter to rawdata
-function apply_filter() {
+// additively apply filters to rawdata
+function apply_filters() {
   // get the current filters
   var country = d3.select("select#country").node().value; 
   var strength = d3.select("select#strength").node().value; 
+  var sort = d3.select("select#sort").node().value;
+
   // apply filters to the raw data, and feed that result filter again
   var data = country ? filter(rawdata, {key: "country", value: country}) : rawdata;
   data = strength ? filter(data, {key: "strength", value: strength}) : data;
@@ -381,7 +391,6 @@ function nest(data,field) {
       .key(function(d) { return d[field] })
       .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
       .entries(data);
-
 } // nest
 
 
@@ -401,19 +410,12 @@ function filter(data, filter) {
     return filtered;
 }
 
-function delegate_event(elem) {
+function delegate_event(elem, data) {
   // use event delegation to dispatch change function from select2 options
   $("body").on("change", elem, function() {
-      // filter data for the selected country option
-      var data = apply_filter();
-      dispatch.call(
-        "statechange",
-        this,
-        nest(data,"theme")
-      );
+    dispatch.call("statechange",this,data);
   });
 }
-
 
 // calculate row offsets given length of chart arrays and overflow
 function calcRowOffsets(data,width) {
@@ -432,6 +434,11 @@ function calcRowOffsets(data,width) {
     var totalrows = plusrows + minusrows;
     // and calc the offset: "extra" rows times the height of one square
     nextoffset = nextoffset + (totalrows - 2) * rectw;
+
+    // while we're here, add plus/minus counts at this level to facilitate sorting
+    d["pluscount"] = plus;
+    d["minuscount"] = minus;
+
   });
 }
 
