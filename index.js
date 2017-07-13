@@ -201,8 +201,9 @@ dispatch.on("leaflet", function(countries_keyed) {
 // inital chart setup after data load
 dispatch.on("load.chart", function(map) {
   // layout properties
-  var margin      = { top: 0, right: 30, bottom: 0, left: 80 };
-  var svgwidth    = 1200 - margin.left - margin.right;
+  var margin      = { top: 0, right: 30, bottom: 0, left: 40 };
+  var svgwidth    = 700 - margin.left;
+  var svgwidthscaled = svgwidth - 70; // TO DO, why are <g>s bigger than SVG?
   var svgheight   = 200; // TO DO: This will vary considerably between upper and lower charts
 
   // INITIAL SVG SETUP
@@ -232,7 +233,11 @@ dispatch.on("load.chart", function(map) {
     //
     // create svg groups for each data grouping (the top level of nest())
     var rows = svg.selectAll("g.row")
-      .data(function(d) {return d}, function(d) {return d.key});
+      .data(function(d,i) {
+        // calculate the origin of the next row, given this row's height 
+        calcRowOffsets(d,svgwidthscaled);
+        return d;
+      }, function(d) {return d.key});
 
     // remove old rows
     rows.exit().remove();
@@ -240,16 +245,18 @@ dispatch.on("load.chart", function(map) {
     // update existing ones left over
     rows.attr("class", "row")
       .transition(tfast)
-      .attr("transform", function(d, i) {
-        return "translate(50," + rowh * i + ")"
+      .attr("transform", function(d,i) {
+        var offset = ("offset" in d) ? d["offset"] : 0;
+        return "translate(50," + ((rowh * i) + offset) + ")"
       });
 
     // create new rows if our updated dataset has more then the previous
     var rowenter = rows.enter().append("g")
       .attr("class", "row")
-      .attr("transform", function(d, i) {
-        return "translate(50," + rowh * i + ")"
-      })
+      .attr("transform", function(d,i) {
+        var offset = ("offset" in d) ? d["offset"] : 0;
+        return "translate(50," + ((rowh * i) + offset) + ")"
+      });
 
     // append label
     rowenter.append("text")
@@ -264,7 +271,7 @@ dispatch.on("load.chart", function(map) {
     // same select-again issue as below?  appears to be so
     var rows = svg.selectAll("g.row")
     var charts = rows.selectAll("g.chart")
-      .data(function(d) { return d.values; }, function(d) {return d.key});
+      .data(function(d) { calcChartOffsets(d,svgwidthscaled); return d.values; }, function(d) {return d.key});
 
     // get rid of the old ones we don't need when doing an update
     charts.exit().remove();
@@ -272,15 +279,16 @@ dispatch.on("load.chart", function(map) {
     // update existing ones left over
     charts.attr("class", "chart")
       .attr("transform", function(d, i) {
-        return "translate(-20," + ((i * grph) + 10) + ")"
+        var offset = ("offset" in d) ? d["offset"] : 0;
+        return "translate(-20," + ((i * grph) + 10 + offset) + ")"
       });
 
     // create new ones if our updated dataset has more then the previous
     charts.enter().append("g")
-      .attr("class", "chart")
       .attr("class","chart")
       .attr("transform", function(d, i) {
-        return "translate(-20," + ((i * grph) + 10) + ")"
+        var offset = ("offset" in d) ? d["offset"] : 0;
+        return "translate(-20," + ((i * grph) + 10 + offset) + ")"
       });
 
     // reselect the chart groups, so that we get any new ones that were made
@@ -293,8 +301,6 @@ dispatch.on("load.chart", function(map) {
     var squares = charts.selectAll("rect")
       .data(function(d) { return _.sortBy(d.values,"valence","strength") }, function(d) {return d.zb_id});
 
-
-
     // get rid of ones we don't need anymore, fade them out
     squares.exit()
       .transition(tslow)
@@ -305,9 +311,13 @@ dispatch.on("load.chart", function(map) {
     squares
       .style("fill-opacity", 1)
       .transition(tfast)
-        .attr("x",function(d, i) {
-          var x = i * rectw;  
-          return i * rectw
+        .attr("x",function(d,i) {
+          var x = calcx(i,svgwidthscaled); 
+          return x * rectw;
+        })
+        .attr("y", function(d,i) {
+          var y = calcy(i,svgwidthscaled);
+          return y;
         });
 
     // make new squares
@@ -317,8 +327,13 @@ dispatch.on("load.chart", function(map) {
       .classed("minus",function(d) { return d.valence < 0 })
       .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false})
       .transition(tfast)
-        .attr("x",function(d, i) { 
-          return i * rectw
+        .attr("x",function(d,i) {
+          var x = calcx(i,svgwidthscaled); 
+          return x * rectw;
+        })
+        .attr("y", function(d,i) {
+          var y = calcy(i,svgwidthscaled);
+          return y;
         });
 
   }); // statechange.chart
@@ -397,5 +412,55 @@ function delegate_event(elem) {
         nest(data,"theme")
       );
   });
-  
+}
+
+
+// calculate row offsets given length of chart arrays and overflow
+function calcRowOffsets(data,width) {
+  var nextoffset = 0; 
+  data.forEach(function(d) {
+    // set this one
+    d["offset"] = nextoffset;
+
+    // calc the next one:
+    // first get count of chart objects
+    var plus = 0 in d.values ? d.values[0].values.length : 0;
+    var minus = 1 in d.values ? d.values[1].values.length : 0;
+    // figure out how many rows this takes
+    var plusrows  = Math.ceil((plus * rectw) / width);
+    var minusrows = Math.ceil((minus * rectw) / width);
+    var totalrows = plusrows + minusrows;
+    // and calc the offset: "extra" rows times the height of one square
+    nextoffset = nextoffset + (totalrows - 2) * rectw;
+  });
+}
+
+// calculate chart offsets given length of chart arrays and overflow
+function calcChartOffsets(data,width) {
+  var nextoffset = 0; 
+  data.values.forEach(function(d) {
+    // set this one
+    d["offset"] = nextoffset;
+    // calc the next one:
+    // first get count of chart objects
+    var rows = d.values.length;
+    // figure out how many rows this takes
+    var totalrows = Math.ceil((rows * rectw) / width);
+    // and calc the offset: "extra" rows times the height of one square
+    nextoffset = nextoffset + (totalrows - 1) * rectw;
+  });
+}
+
+// calc x position of rectangles, given container width
+function calcx(i,width) {
+  var number_that_fit = Math.floor(width / rectw);
+  return x = i + 1 > number_that_fit ? i - number_that_fit : i;
+}
+
+function calcy(i,width) {
+  var number_that_fit = Math.floor(width / rectw);
+  var this_row = Math.floor(i / number_that_fit);
+  var y = this_row * rectw;
+  return y;
+
 }
