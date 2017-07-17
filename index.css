@@ -76,11 +76,10 @@ span.icon-text {
   color:#fff;
 }
 
-/* hide initially while loading to avoid FOUC */
-/*select#country {
-  display:none;
+
+div#select-container {
+  width: 100%;
 }
-*/
 
 /*SELECT2 STYLES AND OVERRIDES*/
 

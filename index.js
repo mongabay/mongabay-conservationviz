@@ -362,17 +362,17 @@ function handleMarkerClick(markerdata) {
 // UTILITY FUNCTIONS
 
 // additively apply filters to rawdata
-function apply_filters() {
-  // get the current filters
-  var country = d3.select("select#country").node().value; 
-  var strength = d3.select("select#strength").node().value; 
-  var sort = d3.select("select#sort").node().value;
+// function apply_filters() {
+//   // get the current filters
+//   var country = d3.select("select#country").node().value; 
+//   var strength = d3.select("select#strength").node().value; 
+//   var sort = d3.select("select#sort").node().value;
 
-  // apply filters to the raw data, and feed that result filter again
-  var data = country ? filter(rawdata, {key: "country", value: country}) : rawdata;
-  data = strength ? filter(data, {key: "strength", value: strength}) : data;
-  return data;
-}
+//   // apply filters to the raw data, and feed that result filter again
+//   var data = country ? filter(rawdata, {key: "country", value: country}) : rawdata;
+//   data = strength ? filter(data, {key: "strength", value: strength}) : data;
+//   return data;
+// }
 
 // generic dispatch call
 function update(data, theme, key, value) {
@@ -410,19 +410,55 @@ function filter(data, filter) {
     return filtered;
 }
 
+// function delegate_event(elem) {
+//   // use event delegation to dispatch change function from select2 options
+//   $("body").on("change", elem, function() {
+//       // apply all filters
+//       var data = apply_filters();
+//       dispatch.call(
+//         "statechange",
+//         this,
+//         nest(data,"theme")
+//       );
+//   });
+// }
+
 function delegate_event(elem) {
   // use event delegation to dispatch change function from select2 options
   $("body").on("change", elem, function() {
-      // apply all filters
-      var data = apply_filters();
-      dispatch.call(
-        "statechange",
-        this,
-        nest(data,"theme")
-      );
+    // start with the raw data
+    var data = rawdata;
+
+    // apply country filter, if there is one
+    var countryoption = d3.select("select#country").node().value;
+    if (countryoption) data = filter(data, "country", countryoption);
+
+    // apply strength filter, if there is one
+    var strengthoption = d3.select("select#strength").node().value;
+    if (strengthoption) data = filter(data, "strength", strengthoption);
+
+    // before sorting, nest(), as sorting happens on nested rows, not raw data points
+    var nested = nest(data,"theme");
+
+    // apply a sort field, if there is one
+    var sortoption = d3.select("select#sort").node().value;
+    if (sortoption) nested = sort(nested, sortoption);
+
+    // All done. Dispatch!
+    dispatch.call("statechange",this,nested);
   });
 }
 
+// custom sort data with optional order
+function sort(data, sortoption) {
+  var sortoptions = sortoption.split("#");
+  var sortfield = sortoptions[0]; 
+  var reverse = sortoptions[1];
+
+  var sorted = _.sortBy(data,sortfield);
+  if (typeof reverse != "undefined") sorted = sorted.reverse(); 
+  return sorted;
+}
 
 // calculate row offsets given length of chart arrays and overflow
 function calcRowOffsets(data,width) {
