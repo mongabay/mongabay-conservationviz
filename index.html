@@ -34,31 +34,32 @@
 <body>
 
   <div style="margin:1em;">
-    <!-- <button onClick="draw(nest(rawdata,'variable'))">Switch to data by variable</button> -->
-    <!-- <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button> -->
-    <!-- <button style="margin-right:4px;" onClick="update(rawdata,'theme','strength','Direct correlation')">Filter by strength</button> -->
 
-    <!-- country filter -->
-    <select id="country" placeholder="Select a country">
-      <option></option>
-    </select>
+    <div id="filters" style="width:100%">
+      <!-- country filter -->
+      <select id="country" placeholder="Select a country">
+        <option></option>
+      </select>
 
-    <!-- strength filter -->
-    <select id="strength" placeholder="Select a strength">
-      <option></option>
-    </select>
+      <!-- strength filter -->
+      <select id="strength" placeholder="Select a strength">
+        <option></option>
+      </select>
 
-    <!-- sort options -->
-    <!-- TO DO needs further definition -->
-    <select id="sort" placeholder="Sort by evidence" style="width:121px;">
-      <option></option>
-      <option value="most">Most evidence</option>
-      <option value="least">Least evidence</option>
-    </select>
+      <!-- sort options -->
+      <!-- TO DO needs further definition -->
+      <select id="sort" placeholder="Sort by evidence" style="width:121px;">
+        <option></option>
+        <option value="pluscount#reverse">Most strong evidence</option>
+        <option value="pluscount">Least strong evidence</option>
+        <option value="minuscount#reverse">Least weak evidence</option>
+        <option value="minuscount">Most weak evidence</option>
+      </select>
+    </div>
 
-    <svg class="top"></svg>
+    <div class="top"></div>
     <div id="map"></div>
-    <svg class="bottom"></svg>
+    <div class="bottom"></div>
 
   </div>
 

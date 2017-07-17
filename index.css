@@ -10,20 +10,39 @@ svg g {
   opacity: 1;
 }
 
-rect {
-  width:19px; height: 19px;
+div.top div {
+  opacity: 1;
 }
 
-rect.plus {
-  fill: #309223;
+div.row {
+  clear:both;
 }
-rect.neutral {
-  fill: #FACB57;
+
+div.chart {
+  clear:both;
+  /*TO DO: set width in code;*/
+  width:450px;
+  margin-left:50px; 
 }
-rect.minus {
-  fill: #D7067C;
+
+div.rect {
+  width:19px; height: 19px;
+  /*position:absolute;*/
+  float:left;
+  margin-left:1px;
+  margin-top:1px;
 }
-rect.weak {
+
+div.rect.plus {
+  background: #309223;
+}
+div.rect.neutral {
+  background: #FACB57;
+}
+div.rect.minus {
+  background: #D7067C;
+}
+div.rect.weak {
   opacity: 0.5;
 }
 

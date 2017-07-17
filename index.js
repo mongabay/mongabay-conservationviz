@@ -38,7 +38,9 @@ function main(error, countries, data) {
   });
 
   // get a count of countries in the data, and save to countries_keyed
+  // for display on the map
   data.forEach(function(d) {
+    // d.country can be both a country name, and a list of countries
     var names = d.country.indexOf(",") ? d.country.split(",") : [d.country];
     names.forEach(function(name){
       // trim whitespace, and skip bad matches 
@@ -49,15 +51,19 @@ function main(error, countries, data) {
   });
 
   // generate list of countries present in data
+  // for use in the dropdown
+  // TO DO: why not just use countries_keyed where count > 1 ?
   var countries = [];
-  data.forEach(function(d) {
-    // d.country can be a list of countries, so check for that, and split if so
-    var country = d.country;
-    country = country.indexOf(",") ? country.split(",") : [country];
-    countries = _.union(countries, country.map(function(c) { return c.trim() }));
-  });
-  // sort, remove duplicates, remove blanks, and then generate select options
-  countries = _.without(_.uniq(countries.sort()), "");
+  // data.forEach(function(d) {
+  //   // d.country can be a list of countries, so check for that, and split if so
+  //   var country = d.country;
+  //   country = country.indexOf(",") ? country.split(",") : [country];
+  //   countries = _.union(countries, country.map(function(c) { return c.trim() }));
+  // });
+  // // sort, remove duplicates, remove blanks, and then generate select options
+  // countries = _.without(_.uniq(countries.sort()), "");
+  var keys = Object.keys(countries_keyed);
+  keys.forEach(function(k) { if (countries_keyed[k]["count"] > 0) countries.push(k)  })
   countries.forEach(function(country) {
     d3.select("select#country")
       .append("option")
@@ -144,12 +150,13 @@ dispatch.on("load.menus", function(countries) {
     }).show();
   });
 
+
+  // SORT OPTIONS
+
   // and use event delegation to listen for changes
   delegate_event("select#country");
   delegate_event("select#strength");
   delegate_event("select#sort");
-
-  // SORT OPTIONS
 
 
 }); // load.menu
@@ -216,36 +223,32 @@ dispatch.on("load.chart", function(map) {
 
   // INITIAL SVG SETUP
   // create an svg element to hold our chart parts
-  var svg = d3.select("svg.top")
+  var top = d3.select("div.top")
     .attr("width", svgwidth)
     .attr("height", svgheight)
-    .append("g")
+    .append("div")
       .attr("transform", "translate(" + margin.left + ",0)")
       .attr("class","outergroup")
 
   // define a transition, will occur over 750 milliseconds
-  var tfast = svg.transition().duration(750);
-  var tslow = svg.transition().duration(3850);
+  var tfast = top.transition().duration(750);
+  var tslow = top.transition().duration(3850);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.chart", function(data) {
 
     console.log("statechange data: ", data);
 
-    // bind our new piece of data to our svg element
+    // bind our new piece of data to our top element
     // could also do `svg.data([data.values]);`
-    svg.datum(data);  
+    top.datum(data);  
 
     // 
     // ROWS
     //
     // create svg groups for each data grouping (the top level of nest())
-    var rows = svg.selectAll("g.row")
-      .data(function(d,i) {
-        // calculate the origin of the next row, given this row's height 
-        calcRowOffsets(d,svgwidthscaled);
-        return d;
-      }, function(d) {return d.key});
+    var rows = top.selectAll("div.row")
+      .data(function(d,i) { return d; }, function(d) {return d.key;});
 
     // remove old rows
     rows.exit().remove();
@@ -259,7 +262,7 @@ dispatch.on("load.chart", function(map) {
       });
 
     // create new rows if our updated dataset has more then the previous
-    var rowenter = rows.enter().append("g")
+    var rowenter = rows.enter().append("div")
       .attr("class", "row")
       .attr("transform", function(d,i) {
         var offset = ("offset" in d) ? d["offset"] : 0;
@@ -277,9 +280,9 @@ dispatch.on("load.chart", function(map) {
     // tell d3 we want svg groups for each of our chart categories
     // there are currently only two: plus and minus
     // same select-again issue as below?  appears to be so
-    var rows = svg.selectAll("g.row")
-    var charts = rows.selectAll("g.chart")
-      .data(function(d) { calcChartOffsets(d,svgwidthscaled); return d.values; }, function(d) {return d.key});
+    var rows = top.selectAll("div.row")
+    var charts = rows.selectAll("div.chart")
+      .data(function(d) { return d.values; }, function(d) {return d.key});
 
     // get rid of the old ones we don't need when doing an update
     charts.exit().remove();
@@ -292,7 +295,7 @@ dispatch.on("load.chart", function(map) {
       });
 
     // create new ones if our updated dataset has more then the previous
-    charts.enter().append("g")
+    charts.enter().append("div")
       .attr("class","chart")
       .attr("transform", function(d, i) {
         var offset = ("offset" in d) ? d["offset"] : 0;
@@ -301,17 +304,17 @@ dispatch.on("load.chart", function(map) {
 
     // reselect the chart groups, so that we get any new ones that were made
     // our previous selection would not contain them
-    charts = rows.selectAll("g.chart");
+    charts = rows.selectAll("div.chart");
 
     //
     // SQUARES: bind data
     //
-    var squares = charts.selectAll("rect")
+    var squares = charts.selectAll("div")
       .data(function(d) { return _.sortBy(d.values,"valence","strength") }, function(d) {return d.zb_id});
 
     // get rid of ones we don't need anymore, fade them out
     squares.exit()
-      .transition(tslow)
+      .transition(tfast)
         .style("opacity", 1e-6)
         .remove();
 
@@ -329,7 +332,8 @@ dispatch.on("load.chart", function(map) {
         });
 
     // make new squares
-    squares.enter().append("rect")
+    squares.enter().append("div")
+      .classed("rect","true")
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
@@ -351,7 +355,7 @@ dispatch.on("load.chart", function(map) {
 
 // NAMED FUNCTIONS
 function handleMarkerClick(markerdata) {
-  var data = filter(rawdata, {key: "country", value: markerdata.name});
+  var data = filter(rawdata, "country", markerdata.name);
   dispatch.call(
     "statechange",
     this,
@@ -361,22 +365,9 @@ function handleMarkerClick(markerdata) {
 
 // UTILITY FUNCTIONS
 
-// additively apply filters to rawdata
-function apply_filters() {
-  // get the current filters
-  var country = d3.select("select#country").node().value; 
-  var strength = d3.select("select#strength").node().value; 
-  var sort = d3.select("select#sort").node().value;
-
-  // apply filters to the raw data, and feed that result filter again
-  var data = country ? filter(rawdata, {key: "country", value: country}) : rawdata;
-  data = strength ? filter(data, {key: "strength", value: strength}) : data;
-  return data;
-}
-
 // generic dispatch call
 function update(data, theme, key, value) {
-  var filtered = filter(data, {key: key, value: value});
+  var filtered = filter(data, key, value);
   dispatch.call(
     "statechange",
     this,
@@ -387,23 +378,34 @@ function update(data, theme, key, value) {
 // nest our data on selected field, then either "plus" or "minus",
 //   depending on value of "valence"
 function nest(data,field) { 
-  return d3.nest()
+  var nest = d3.nest()
       .key(function(d) { return d[field] })
       .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
       .entries(data);
+
+  // add some summary counts, used later for sorting
+  nest.forEach(function(n) {
+    // n.values
+    var pluscount   = n.values[0].values.length;
+    var minuscount  = n.values[1].values.length;
+    n["pluscount"]  = pluscount;
+    n["minuscount"] = minuscount;
+  })
+
+  return nest;
 } // nest
 
 
-// Filter data based on a filter object in the form of 
-//   {key: "fieldname to filter", value: "value to match"}
-function filter(data, filter) {
+// Filter data based on a key and a value
+function filter(data, key, value) {
     var filtered = data.filter(function(d) {
-      // country requires more permissive filtering (match one country in a list)
+      // country requires more permissive filtering:
+      // country can be a list, or a single country 
       var match;
-      if (filter.key == "country") {
-        match = d["country"].indexOf(filter.value) > -1; 
+      if (key == "country") {
+        match = d["country"].indexOf(value) > -1; 
       } else {
-        match = (d[filter.key] == filter.value);
+        match = (d[key] == value);
       }
       return match;
     });
@@ -413,57 +415,80 @@ function filter(data, filter) {
 function delegate_event(elem) {
   // use event delegation to dispatch change function from select2 options
   $("body").on("change", elem, function() {
-      // apply all filters
-      var data = apply_filters();
-      dispatch.call(
-        "statechange",
-        this,
-        nest(data,"theme")
-      );
+    // start with the raw data
+    var data = rawdata;
+
+    // apply country filter, if there is one
+    var countryoption = d3.select("select#country").node().value;
+    if (countryoption) data = filter(data, "country", countryoption);
+
+    // apply strength filter, if there is one
+    var strengthoption = d3.select("select#strength").node().value;
+    if (strengthoption) data = filter(data, "strength", strengthoption);
+
+    // before sorting, nest(), as sorting happens on nested rows, not raw data points
+    var nested = nest(data,"theme");
+
+    // apply a sort field, if there is one
+    var sortoption = d3.select("select#sort").node().value;
+    if (sortoption) nested = sort(nested, sortoption);
+
+    // All done. Dispatch!
+    dispatch.call("statechange",this,nested);
   });
 }
 
+// custom sort data with optional
+function sort(data, sortoption) {
+  var sortoptions = sortoption.split("#");
+  var sortfield = sortoptions[0]; 
+  var reverse = sortoptions[1];
 
-// calculate row offsets given length of chart arrays and overflow
-function calcRowOffsets(data,width) {
-  var nextoffset = 0; 
-  data.forEach(function(d) {
-    // set this one
-    d["offset"] = nextoffset;
-
-    // calc the next one:
-    // first get count of chart objects
-    var plus = 0 in d.values ? d.values[0].values.length : 0;
-    var minus = 1 in d.values ? d.values[1].values.length : 0;
-    // figure out how many rows this takes
-    var plusrows  = Math.ceil((plus * rectw) / width);
-    var minusrows = Math.ceil((minus * rectw) / width);
-    var totalrows = plusrows + minusrows;
-    // and calc the offset: "extra" rows times the height of one square
-    nextoffset = nextoffset + (totalrows - 2) * rectw;
-
-    // while we're here, add plus/minus counts at this level to facilitate sorting
-    d["pluscount"] = plus;
-    d["minuscount"] = minus;
-
-  });
+  var sorted = _.sortBy(data,sortfield);
+  if (typeof reverse != "undefined") sorted = sorted.reverse(); 
+  return sorted;
 }
 
-// calculate chart offsets given length of chart arrays and overflow
-function calcChartOffsets(data,width) {
-  var nextoffset = 0; 
-  data.values.forEach(function(d) {
-    // set this one
-    d["offset"] = nextoffset;
-    // calc the next one:
-    // first get count of chart objects
-    var rows = d.values.length;
-    // figure out how many rows this takes
-    var totalrows = Math.ceil((rows * rectw) / width);
-    // and calc the offset: "extra" rows times the height of one square
-    nextoffset = nextoffset + (totalrows - 1) * rectw;
-  });
-}
+// // calculate row offsets given length of chart arrays and overflow
+// function calcRowOffsets(data,width) {
+//   var nextoffset = 0; 
+//   data.forEach(function(d) {
+//     // set this one
+//     d["offset"] = nextoffset;
+
+//     // calc the next one:
+//     // first get count of chart objects
+//     var plus = 0 in d.values ? d.values[0].values.length : 0;
+//     var minus = 1 in d.values ? d.values[1].values.length : 0;
+//     // figure out how many rows this takes
+//     var plusrows  = Math.ceil((plus * rectw) / width);
+//     var minusrows = Math.ceil((minus * rectw) / width);
+//     var totalrows = plusrows + minusrows;
+//     // and calc the offset: "extra" rows times the height of one square
+//     nextoffset = nextoffset + (totalrows - 2) * rectw;
+
+//     // while we're here, add plus/minus counts at this level to facilitate sorting
+//     d["pluscount"] = plus;
+//     d["minuscount"] = minus;
+
+//   });
+// }
+
+// // calculate chart offsets given length of chart arrays and overflow
+// function calcChartOffsets(data,width) {
+//   var nextoffset = 0; 
+//   data.values.forEach(function(d) {
+//     // set this one
+//     d["offset"] = nextoffset;
+//     // calc the next one:
+//     // first get count of chart objects
+//     var rows = d.values.length;
+//     // figure out how many rows this takes
+//     var totalrows = Math.ceil((rows * rectw) / width);
+//     // and calc the offset: "extra" rows times the height of one square
+//     nextoffset = nextoffset + (totalrows - 1) * rectw;
+//   });
+// }
 
 // calc x position of rectangles, given container width
 function calcx(i,width) {
