@@ -1,7 +1,10 @@
 // global declarations
 
 // data variables
-var rawdata, countrylist, strengthlist;
+var rawdata; 
+var strengthlist = [];
+var countrylist  = [];
+var lookup = {};
 
 // map
 var MAP;
@@ -19,10 +22,11 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 // get data and a callback when download is complete
 d3.queue()
     .defer(d3.csv, 'data/countries.csv')
+    .defer(d3.csv, 'data/lookup.csv')
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
-function main(error, countries, data) {
+function main(error, countries, lookups, data) {
   if (error) throw error;
   
   // parse country data, and add a count field, for use in Leaflet
@@ -31,13 +35,18 @@ function main(error, countries, data) {
     val.count = 0;
   });
   
+  // parse lookup list
+  lookups.forEach(function(d) {
+    lookup[d.key] = d;    
+  });
+  
   // parse raw data
   data.forEach(function(d) {
     // transform string valence into intenger
     d.valence = +d.valence;
   });
-
-  // get a count of countries in the data, and save to countries_keyed
+  
+    // get a count of count)ries in the data, and save to countries_keyed
   data.forEach(function(d) {
     var names = d.country.indexOf(",") ? d.country.split(",") : [d.country];
     names.forEach(function(name){
@@ -49,54 +58,38 @@ function main(error, countries, data) {
   });
 
   // generate list of countries present in data
-  var countries = [];
   data.forEach(function(d) {
     // d.country can be a list of countries, so check for that, and split if so
     var country = d.country;
     country = country.indexOf(",") ? country.split(",") : [country];
-    countries = _.union(countries, country.map(function(c) { return c.trim() }));
+    countrylist = _.union(countrylist, country.map(function(c) { return c.trim() }));
   });
   // sort, remove duplicates, remove blanks, and then generate select options
   countries = _.without(_.uniq(countries.sort()), "");
-  countries.forEach(function(country) {
-    d3.select("select#country")
-      .append("option")
-      .text(country)
-      .attr("value",country.trim())
-  });
   
   // generate list of strengths present in the data
-  var strengths = [];
   data.forEach(function(d) {
-    strengths.push(d.strength.trim());
+    strengthlist.push(d.strength.trim());
   });
   // sort and remove duplicates, then generate select options
-  strengths = _.without(_.uniq(strengths.sort()), "");
-  strengths.forEach(function(strength) {
-    d3.select("select#strength")
-      .append("option")
-      .text(strength)
-      .attr("value",strength.trim())
-  });
+  strengthlist = _.without(_.uniq(strengthlist.sort()), "");
 
   // keep global references to raw data
   rawdata = data;
-  countrylist = countries;
-  strengthlist = strengths;
 
   // nest the data based on a given attribute
-  var nested = nest(data,"theme");
+  // var nested = nest(data,"theme");
 
   // construct a new d3 map, not as in geographic map, but more like a "hash"
   // TA Interesting structure, not sure if we'll use it here or not
-  var map = d3.map(nested, function(d) { return d.key; });
+  // var map = d3.map(nested, function(d) { return d.key; });
 
   // call our dispatch events with `this` context, and corresponding data
   // TO DO: what version of data gets dispatched?
   // How to attach buttons? Other controls?
-  dispatch.call("load", this, map);
+  dispatch.call("load", this, data); // why? Is this used?
   dispatch.call("leaflet", this, countries_keyed);
-  dispatch.call("statechange", this, nested);
+  dispatch.call("statechange", this, data);
 
 }
 
@@ -112,27 +105,25 @@ dispatch.on("load.menus", function(countries) {
   select.selectAll("option")
       .data(countrylist)
     .enter().append("option")
-      .attr("value", function(d) { return d; })
-      .text(function(d) { return d; });
-
-  // hack: style the dropdowns using Select2, then show
-  $("select#country").select2({
-    placeholder: "Select a country",
-    minimumResultsForSearch: Infinity,
-    allowClear: true
-  }).show();
+      .attr("value", function(d) { return d.trim(); })
+      .text(function(d) { return d.trim(); });
 
   // 
   // STRENGTH FILTER
   // 
   var select = d3.select("select#strength");
 
-  // append options to select dropdown
+  // append strengthoptions to select dropdown
   select.selectAll("option")
       .data(strengthlist)
     .enter().append("option")
       .attr("value", function(d) { return d; })
-      .text(function(d) { return d; });
+      .text(function(d) { return lookup[d]["name"].trim(); });
+
+  //
+  // SORT OPTIONS
+  //
+  // Note here: defined directly as html option vals and text
 
   // hack: style the dropdowns using Select2, then show
   $("select").each(function() {
@@ -149,7 +140,6 @@ dispatch.on("load.menus", function(countries) {
   delegate_event("select#strength");
   delegate_event("select#sort");
 
-  // SORT OPTIONS
 
 
 }); // load.menu
@@ -206,17 +196,17 @@ dispatch.on("leaflet", function(countries_keyed) {
 
 
 // inital chart setup after data load
-dispatch.on("load.chart", function(map) {
+dispatch.on("load.topchart", function(map) {
+
   // layout properties
   var margin      = { top: 0, right: 30, bottom: 0, left: 40 };
-  var svgwidth    = 700 - margin.left;
-  var svgwidthscaled = svgwidth - 70; // TO DO, why are <g>s bigger than SVG?
+  var svgwidth    = 800 - margin.left;
+  var svgwidthscaled = svgwidth - 140; // TO DO, why are <g>s bigger than SVG?
   var svgheight   = 230; // TO DO: This will vary considerably between upper and lower charts
                          // and needs to be updated depending on content
-
   // INITIAL SVG SETUP
   // create an svg element to hold our chart parts
-  var svg = d3.select("svg.top")
+  var svgtop = d3.select("svg.top")
     .attr("width", svgwidth)
     .attr("height", svgheight)
     .append("g")
@@ -224,11 +214,48 @@ dispatch.on("load.chart", function(map) {
       .attr("class","outergroup")
 
   // define a transition, will occur over 750 milliseconds
-  var tfast = svg.transition().duration(750);
-  var tslow = svg.transition().duration(3850);
+  var tfast = svgtop.transition().duration(750);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.chart", function(data) {
+  dispatch.on("statechange.topchart", function(data) {
+    var data = nest(data,"theme");
+    update(data, svgtop, svgwidthscaled, tfast);
+  });
+
+});
+
+
+// inital chart setup after data load
+dispatch.on("load.bottomchart", function(map) {
+
+  // layout properties
+  var margin      = { top: 0, right: 30, bottom: 0, left: 40 };
+  var svgwidth    = 800 - margin.left;
+  var svgwidthscaled = svgwidth - 140; // TO DO, why are <g>s bigger than SVG?
+  var svgheight   = 1230; // TO DO: This will vary considerably between upper and lower charts
+                         // and needs to be updated depending on content
+  // INITIAL SVG SETUP
+  // create an svg element to hold our chart parts
+  var svgtop = d3.select("svg.bottom")
+    .attr("width", svgwidth)
+    .attr("height", svgheight)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + ",0)")
+      .attr("class","outergroup")
+
+  // define a transition, will occur over 750 milliseconds
+  var tfast = svgtop.transition().duration(750);
+
+  // register a callback to be invoked which updates the chart when "statechange" occurs
+  dispatch.on("statechange.bottomchart", function(data) {
+    var data = nest(data,"variable");
+    update(data, svgtop, svgwidthscaled, tfast);
+  });
+
+});
+
+function update(data, svg, svgwidthscaled, tfast) {
+
 
     console.log("statechange data: ", data);
 
@@ -263,13 +290,36 @@ dispatch.on("load.chart", function(map) {
       .attr("class", "row")
       .attr("transform", function(d,i) {
         var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(50," + ((rowh * i) + offset) + ")"
+        return "translate(50," + ((rowh * i) + offset) + ")";
       });
 
+
+    // 
+    // TEXT
+    //
+    
     // append label
-    rowenter.append("text")
-        .text(function(d) {return d.key})
-        .attr("transform", "translate(-90,35)");
+    var text = rowenter.append("text")
+        .text(function(d) {return lookup[d.key]["name"]})
+        // outergroup adds 40
+        // rows add 50
+        // so, here pull text back 90
+        .attr("x", "-90")
+        .attr("y", "40");
+
+    // find longest text
+    var textw = 0;
+    svg.selectAll("text")
+      .each(function(t) {
+        var text = d3.select(this).node();
+        var thiswidth = text.getComputedTextLength();
+        textw = thiswidth > textw ? thiswidth : textw;
+      });
+
+    // calc the start of the chart <g> given the width of the text
+    // the chart <g> starts at 90 because of outergroup 40 and row 50
+    // here we use 90 or textw, whichever is bigger, plus a margin of 15px
+    var chartoffset = textw > 90 ? textw - 90 + 15 : 0;
 
     //
     // CHART GROUPS
@@ -288,7 +338,7 @@ dispatch.on("load.chart", function(map) {
     charts.attr("class", "chart")
       .attr("transform", function(d, i) {
         var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(-20," + ((i * grph) + 10 + offset) + ")"
+        return "translate(" + chartoffset + ", " + ((i * grph) + 10 + offset) + ")";
       });
 
     // create new ones if our updated dataset has more then the previous
@@ -296,7 +346,7 @@ dispatch.on("load.chart", function(map) {
       .attr("class","chart")
       .attr("transform", function(d, i) {
         var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(-20," + ((i * grph) + 10 + offset) + ")"
+        return "translate(" + chartoffset + ", " + ((i * grph) + 10 + offset) + ")";
       });
 
     // reselect the chart groups, so that we get any new ones that were made
@@ -311,8 +361,8 @@ dispatch.on("load.chart", function(map) {
 
     // get rid of ones we don't need anymore, fade them out
     squares.exit()
-      .transition(tslow)
-        .style("opacity", 1e-6)
+      .transition(tfast)
+      .style("opacity", 1e-6)
         .remove();
 
     // update existing squares, transition
@@ -333,7 +383,7 @@ dispatch.on("load.chart", function(map) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("weak", function(d) {return d.strength != "Direct correlation" ? true : false})
+      .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i,svgwidthscaled); 
@@ -344,19 +394,15 @@ dispatch.on("load.chart", function(map) {
           return y;
         });
 
-  }); // statechange.chart
 
-}); // load.chart
+
+}
 
 
 // NAMED FUNCTIONS
 function handleMarkerClick(markerdata) {
   var data = filter(rawdata, "country", markerdata.name);
-  dispatch.call(
-    "statechange",
-    this,
-    nest(data,"theme")
-  );
+  dispatch.call("statechange", this, data);
 }
 
 // UTILITY FUNCTIONS
@@ -375,22 +421,30 @@ function handleMarkerClick(markerdata) {
 // }
 
 // generic dispatch call
-function update(data, theme, key, value) {
-  var filtered = filter(data, key, value);
-  dispatch.call(
-    "statechange",
-    this,
-    nest(filtered,theme)
-  );
-}
+// function update(data, theme, key, value) {
+//   var filtered = filter(data, key, value);
+//   dispatch.call(
+//     "statechange",
+//     this,
+//     nest(filtered,theme)
+//   );
+// }
 
 // nest our data on selected field, then either "plus" or "minus",
 //   depending on value of "valence"
 function nest(data,field) { 
-  return d3.nest()
+  var nested = d3.nest()
       .key(function(d) { return d[field] })
       .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
       .entries(data);
+
+    // work sort in here before nesting?
+    // apply a sort field, if there is one
+    var sortoption = d3.select("select#sort").node().value;
+    if (sortoption) nested = sort(nested, sortoption);
+
+    return nested;
+
 } // nest
 
 // Filter data based on a key and a value
@@ -436,15 +490,13 @@ function delegate_event(elem) {
     var strengthoption = d3.select("select#strength").node().value;
     if (strengthoption) data = filter(data, "strength", strengthoption);
 
-    // before sorting, nest(), as sorting happens on nested rows, not raw data points
-    var nested = nest(data,"theme");
+    // // before sorting, nest(), as sorting happens on nested rows, not raw data points
+    // var nested = nest(data,"theme");
 
-    // apply a sort field, if there is one
-    var sortoption = d3.select("select#sort").node().value;
-    if (sortoption) nested = sort(nested, sortoption);
+    // for sorting, see nest() call
 
     // All done. Dispatch!
-    dispatch.call("statechange",this,nested);
+    dispatch.call("statechange",this,data);
   });
 }
 
