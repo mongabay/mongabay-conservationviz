@@ -76,12 +76,17 @@ span.icon-text {
   color:#fff;
 }
 
+/* SORT SELECTS */
 
 div#select-container {
   width: 100%;
 }
 
-/*SELECT2 STYLES AND OVERRIDES*/
+select#sort {
+  width: 150px;
+}
+
+/* SELECT2 STYLES AND OVERRIDES */
 
 span.select2-container:hover span.select2-selection__placeholder {
   color:#333 !important;

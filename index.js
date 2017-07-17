@@ -351,7 +351,7 @@ dispatch.on("load.chart", function(map) {
 
 // NAMED FUNCTIONS
 function handleMarkerClick(markerdata) {
-  var data = filter(rawdata, {key: "country", value: markerdata.name});
+  var data = filter(rawdata, "country", markerdata.name);
   dispatch.call(
     "statechange",
     this,
@@ -376,7 +376,7 @@ function handleMarkerClick(markerdata) {
 
 // generic dispatch call
 function update(data, theme, key, value) {
-  var filtered = filter(data, {key: key, value: value});
+  var filtered = filter(data, key, value);
   dispatch.call(
     "statechange",
     this,
@@ -393,17 +393,16 @@ function nest(data,field) {
       .entries(data);
 } // nest
 
-
-// Filter data based on a filter object in the form of 
-//   {key: "fieldname to filter", value: "value to match"}
-function filter(data, filter) {
+// Filter data based on a key and a value
+function filter(data, key, value) {
     var filtered = data.filter(function(d) {
-      // country requires more permissive filtering (match one country in a list)
+      // country requires more permissive filtering:
+      // country can be a list, or a single country 
       var match;
-      if (filter.key == "country") {
-        match = d["country"].indexOf(filter.value) > -1; 
+      if (key == "country") {
+        match = d["country"].indexOf(value) > -1; 
       } else {
-        match = (d[filter.key] == filter.value);
+        match = (d[key] == value);
       }
       return match;
     });
