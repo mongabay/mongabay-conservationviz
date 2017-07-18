@@ -5,18 +5,23 @@
 var rawdata; 
 var lookup = {};
 
+// map constants
+var map;
+var min_zoom= 2;
+var max_zoom= 18;
+
 // offsets lookup, calculated from the data itself on load
 var offsets = {};
 
-// map
-var MAP;
-var MIN_ZOOM = 2;
-var MAX_ZOOM = 18;
-
 // row heights and widths, rectangle withs
-var grph = 20;
 var rectw = 20;
 var rowmargin = 10;
+
+// svg width: - top will be a (percentage? fixed amount?) of the screen width
+//            - bottom will be single column on mobile, or 3 cols on Desktop
+// for now, we'll just make this up
+var topwidth    = 680;
+var bottomwidth = 300;
 
 // themes to display on top and bottom charts
 var themes = {
@@ -100,11 +105,6 @@ function main(error, countries, lookups, data) {
 // these will set the max dimensions for the top and bottom svg containers
 // and could be extended to the map container in the future as well
 dispatch.on("load.setup", function(options) {
-  // svg width: - top will be a (percentage? fixed amount?) of the screen width
-  //            - bottom will be single column on mobile, or 3 cols on Desktop
-  // for now, we'll just make this up
-  var topwidth    = 680;
-  var bottomwidth = 300;
 
   // calc height and width needed for top data
   var data = nest(rawdata,themes.top);
@@ -170,20 +170,20 @@ dispatch.on("load.menus", function(options) {
 dispatch.on("load.leaflet", function(data) {
 
   // init the map with some basic settings
-  MAP = L.map('map',{
-    minZoom: MIN_ZOOM,
-    maxZoom: MAX_ZOOM,
+  map = L.map('map',{
+    minZoom:min_zoom,
+    maxZoom:max_zoom,
     keyboard: false,
   });
   // add a positron basemap, without labels
   var positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
     attribution: '©OpenStreetMap, ©CartoDB'
-  }).addTo(MAP);
+  }).addTo(map);
 
   // then create a tile pane for the labels, and add positron labels to it (only at high zoom)
-  MAP.createPane('labels');
-  MAP.getPane('labels').style.zIndex = 650;
-  MAP.getPane('labels').style.pointerEvents = 'none';
+  map.createPane('labels');
+  map.getPane('labels').style.zIndex = 650;
+  map.getPane('labels').style.pointerEvents = 'none';
   L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png', {
     attribution: '©OpenStreetMap, ©CartoDB',
     pane: 'labels'
@@ -193,7 +193,7 @@ dispatch.on("load.leaflet", function(data) {
   // count is the number of studies in that country in the raw data 
   var countries_keyed = data.countries_keyed;
   var countries = Object.keys(countries_keyed);
-  var markers = L.featureGroup().addTo(MAP);
+  var markers = L.featureGroup().addTo(map);
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -212,7 +212,7 @@ dispatch.on("load.leaflet", function(data) {
       });
     }
   });
-  MAP.fitBounds(markers.getBounds());
+  map.fitBounds(markers.getBounds());
 }); // load.leaflet
 
 
@@ -244,6 +244,7 @@ dispatch.on("load.topchart", function(map) {
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.topchart", function(data) {
     var data = nest(data,themes.top);
+    calcOffsets(data,topwidth,themes.top);
     update(data, svg, svgwidthscaled, tfast, themes.top);
   });
 
@@ -273,6 +274,7 @@ dispatch.on("load.bottomchart", function(map) {
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.bottomchart", function(data) {
     var data = nest(data,themes.bottom);
+    calcOffsets(data,bottomwidth,themes.bottom);
     update(data, svg, svgwidthscaled, tfast, themes.bottom);
   });
 
@@ -314,29 +316,73 @@ function update(data, svg, svgwidthscaled, tfast, group) {
 
 
     // 
-    // TEXT
+    // TEXT GROUPS
     //
     
-    // append label
-    var text = rowenter.append("text")
-        .text(function(d) {return lookup[d.key]["name"]})
-        // outergroup adds 40 to left
-        // rows add 50 to left
-        // so, here pull x back 90
-        .attr("x", "-90")
-        .attr("y", function(d) {
-          var totalheight = offsets[group][d.key]["totalrows"] * rectw;
-          // TO DO: text is currently 14px, not sure why the
-          // addition of 5 seems to center things, but it does
-          var y = (totalheight / 2) + 5;
-          return y;
-        });
+    var rows = svg.selectAll("g.row");
+    var textgroups = rows.selectAll("g.text")
+      .data(function(d) {return [d]}, function(d) {return d.key});
 
-    // calc the start of the chart <g> given the width of the longest text
-    // the chart <g> starts at 90 because of outergroup 40 and row 50
-    // here we use 90 or longest, whichever is longer, plus a margin of 15px
-    var longest = find_longest_text_node(svg);
-    var chartstart = longest > 90 ? longest - 90 + 15 : 0;
+    // get rid of ones we don't need
+    textgroups.exit().remove();
+
+    // update existing ones left over
+    textgroups.attr("class","text")
+        
+    // add new ones
+    textgroups.enter().append("g")
+      .attr("class","text")
+      .append("text")
+      .text(function(d) {return lookup[d.key]["name"]})
+      // outergroup adds 40 to left
+      // rows add 50 to left
+      // so, here pull x back 90
+      .attr("x", "-90")
+      .attr("y", function(d) {
+        var totalheight = offsets[group][d.key]["totalrows"] * rectw;
+        // TO DO: text is currently 14px, not sure why the
+        // addition of 5 seems to center things, but it does
+        var y = (totalheight / 2) + 5;
+        return y;
+      });
+
+
+    // labels
+    var textgroups = rows.selectAll("g.text");
+    var text = textgroups.selectAll("text")
+      .data(function(d) {return [d]}, function(d) {return d.key});
+
+    // exit
+    text.exit().remove();
+
+    // update
+    text.text(function(d) {return lookup[d.key]["name"]})
+      // outergroup adds 40 to left
+      // rows add 50 to left
+      // so, here pull x back 90
+      .attr("x", "-90")
+      .attr("y", function(d) {
+        var totalheight = offsets[group][d.key]["totalrows"] * rectw;
+        // TO DO: text is currently 14px, not sure why the
+        // addition of 5 seems to center things, but it does
+        var y = (totalheight / 2) + 5;
+        return y;
+      });
+
+    // enter
+    text.enter().append("text")
+      .text(function(d) {return lookup[d.key]["name"]})
+      // outergroup adds 40 to left
+      // rows add 50 to left
+      // so, here pull x back 90
+      .attr("x", "-90")
+      .attr("y", function(d) {
+        var totalheight = offsets[group][d.key]["totalrows"] * rectw;
+        // TO DO: text is currently 14px, not sure why the
+        // addition of 5 seems to center things, but it does
+        var y = (totalheight / 2) + 5;
+        return y;
+      });
 
     //
     // CHART GROUPS
@@ -344,12 +390,18 @@ function update(data, svg, svgwidthscaled, tfast, group) {
     // tell d3 we want svg groups for each of our chart categories
     // there are currently only two: plus and minus
     // same select-again issue as below?  appears to be so
-    var rows = svg.selectAll("g.row")
+    var rows = svg.selectAll("g.row");
     var charts = rows.selectAll("g.chart")
       .data(function(d) { return d.values; }, function(d) {return d.key});
 
     // get rid of the old ones we don't need when doing an update
     charts.exit().remove();
+
+    // calc the start of the chart <g> given the width of the longest text
+    // the chart <g> starts at 90 because of outergroup 40 and row 50
+    // here we use 90 or longest, whichever is longer, plus a margin of 15px
+    var longest = find_longest_text_node(svg);
+    var chartstart = longest > 90 ? longest - 90 + 15 : 0;
 
     // update existing ones left over
     charts.attr("class", "chart")
