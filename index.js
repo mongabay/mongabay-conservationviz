@@ -320,25 +320,23 @@ function update(data, svg, svgwidthscaled, tfast, group) {
     // append label
     var text = rowenter.append("text")
         .text(function(d) {return lookup[d.key]["name"]})
-        // outergroup adds 40
-        // rows add 50
-        // so, here pull text back 90
+        // outergroup adds 40 to left
+        // rows add 50 to left
+        // so, here pull x back 90
         .attr("x", "-90")
-        .attr("y", "40");
+        .attr("y", function(d) {
+          var totalheight = offsets[group][d.key]["totalrows"] * rectw;
+          // TO DO: text is currently 14px, not sure why the
+          // addition of 5 seems to center things, but it does
+          var y = (totalheight / 2) + 5;
+          return y;
+        });
 
-    // find longest text
-    var textw = 0;
-    svg.selectAll("text")
-      .each(function(t) {
-        var text = d3.select(this).node();
-        var thiswidth = text.getComputedTextLength();
-        textw = thiswidth > textw ? thiswidth : textw;
-      });
-
-    // calc the start of the chart <g> given the width of the text
+    // calc the start of the chart <g> given the width of the longest text
     // the chart <g> starts at 90 because of outergroup 40 and row 50
-    // here we use 90 or textw, whichever is bigger, plus a margin of 15px
-    var chartstart = textw > 90 ? textw - 90 + 15 : 0;
+    // here we use 90 or longest, whichever is longer, plus a margin of 15px
+    var longest = find_longest_text_node(svg);
+    var chartstart = longest > 90 ? longest - 90 + 15 : 0;
 
     //
     // CHART GROUPS
@@ -562,6 +560,8 @@ function calcOffsets(data,width,group) {
 // given length of chart arrays and overflow
 function calcChartOffsets(data,width,key,group) {
   var nextoffset = 0; 
+  // save row count for text spacing
+  offsets[group][key]["totalrows"] = 0;
   data.values.forEach(function(d) {
     // set this one
     offsets[group][key]["chartoffset"] = nextoffset;
@@ -572,6 +572,9 @@ function calcChartOffsets(data,width,key,group) {
     var totalrows = Math.ceil((rows * rectw) / width);
     // and calc the offset: rows * height of one square
     nextoffset = nextoffset + (totalrows * rectw);
+
+  // save row count for text spacing
+    offsets[group][key]["totalrows"] += totalrows;
   });
 }
 
@@ -586,5 +589,17 @@ function calcy(i,width) {
   var this_row = Math.floor(i / number_that_fit);
   var y = this_row * rectw;
   return y;
+}
 
+function find_longest_text_node(svgcontainer) {
+  // find longest text
+  var textw = 0;
+  svgcontainer.selectAll("text")
+    .each(function(t) {
+      var text = d3.select(this).node();
+      var thiswidth = text.getComputedTextLength();
+      textw = thiswidth > textw ? thiswidth : textw;
+    });
+
+  return textw;
 }
