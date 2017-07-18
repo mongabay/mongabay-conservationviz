@@ -1,10 +1,12 @@
-// global declarations
-
+//
+// Global declarations
+//
 // data variables
 var rawdata; 
-var strengthlist = [];
-var countrylist  = [];
 var lookup = {};
+
+// offsets lookup, calculated from the data itself on load
+var offsets = {};
 
 // map
 var MAP;
@@ -12,9 +14,15 @@ var MIN_ZOOM = 2;
 var MAX_ZOOM = 18;
 
 // row heights and widths, rectangle withs
-var rowh = 55;
 var grph = 20;
 var rectw = 20;
+var rowmargin = 10;
+
+// themes to display on top and bottom charts
+var themes = {
+  top: "theme",
+  bottom: "variable"
+}
 
 // register events to emit & listen for via d3 dispatch
 var dispatch = d3.dispatch("load", "leaflet", "statechange");
@@ -26,75 +34,89 @@ d3.queue()
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
+// callback from queue
+// countries TO DO: save this with the lookup, to have a single source
 function main(error, countries, lookups, data) {
   if (error) throw error;
   
-  // parse country data, and add a count field, for use in Leaflet
+  // Pre-processing of lookup table: parse lookup list into a global lookup object
+  lookups.forEach(function(d) {
+    lookup[d.key] = d;    
+  });
+  
+  // Pre-processing of country data:  
+  // 1) parse country data, and add a count field, for use in Leaflet
   var countries_keyed = _.keyBy(countries, o => o.name);
   _.mapValues(countries_keyed, function(val) {
     val.count = 0;
   });
   
-  // parse lookup list
-  lookups.forEach(function(d) {
-    lookup[d.key] = d;    
-  });
-  
-  // parse raw data
+  // Pre-processing of data
+  // 1) get a count of countries in the data, and save to countries_keyed
   data.forEach(function(d) {
-    // transform string valence into intenger
-    d.valence = +d.valence;
-  });
-  
-    // get a count of count)ries in the data, and save to countries_keyed
-  data.forEach(function(d) {
+    // d.country can be a list of countries, so check for that, and split if so
     var names = d.country.indexOf(",") ? d.country.split(",") : [d.country];
     names.forEach(function(name){
       // trim whitespace, and skip bad matches 
       name = name.trim();
       if (countries_keyed[name] === undefined) return;
       countries_keyed[name]["count"] = countries_keyed[name]["count"] += 1;
+    
+
     });  
   });
 
-  // generate list of countries present in data
+  // 2) generate a list of countries present in data
+  // TO DO: combine 1 & 2
+  var countrylist = [];
   data.forEach(function(d) {
     // d.country can be a list of countries, so check for that, and split if so
     var country = d.country;
     country = country.indexOf(",") ? country.split(",") : [country];
     countrylist = _.union(countrylist, country.map(function(c) { return c.trim() }));
   });
-  // sort, remove duplicates, remove blanks, and then generate select options
-  countries = _.without(_.uniq(countries.sort()), "");
-  
-  // generate list of strengths present in the data
+
+  // misc: 
+  var strengthlist = [];
   data.forEach(function(d) {
+    // transform string valence into intenger
+    d.valence = +d.valence;
+    // generate list of strengths present in the data
     strengthlist.push(d.strength.trim());
   });
   // sort and remove duplicates, then generate select options
   strengthlist = _.without(_.uniq(strengthlist.sort()), "");
 
-  // keep global references to raw data
+  // keep global reference to raw data
   rawdata = data;
 
-  // nest the data based on a given attribute
-  // var nested = nest(data,"theme");
-
-  // construct a new d3 map, not as in geographic map, but more like a "hash"
-  // TA Interesting structure, not sure if we'll use it here or not
-  // var map = d3.map(nested, function(d) { return d.key; });
-
   // call our dispatch events with `this` context, and corresponding data
-  // TO DO: what version of data gets dispatched?
-  // How to attach buttons? Other controls?
-  dispatch.call("load", this, data); // why? Is this used?
-  dispatch.call("leaflet", this, countries_keyed);
+  dispatch.call("load", this, {countries: countrylist, stengths: strengthlist, countries_keyed: countries_keyed}); 
   dispatch.call("statechange", this, data);
 
 }
 
+// listen for "load" and calculate global container dimensions based on incoming data
+// these will set the max dimensions for the top and bottom svg containers
+// and could be extended to the map container in the future as well
+dispatch.on("load.setup", function(options) {
+  // svg width: - top will be a (percentage? fixed amount?) of the screen width
+  //            - bottom will be single column on mobile, or 3 cols on Desktop
+  // for now, we'll just make this up
+  var topwidth    = 680;
+  var bottomwidth = 300;
+
+  // calc height and width needed for top data
+  var data = nest(rawdata,themes.top);
+  calcOffsets(data,topwidth,themes.top);
+
+  // calc offsets etc. needed for bottom data
+  var data = nest(rawdata,themes.bottom);
+  calcOffsets(data, bottomwidth,themes.bottom);
+});
+
 // register a listener for "load" and create dropdowns for various fiters
-dispatch.on("load.menus", function(countries) {
+dispatch.on("load.menus", function(options) {
   
   // 
   // COUNTRY FILTER
@@ -103,7 +125,7 @@ dispatch.on("load.menus", function(countries) {
 
   // append options to select dropdown
   select.selectAll("option")
-      .data(countrylist)
+      .data(options["countries"])
     .enter().append("option")
       .attr("value", function(d) { return d.trim(); })
       .text(function(d) { return d.trim(); });
@@ -115,7 +137,7 @@ dispatch.on("load.menus", function(countries) {
 
   // append strengthoptions to select dropdown
   select.selectAll("option")
-      .data(strengthlist)
+      .data(options["stengths"])
     .enter().append("option")
       .attr("value", function(d) { return d; })
       .text(function(d) { return lookup[d]["name"].trim(); });
@@ -135,19 +157,17 @@ dispatch.on("load.menus", function(countries) {
     }).show();
   });
 
-  // and use event delegation to listen for changes
+  // because we're using select2, and these options are added dynamically, 
+  // we have to use event delegation to listen for changes
   delegate_event("select#country");
   delegate_event("select#strength");
   delegate_event("select#sort");
-
-
-
 }); // load.menu
 
 // 
 // initial map setup after data load
 //
-dispatch.on("leaflet", function(countries_keyed) {
+dispatch.on("load.leaflet", function(data) {
 
   // init the map with some basic settings
   MAP = L.map('map',{
@@ -171,6 +191,7 @@ dispatch.on("leaflet", function(countries_keyed) {
 
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
+  var countries_keyed = data.countries_keyed;
   var countries = Object.keys(countries_keyed);
   var markers = L.featureGroup().addTo(MAP);
   countries.forEach(function(name){
@@ -192,21 +213,25 @@ dispatch.on("leaflet", function(countries_keyed) {
     }
   });
   MAP.fitBounds(markers.getBounds());
-}); // leaflet
+}); // load.leaflet
 
 
 // inital chart setup after data load
 dispatch.on("load.topchart", function(map) {
 
-  // layout properties
+  // layout properties specific to the top chart
   var margin      = { top: 0, right: 30, bottom: 0, left: 40 };
   var svgwidth    = 800 - margin.left;
   var svgwidthscaled = svgwidth - 140; // TO DO, why are <g>s bigger than SVG?
-  var svgheight   = 230; // TO DO: This will vary considerably between upper and lower charts
-                         // and needs to be updated depending on content
+
+  // svg height: Number of chart rows X square height plus spacing between rows
+  var nrows     = offsets[themes.top]["themerows"] - 1;
+  var rowheight = offsets[themes.top]["chartrows"] * rectw;
+  var svgheight = rowheight + (nrows * rowmargin);
+
   // INITIAL SVG SETUP
   // create an svg element to hold our chart parts
-  var svgtop = d3.select("svg.top")
+  var svg = d3.select("svg.top")
     .attr("width", svgwidth)
     .attr("height", svgheight)
     .append("g")
@@ -214,29 +239,28 @@ dispatch.on("load.topchart", function(map) {
       .attr("class","outergroup")
 
   // define a transition, will occur over 750 milliseconds
-  var tfast = svgtop.transition().duration(750);
+  var tfast = svg.transition().duration(750);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.topchart", function(data) {
-    var data = nest(data,"theme");
-    update(data, svgtop, svgwidthscaled, tfast);
+    var data = nest(data,themes.top);
+    update(data, svg, svgwidthscaled, tfast, themes.top);
   });
 
 });
-
 
 // inital chart setup after data load
 dispatch.on("load.bottomchart", function(map) {
 
-  // layout properties
+  // layout properties specific to the bottom chart
   var margin      = { top: 0, right: 30, bottom: 0, left: 40 };
   var svgwidth    = 800 - margin.left;
   var svgwidthscaled = svgwidth - 140; // TO DO, why are <g>s bigger than SVG?
-  var svgheight   = 1230; // TO DO: This will vary considerably between upper and lower charts
-                         // and needs to be updated depending on content
+  var svgheight   = 1230; // TO DO, data specific
+
   // INITIAL SVG SETUP
   // create an svg element to hold our chart parts
-  var svgtop = d3.select("svg.bottom")
+  var svg = d3.select("svg.bottom")
     .attr("width", svgwidth)
     .attr("height", svgheight)
     .append("g")
@@ -244,18 +268,17 @@ dispatch.on("load.bottomchart", function(map) {
       .attr("class","outergroup")
 
   // define a transition, will occur over 750 milliseconds
-  var tfast = svgtop.transition().duration(750);
+  var tfast = svg.transition().duration(750);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.bottomchart", function(data) {
-    var data = nest(data,"variable");
-    update(data, svgtop, svgwidthscaled, tfast);
+    var data = nest(data,themes.bottom);
+    update(data, svg, svgwidthscaled, tfast, themes.bottom);
   });
 
 });
 
-function update(data, svg, svgwidthscaled, tfast) {
-
+function update(data, svg, svgwidthscaled, tfast, group) {
 
     console.log("statechange data: ", data);
 
@@ -268,11 +291,7 @@ function update(data, svg, svgwidthscaled, tfast) {
     //
     // create svg groups for each data grouping (the top level of nest())
     var rows = svg.selectAll("g.row")
-      .data(function(d,i) {
-        // calculate the origin of the next row, given this row's height 
-        calcRowOffsets(d,svgwidthscaled);
-        return d;
-      }, function(d) {return d.key});
+      .data(function(d,i) { return d; }, function(d) {return d.key});
 
     // remove old rows
     rows.exit().remove();
@@ -281,16 +300,16 @@ function update(data, svg, svgwidthscaled, tfast) {
     rows.attr("class", "row")
       .transition(tfast)
       .attr("transform", function(d,i) {
-        var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(50," + ((rowh * i) + offset) + ")"
+        var offset = offsets[group][d.key]["offset"];
+        return "translate(50," + offset + ")";
       });
 
     // create new rows if our updated dataset has more then the previous
     var rowenter = rows.enter().append("g")
       .attr("class", "row")
       .attr("transform", function(d,i) {
-        var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(50," + ((rowh * i) + offset) + ")";
+        var offset = offsets[group][d.key]["offset"];
+        return "translate(50," + offset + ")";
       });
 
 
@@ -319,7 +338,7 @@ function update(data, svg, svgwidthscaled, tfast) {
     // calc the start of the chart <g> given the width of the text
     // the chart <g> starts at 90 because of outergroup 40 and row 50
     // here we use 90 or textw, whichever is bigger, plus a margin of 15px
-    var chartoffset = textw > 90 ? textw - 90 + 15 : 0;
+    var chartstart = textw > 90 ? textw - 90 + 15 : 0;
 
     //
     // CHART GROUPS
@@ -329,7 +348,7 @@ function update(data, svg, svgwidthscaled, tfast) {
     // same select-again issue as below?  appears to be so
     var rows = svg.selectAll("g.row")
     var charts = rows.selectAll("g.chart")
-      .data(function(d) { calcChartOffsets(d,svgwidthscaled); return d.values; }, function(d) {return d.key});
+      .data(function(d) { return d.values; }, function(d) {return d.key});
 
     // get rid of the old ones we don't need when doing an update
     charts.exit().remove();
@@ -337,16 +356,24 @@ function update(data, svg, svgwidthscaled, tfast) {
     // update existing ones left over
     charts.attr("class", "chart")
       .attr("transform", function(d, i) {
-        var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(" + chartoffset + ", " + ((i * grph) + 10 + offset) + ")";
+        // get the offset, saved in offset{} by the parent node's key
+        var key = d3.select(this.parentNode).datum().key;
+        // offset never applies to the first row (plus), but only the second row (minus)
+        // and only when the first row has to wrap, which we pre-calculated in load.setup
+        var offset = i == 1 ? offsets[group][key]["chartoffset"] : 0;
+        return "translate(" + chartstart + ", " + offset + ")";
       });
 
     // create new ones if our updated dataset has more then the previous
     charts.enter().append("g")
       .attr("class","chart")
       .attr("transform", function(d, i) {
-        var offset = ("offset" in d) ? d["offset"] : 0;
-        return "translate(" + chartoffset + ", " + ((i * grph) + 10 + offset) + ")";
+        // get the offset, saved in offsets{} by the parent node's key
+        var key = d3.select(this.parentNode).datum().key;
+        // offset never applies to the first row (plus), but only the second row (minus)
+        // and only when the first row has to wrap, which we pre-calculated in load.setup
+        var offset = i == 1 ? offsets[group][key]["chartoffset"] : 0;
+        return "translate(" + chartstart + ", " + offset + ")";
       });
 
     // reselect the chart groups, so that we get any new ones that were made
@@ -463,19 +490,6 @@ function filter(data, key, value) {
     return filtered;
 }
 
-// function delegate_event(elem) {
-//   // use event delegation to dispatch change function from select2 options
-//   $("body").on("change", elem, function() {
-//       // apply all filters
-//       var data = apply_filters();
-//       dispatch.call(
-//         "statechange",
-//         this,
-//         nest(data,"theme")
-//       );
-//   });
-// }
-
 function delegate_event(elem) {
   // use event delegation to dispatch change function from select2 options
   $("body").on("change", elem, function() {
@@ -489,9 +503,6 @@ function delegate_event(elem) {
     // apply strength filter, if there is one
     var strengthoption = d3.select("select#strength").node().value;
     if (strengthoption) data = filter(data, "strength", strengthoption);
-
-    // // before sorting, nest(), as sorting happens on nested rows, not raw data points
-    // var nested = nest(data,"theme");
 
     // for sorting, see nest() call
 
@@ -511,14 +522,20 @@ function sort(data, sortoption) {
   return sorted;
 }
 
-// calculate row offsets given length of chart arrays and overflow
-function calcRowOffsets(data,width) {
+// calculate row offsets (spacing between rows) given length of chart arrays and overflow
+function calcOffsets(data,width,group) {
   var nextoffset = 0; 
-  data.forEach(function(d) {
-    // set this one
-    d["offset"] = nextoffset;
+  offsets[group] = {};
+  offsets[group]["chartrows"] = 0;
+  offsets[group]["themerows"] = data.length;
+  data.forEach(function(d,i) {
+    // Add objects for this group
+    offsets[group][d.key] = {};
 
-    // calc the next one:
+    // Set this offset
+    offsets[group][d.key]["offset"] = nextoffset;
+
+    // Now calc the next one, for the next iteration
     // first get count of chart objects
     var plus = 0 in d.values ? d.values[0].values.length : 0;
     var minus = 1 in d.values ? d.values[1].values.length : 0;
@@ -526,29 +543,35 @@ function calcRowOffsets(data,width) {
     var plusrows  = Math.ceil((plus * rectw) / width);
     var minusrows = Math.ceil((minus * rectw) / width);
     var totalrows = plusrows + minusrows;
-    // and calc the offset: "extra" rows times the height of one square
-    nextoffset = nextoffset + (totalrows - 2) * rectw;
+    // and calc the offset: rows * the height of one square, plus the bottom margin
+    nextoffset = nextoffset + (totalrows * rectw) + rowmargin;
 
-    // while we're here, add plus/minus counts at this level to facilitate sorting
-    d["pluscount"] = plus;
-    d["minuscount"] = minus;
+    // add plus/minus counts at this level to facilitate sorting
+    offsets[group][d.key]["pluscount"] = plus;
+    offsets[group][d.key]["minuscount"] = minus;
 
+    // keep a count of rows, from which to calculate total SVG height
+    offsets[group]["chartrows"] += totalrows;
+
+    // now calc chart offsets for this one row
+    calcChartOffsets(d, width, d.key, group);
   });
 }
 
-// calculate chart offsets given length of chart arrays and overflow
-function calcChartOffsets(data,width) {
+// calculate chart offsets (spacing between the two charts in one row) 
+// given length of chart arrays and overflow
+function calcChartOffsets(data,width,key,group) {
   var nextoffset = 0; 
   data.values.forEach(function(d) {
     // set this one
-    d["offset"] = nextoffset;
+    offsets[group][key]["chartoffset"] = nextoffset;
     // calc the next one:
     // first get count of chart objects
     var rows = d.values.length;
     // figure out how many rows this takes
     var totalrows = Math.ceil((rows * rectw) / width);
-    // and calc the offset: "extra" rows times the height of one square
-    nextoffset = nextoffset + (totalrows - 1) * rectw;
+    // and calc the offset: rows * height of one square
+    nextoffset = nextoffset + (totalrows * rectw);
   });
 }
 
