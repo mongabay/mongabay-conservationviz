@@ -38,23 +38,28 @@
     <!-- <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button> -->
     <!-- <button style="margin-right:4px;" onClick="update(rawdata,'theme','strength','Direct correlation')">Filter by strength</button> -->
 
-    <!-- country filter -->
-    <select id="country" placeholder="Select a country">
-      <option></option>
-    </select>
+    <!-- filters -->
+    <div id="select-container">
+      <!-- country filter -->
+      <select id="country" placeholder="Select a country">
+        <option></option>
+      </select>
 
-    <!-- strength filter -->
-    <select id="strength" placeholder="Select a strength">
-      <option></option>
-    </select>
+      <!-- strength filter -->
+      <select id="strength" placeholder="Select a strength">
+        <option></option>
+      </select>
 
-    <!-- sort options -->
-    <!-- TO DO needs further definition -->
-    <select id="sort" placeholder="Sort by evidence" style="width:121px;">
-      <option></option>
-      <option value="most">Most evidence</option>
-      <option value="least">Least evidence</option>
-    </select>
+      <!-- sort options -->
+      <!-- TO DO needs further definition -->
+      <select id="sort" placeholder="Sort by evidence">
+        <option></option>
+        <option value="pluscount#reverse">Most positive evidence</option>
+        <option value="pluscount">Least positive evidence</option>
+        <option value="minuscount#reverse">Most neagative evidence</option>
+        <option value="minuscount">Least negative evidence</option>
+      </select>
+    </div>
 
     <svg class="top"></svg>
     <div id="map"></div>
@@ -63,6 +68,7 @@
   </div>
 
   <!-- Local javascript -->
+  <script src="./config.js"></script>
   <script src="./index.js"></script>
 </body>
 

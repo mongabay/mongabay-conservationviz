@@ -6,12 +6,17 @@ svg {
   background:#fff;
 }
 
-svg g {
-  opacity: 1;
+svg.top {
+  margin-top:10px;
+  margin-bottom:10px;
 }
 
-rect {
-  width:19px; height: 19px;
+svg.bottom {
+  margin-top:10px;
+}
+
+svg g {
+  opacity: 1;
 }
 
 rect.plus {
@@ -76,13 +81,37 @@ span.icon-text {
   color:#fff;
 }
 
-/* hide initially while loading to avoid FOUC */
-/*select#country {
+/* SORT SELECTS */
+
+div#select-container {
+  width: 100%;
+}
+
+select#sort {
+  width: 185px;
+}
+
+/* LEAFLET OVERRIDES */
+
+.leaflet-popup-content-wrapper {
+  border-radius:0;
+}
+
+.leaflet-popup-content-wrapper {
+  text-align:center;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  margin:5px 12px;
+}
+
+.leaflet-popup-tip-container, .leaflet-popup-close-button {
   display:none;
 }
-*/
 
-/*SELECT2 STYLES AND OVERRIDES*/
+
+
+/* SELECT2 STYLES AND OVERRIDES */
 
 span.select2-container:hover span.select2-selection__placeholder {
   color:#333 !important;
