@@ -7,6 +7,7 @@ var themes = {
 
 // global configuration of colors, sizes, spacing, for top and bottom charts
 // all measures are in pixels
+// Note: additional config variables are calculated at runtime and added to this structure
 var config = {};
 config[themes.top] = {
   svgwidth:   680,                // width of the svg container, TO DO

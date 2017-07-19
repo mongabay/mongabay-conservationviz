@@ -89,8 +89,8 @@ function main(error, countries, lookups, data) {
 
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
-// spacing of chart squares and chart rows, spacing of group rows etc. 
 // This could be extended to the map container in the future as well
+
 dispatch.on("load.setup", function(options) {
   // calc height and width needed for top data, saved to config
   var data = nest(rawdata,themes.top);
@@ -263,16 +263,24 @@ function update(data, svg, tfast, group) {
   rows.attr("class", "row")
     .transition(tfast)
     .attr("transform", function(d,i) {
-      var offset = config[group][d.key]["offset"];
-      return "translate(0," + offset + ")";
+      var offset_x = 0; // col offset
+      var offset_y = config[group][d.key]["offset_y"]; // row offset
+      return "translate(" + offset_x +"," + offset_y + ")";
     });
 
   // create new rows if our updated dataset has more then the previous
   var rowenter = rows.enter().append("g")
     .attr("class", "row")
     .attr("transform", function(d,i) {
-      var offset = config[group][d.key]["offset"];
-      return "translate(0," + offset + ")";
+      var offset_x = 0; // col offset
+
+      // which column are we in? Row is zero indexed, so add 1 to it
+      var col = Math.ceil((i + 1)/config[group]["rowspercol"]);
+      // define the start position, column * colwidth, minus one colwidth
+      var offset_x = (col * config[group]["colwidth"]) - config[group]["colwidth"];
+
+      var offset_y = config[group][d.key]["offset_y"]; // row offset
+      return "translate(" + offset_x +"," + offset_y + ")";
     });
 
 
@@ -519,14 +527,19 @@ function calcOffsets(data,group) {
   var sqsize = config[group]["sqsize"];
   var width = config[group]["svgwidthscaled"];
   config[group]["chartrows"] = 0;
-  config[group]["themerows"] = data.length - 1;
-  // loop through the data and calc some things
+  config[group]["themerows"] = data.length - 1; // why -1?
+
+  // some math to help figure out column lengths and offsets from rows
+  config[group]["rowspercol"] = Math.ceil(data.length / config[group]["ncols"]);
+  config[group]["colwidth"]   = width / config[group]["ncols"];
+
+  // loop through the actual chart data and calc more things
   data.forEach(function(d,i) {
     // Add objects for this group
     config[group][d.key] = {};
 
-    // Set this offset
-    config[group][d.key]["offset"] = nextoffset;
+    // Set the current "y" offset
+    config[group][d.key]["offset_y"] = nextoffset;
 
     // Now calc the next one, for the next iteration
     // first look through values and get sums for plus and minus
