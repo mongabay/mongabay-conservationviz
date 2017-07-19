@@ -6,6 +6,15 @@ svg {
   background:#fff;
 }
 
+svg.top {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+svg.bottom {
+  margin-top:10px;
+}
+
 svg g {
   opacity: 1;
 }
