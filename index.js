@@ -186,6 +186,15 @@ dispatch.on("load.leaflet", function(data) {
       marker.on('click',function(e) { 
         handleMarkerClick(e.target.data); 
       });
+      marker.bindPopup(country.name);
+      marker.on('mouseover', function (e) {
+        this.openPopup();
+      });
+      marker.on('mouseout', function (e) {
+        // this.closePopup();
+      });
+
+
     }
   });
   map.fitBounds(markers.getBounds());
@@ -582,7 +591,6 @@ function calcChartOffsets(data,width,key,group) {
 // calc x position of rectangles, given container width, and square size
 function calcx(i,width,sqsize) {
   var number_that_fit = Math.ceil(width / sqsize);
-  console.log(number_that_fit);
   return x = i + 1 > number_that_fit ? i - number_that_fit : i;
 }
 

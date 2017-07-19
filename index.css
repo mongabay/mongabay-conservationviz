@@ -82,6 +82,26 @@ select#sort {
   width: 185px;
 }
 
+/* LEAFLET OVERRIDES */
+
+.leaflet-popup-content-wrapper {
+  border-radius:0;
+}
+
+.leaflet-popup-content-wrapper {
+  text-align:center;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  margin:5px 12px;
+}
+
+.leaflet-popup-tip-container, .leaflet-popup-close-button {
+  display:none;
+}
+
+
+
 /* SELECT2 STYLES AND OVERRIDES */
 
 span.select2-container:hover span.select2-selection__placeholder {
