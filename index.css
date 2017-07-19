@@ -10,10 +10,6 @@ svg g {
   opacity: 1;
 }
 
-rect {
-  width:19px; height: 19px;
-}
-
 rect.plus {
   fill: #309223;
 }
