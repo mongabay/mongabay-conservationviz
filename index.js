@@ -264,6 +264,12 @@ function update(data, svg, tfast, group) {
     .transition(tfast)
     .attr("transform", function(d,i) {
       var offset_x = 0; // col offset
+
+      // which column are we in? Row is zero indexed, so add 1 to it
+      var col = Math.ceil((i + 1)/config[group]["rowspercol"]);
+      // define the start position, column * colwidth, minus one colwidth
+      var offset_x = (col * config[group]["colwidth"]) - config[group]["colwidth"];
+
       var offset_y = config[group][d.key]["offset_y"]; // row offset
       return "translate(" + offset_x +"," + offset_y + ")";
     });
