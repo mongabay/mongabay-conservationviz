@@ -503,18 +503,14 @@ function sort(data, sortoption, group) {
   var sortfield = sortoptions[0]; 
   var reverse = sortoptions[1];
 
-  // debugger;
   var sorted = data.sort(function(a,b) {
-    return offsets[group][a.key][sortfield] - offsets[group][a.key][sortfield];
+    var compare = config[group][a.key][sortfield] - config[group][b.key][sortfield];
+    return compare;
   });
-
-// var sorted = _.sortBy(data, function(d) {
-  // return _.indexOf(sortArray, x[0].Id)
-// })
-
 
   if (typeof reverse != "undefined") sorted = sorted.reverse(); 
   return sorted;
+
 }
 
 // calculate row offsets (spacing between rows) given length of chart arrays and overflow
