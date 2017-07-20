@@ -1,185 +1,184 @@
 zb_id,valence,continent,country,strategy,theme,variable,strength
-1.1.1,0,Africa,Gabon,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.1.2,1,Africa,Gabon,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.1.3,1,Africa,Gabon,FSC,ENV,Collateral damage,Direct correlation
-1.1.4,1,Africa,Gabon,FSC,ENV,Ground disturbance,Direct correlation
-1.1.5,1,Africa,Gabon,FSC,ECON,Harvest efficiency,Direct correlation
-1.1.6,1,Africa,Gabon,FSC,ENV,Road and skid trail density,Direct correlation
-1.1.7,1,Africa,Gabon,FSC,ECON,Timber stock (sustainability of income),Direct correlation
-1.1.8,0,Africa,Gabon,FSC,ENV,Tree diversity,Direct correlation
-1.10.1,1,Global,Global,FSC,ENV,"Deforestation, fragmentation and degradation",Direct correlation
-1.11.1,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.11.2,1,South and Central America,Brazil,FSC,ENV,Road and skid trail density,Direct correlation
-1.12.1,1,Asia,Malaysia,FSC,ENV,Animal diversity,Direct correlation
-1.12.2,1,Asia,Malaysia,FSC,ENV,Animal diversity,Direct correlation
-1.13.1,1,Asia,Indonesia,FSC,ENV,Collateral damage,Direct correlation
-1.13.2,1,Asia,Indonesia,FSC,ENV,Road and skid trail density,Direct correlation
-1.14.1,1,South and Central America,"Brazil, Venezuela, Suriname, Paraguay",FSC,ENV,Ground disturbance,Direct correlation
-1.16.1,1,South and Central America,Brazil,FSC,ECON,Profit,Direct correlation
-1.17.1,-1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.17.2,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.17.3,-1,South and Central America,Brazil,FSC,ENV,Collateral damage,Direct correlation
-1.17.4,1,South and Central America,Brazil,FSC,ENV,Ground disturbance,Direct correlation
-1.17.5,-1,South and Central America,Brazil,FSC,ECON,Pre-logging costs,Direct correlation
-1.17.6,-1,South and Central America,Brazil,FSC,ECON,Skidding cost,Direct correlation
-1.17.7,1,South and Central America,Brazil,FSC,ECON,Worker productivity,Direct correlation
-1.18.1,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.18.2,1,South and Central America,Brazil,FSC,ENV,Ground disturbance,Direct correlation
-1.19.1,-1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.10,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.11,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.12,0,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.13,0,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.2,0,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.3,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.4,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.5,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.6,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.7,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.8,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.19.9,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.20.1,1,Asia,Indonesia,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.20.2,1,Asia,Indonesia,FSC,ENV,Collateral damage,Direct correlation
-1.20.3,0,Asia,Indonesia,FSC,ENV,Collateral damage,Direct correlation
-1.20.4,0,Asia,Indonesia,FSC,ENV,Collateral damage,Direct correlation
-1.20.5,1,Asia,Indonesia,FSC,ENV,Road and skid trail density,Direct correlation
-1.21.1,0,Africa,Cameroon,FSC,ENV,Collateral damage,Direct correlation
-1.22.1,1,Asia,Malaysia,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.22.2,1,Asia,Malaysia,FSC,ENV,Collateral damage,Direct correlation
-1.23.1,1,Asia,Malaysia,FSC,ENV,Collateral damage,Direct correlation
-1.23.2,1,Asia,Malaysia,FSC,ENV,Collateral damage,Direct correlation
-1.23.3,1,Asia,Malaysia,FSC,ENV,Ground disturbance,Direct correlation
-1.23.4,-1,Asia,Malaysia,FSC,ECON,Total cost of logging operations,Direct correlation
-1.23.5,-1,Asia,Malaysia,FSC,ECON,Worker productivity,Direct correlation
-1.26.1,-1,Pan-tropical,Pan-tropical (countries not available),FSC,ECON,Profit,Unknown
-1.27.1,-1,South and Central America,Brazil,FSC,SOC,Access to land,Direct correlation
-1.27.2,1,South and Central America,Brazil,FSC,SOC,"Awareness, empowerment, participation",Direct correlation
-1.27.3,1,South and Central America,Brazil,FSC,SOC,Compliance with laws and regulations,Direct correlation
-1.27.4,0,South and Central America,Brazil,FSC,SOC,Direct economic benefits,Direct correlation
-1.27.5,1,South and Central America,Brazil,FSC,SOC,Infrastructure and Institutions,Direct correlation
-1.27.6,1,South and Central America,Brazil,FSC,SOC,Living and working conditions of employees,Direct correlation
-1.28.1,1,Pan-tropical,"Bolivia, Brazil, French Guiana, Guyana, Malaysia, Republic of Congo, Uganda, Venezuela",FSC,ENV,Animal diversity,Direct correlation
-1.29.1,1,Pan-tropical,Pan-tropical (countries not available),FSC,ENV,Animal diversity,Direct correlation
-1.3.1,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Access to land,Case study (loose correlation)
-1.3.10,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Living and working conditions of employees,Case study (loose correlation)
-1.3.11,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Living and working conditions of employees,Case study (loose correlation)
-1.3.12,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Living and working conditions of employees,Case study (loose correlation)
-1.3.2,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,ENV,"Deforestation, fragmentation and degradation",Case study (loose correlation)
-1.3.3,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,ENV,"Illegal hunting, logging, mining",Case study (loose correlation)
-1.3.4,0,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,"Equality, equity, less marginalization",Case study (loose correlation)
-1.3.5,1,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Infrastructure and Institutions,Case study (loose correlation)
-1.3.6,1,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Infrastructure and Institutions,Case study (loose correlation)
-1.3.7,1,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Community wellbeing and livelihoods,Case study (loose correlation)
-1.3.8,1,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Living and working conditions of employees,Case study (loose correlation)
-1.3.9,1,Africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,Living and working conditions of employees,Case study (loose correlation)
-1.30.1,1,Asia,Malaysia,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.30.2,1,Asia,Malaysia,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.30.3,1,Asia,Malaysia,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.30.4,1,Asia,Malaysia,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.32.1,1,Asia,Malaysia,FSC,ECON,Price premium,Direct correlation
-1.33.1,1,South and Central America,Brazil,FSC,SOC,Conflict,Direct correlation
-1.33.2,1,South and Central America,Brazil,FSC,ECON,Management and administration,Direct correlation
-1.33.3,0,South and Central America,Brazil,FSC,ECON,Management and administration,Direct correlation
-1.33.4,1,South and Central America,Brazil,FSC,ECON,Market access,Direct correlation
-1.33.5,0,South and Central America,Brazil,FSC,ECON,Price premium,Direct correlation
-1.33.6,0,South and Central America,Brazil,FSC,ECON,Profit,Direct correlation
-1.35.1,-1,South and Central America,Guyana,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.35.10,-1,South and Central America,Guyana,FSC,ECON,Worker productivity,Direct correlation
-1.35.2,-1,South and Central America,Guyana,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.35.3,1,South and Central America,Guyana,FSC,ENV,Collateral damage,Direct correlation
-1.35.4,1,South and Central America,Guyana,FSC,ENV,Ground disturbance,Direct correlation
-1.35.5,-1,South and Central America,Guyana,FSC,ECON,Pre-logging costs,Direct correlation
-1.35.6,-1,South and Central America,Guyana,FSC,ECON,Profit,Direct correlation
-1.35.7,1,South and Central America,Guyana,FSC,ECON,Skidding cost,Direct correlation
-1.35.8,-1,South and Central America,Guyana,FSC,ECON,Total cost of logging operations,Direct correlation
-1.35.9,1,South and Central America,Brazil,FSC,ECON,Total cost of logging operations,Direct correlation
-1.36.1,1,South and Central America,Ecuador,FSC,ENV,Ground disturbance,Direct correlation
-1.36.2,-1,South and Central America,Ecuador,FSC,ECON,Pre-logging costs,Direct correlation
-1.36.3,-1,South and Central America,Ecuador,FSC,ECON,Skidding cost,Direct correlation
-1.36.4,-1,South and Central America,Ecuador,FSC,ECON,Total cost of logging operations,Direct correlation
-1.36.5,-1,South and Central America,Ecuador,FSC,ECON,Worker productivity,Direct correlation
-1.37.1,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.37.2,0,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.37.3,0,South and Central America,Brazil,FSC,ENV,Collateral damage,Direct correlation
-1.37.4,1,South and Central America,Brazil,FSC,ENV,Ground disturbance,Direct correlation
-1.37.5,-1,South and Central America,Brazil,FSC,ECON,Pre-logging costs,Direct correlation
-1.37.6,1,South and Central America,Brazil,FSC,ECON,Profit,Direct correlation
-1.37.7,1,South and Central America,Brazil,FSC,ECON,Skidding cost,Direct correlation
-1.37.8,-1,South and Central America,Brazil,FSC,ECON,Worker productivity,Direct correlation
-1.38.1,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.38.10,-1,South and Central America,Brazil,FSC,ECON,Pre-logging costs,Direct correlation
-1.38.11,1,South and Central America,Brazil,FSC,ECON,Profit,Direct correlation
-1.38.12,1,South and Central America,Brazil,FSC,ECON,Profit,Direct correlation
-1.38.13,1,South and Central America,Brazil,FSC,ECON,Skidding cost,Direct correlation
-1.38.14,1,South and Central America,Brazil,FSC,ECON,Worker productivity,Direct correlation
-1.38.15,1,South and Central America,Brazil,FSC,ECON,Total cost of logging operations,Direct correlation
-1.38.16,1,South and Central America,Brazil,FSC,ECON,Total cost of logging operations,Direct correlation
-1.38.17,-1,South and Central America,Brazil,FSC,ECON,Worker productivity,Direct correlation
-1.38.18,1,South and Central America,Brazil,FSC,ECON,Skidding cost,Direct correlation
-1.38.2,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.38.3,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.38.4,1,South and Central America,Brazil,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.38.5,1,South and Central America,Brazil,FSC,ENV,Collateral damage,Direct correlation
-1.38.6,1,South and Central America,Brazil,FSC,ENV,Collateral damage,Direct correlation
-1.38.7,1,South and Central America,Brazil,FSC,ENV,Ground disturbance,Direct correlation
-1.38.8,1,South and Central America,Brazil,FSC,ENV,Ground disturbance,Direct correlation
-1.38.9,-1,South and Central America,Brazil,FSC,ECON,Pre-logging costs,Direct correlation
-1.39.1,1,South and Central America,Guyana,FSC,ECON,Pre-logging costs,Direct correlation
-1.39.2,1,South and Central America,Guyana,FSC,ECON,Skidding cost,Direct correlation
-1.39.3,1,South and Central America,Guyana,FSC,ECON,Total cost of logging operations,Direct correlation
-1.40.1,0,Pan-tropical,"Malaysia, Ethiopia, Indonesia, Papua New Guinea, Brazil, Bolivia, Cameroon, Cambodia, Gabon, Guyana, Costa Rica, Belize, French Guiana, Central Africal Republic, Nigeria, Ghana, Laos",FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.40.2,1,Pan-tropical,Pan-tropical (countries not available),FSC,ENV,Collateral damage,Direct correlation
-1.40.3,0,Pan-tropical,Pan-tropical (countries not available),FSC,ENV,Tree diversity,Direct correlation
-1.42.1,1,Asia,Indonesia,FSC,ENV,"Canopy loss, gap size",Direct correlation
-1.42.10,-1,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.42.11,-1,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.42.12,1,Asia,Indonesia,FSC,ECON,Profit,Direct correlation
-1.42.13,1,South and Central America,Brazil,FSC,ECON,Skidding costs,Direct correlation
-1.42.2,1,South and Central America,Brazil,FSC,SOC,Jobs,Direct correlation
-1.42.3,1,Asia,Indonesia,FSC,SOC,Jobs,Direct correlation
-1.42.4,0,Asia,Malaysia,FSC,SOC,Jobs,Direct correlation
-1.42.5,1,Asia,Indonesia,FSC,ECON,Management and administration,Direct correlation
-1.42.6,1,Asia,Malaysia,FSC,ECON,Market access,Direct correlation
-1.42.7,1,South and Central America,Brazil,FSC,ECON,Price premium,Direct correlation
-1.42.8,0,Asia,Malaysia,FSC,ECON,Price premium,Direct correlation
-1.42.9,-1,South and Central America,Brazil,FSC,ECON,Profit,Direct correlation
-1.43.1,1,Asia,Indonesia,FSC,SOC,Community wellbeing and livelihoods,Causal
-1.43.10,0,Asia,Indonesia,FSC,SOC,Infrastructure and Institutions,Causal
-1.43.2,1,Asia,Indonesia,FSC,SOC,Direct economic benefits,Causal
-1.43.3,1,Asia,Indonesia,FSC,SOC,Community wellbeing and livelihoods,Causal
-1.43.4,1,Asia,Indonesia,FSC,SOC,Community wellbeing and livelihoods,Causal
-1.43.5,1,Asia,Indonesia,FSC,SOC,Community wellbeing and livelihoods,Causal
-1.43.6,0,Asia,Indonesia,FSC,ENV,"Water regulation, erosion prevention",Causal
-1.43.7,1,Asia,Indonesia,FSC,ENV,"Deforestation, fragmentation and degradation",Causal
-1.43.8,0,Asia,Indonesia,FSC,ENV,"Deforestation, fragmentation and degradation",Causal
-1.43.9,0,Asia,Indonesia,FSC,SOC,Infrastructure and Institutions,Causal
-1.44.1,1,Asia,Malaysia,FSC,ENV,Collateral damage,Direct correlation
-1.44.10,-1,Asia,Malaysia,FSC,ECON,Worker productivity,Direct correlation
-1.44.2,1,Asia,Malaysia,FSC,SOC,Compliance with harvest regulations,Direct correlation
-1.44.3,-1,Asia,Malaysia,FSC,ECON,Pre-logging costs,Direct correlation
-1.44.4,-1,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.44.5,-1,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.44.6,1,Asia,Malaysia,FSC,ENV,Road and skid trail density,Direct correlation
-1.44.7,1,Asia,Malaysia,FSC,ENV,Set asides and buffer zones,Direct correlation
-1.44.8,1,Asia,Malaysia,FSC,ECON,Timber stock (sustainability of income),Direct correlation
-1.44.9,-1,Asia,Malaysia,FSC,ECON,Total cost of logging operations,Direct correlation
-1.45.1,-1,Asia,Indonesia,FSC,ECON,Profit,Direct correlation
-1.45.2,0,Asia,Indonesia,FSC,ECON,Total cost of logging operations,Direct correlation
-1.46.1,-1,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.46.2,-1,Asia,Malaysia,FSC,ECON,Total cost of logging operations,Direct correlation
-1.47.1,0,Africa,Gabon,FSC,ECON,Profit,Direct correlation
-1.47.2,-1,Africa,Gabon,FSC,ECON,Total cost of logging operations,Direct correlation
-1.48.1,-1,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.48.2,0,Asia,Malaysia,FSC,ECON,Total cost of logging operations,Direct correlation
-1.49.1,0,Asia,Malaysia,FSC,ECON,Profit,Direct correlation
-1.49.2,1,Asia,Malaysia,FSC,ECON,Total cost of logging operations,Direct correlation
-1.5.1,1,South and Central America,Bolivia,FSC,ECON,Price premium,Direct correlation
-1.51.1,0,South and Central America,Mexico,FSC,ENV,"Deforestation, fragmentation and degradation",Causal
-1.52.1,1,Pan-tropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia, ",FSC,ENV,Animal diversity,Direct correlation
-1.52.2,1,Pan-tropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia, ",FSC,ENV,Animal diversity,Direct correlation
-1.52.3,1,Pan-tropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia, ",FSC,ENV,Animal diversity,Direct correlation
-1.52.4,1,Pan-tropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia, ",FSC,ENV,Tree diversity,Direct correlation
-1.52.5,0,Pan-tropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia, ",FSC,ENV,Animal diversity,Direct correlation
-1.7.1,1,Asia,Malaysia,FSC,ENV,Animal diversity,Direct correlation
-1.7.2,1,Asia,Malaysia,FSC,ENV,"Carbon stock, emissions",Direct correlation
-1.7.3,1,Asia,Malaysia,FSC,ENV,Set asides and buffer zones,Direct correlation
+1.1.1,0,africa,Gabon,FSC,ENV,canopylossgapsize,strength3
+1.1.2,1,africa,Gabon,FSC,ENV,carbonstockemissions,strength3
+1.1.3,1,africa,Gabon,FSC,ENV,collateraldamage,strength3
+1.1.4,1,africa,Gabon,FSC,ENV,grounddisturbance,strength3
+1.1.5,1,africa,Gabon,FSC,ECON,harvestefficiency,strength3
+1.1.6,1,africa,Gabon,FSC,ENV,roadandskidtraildensity,strength3
+1.1.7,1,africa,Gabon,FSC,ECON,timberstock(sustainabilityofincome),strength3
+1.1.8,0,africa,Gabon,FSC,ENV,treediversity,strength3
+1.10.1,1,global,Global,FSC,ENV,deforestationfragmentationanddegradation,strength3
+1.11.1,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.11.2,1,southandcentralamerica,Brazil,FSC,ENV,roadandskidtraildensity,strength3
+1.12.1,1,asia,Malaysia,FSC,ENV,animaldiversity,strength3
+1.12.2,1,asia,Malaysia,FSC,ENV,animaldiversity,strength3
+1.13.1,1,asia,Indonesia,FSC,ENV,collateraldamage,strength3
+1.13.2,1,asia,Indonesia,FSC,ENV,roadandskidtraildensity,strength3
+1.14.1,1,southandcentralamerica,"Brazil, Venezuela, Suriname, Paraguay",FSC,ENV,grounddisturbance,strength3
+1.16.1,1,southandcentralamerica,Brazil,FSC,ECON,profit,strength3
+1.17.1,-1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.17.2,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.17.3,-1,southandcentralamerica,Brazil,FSC,ENV,collateraldamage,strength3
+1.17.4,1,southandcentralamerica,Brazil,FSC,ENV,grounddisturbance,strength3
+1.17.5,-1,southandcentralamerica,Brazil,FSC,ECON,preloggingcosts,strength3
+1.17.6,-1,southandcentralamerica,Brazil,FSC,ECON,skiddingcost,strength3
+1.17.7,1,southandcentralamerica,Brazil,FSC,ECON,workerproductivity,strength3
+1.18.1,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.18.2,1,southandcentralamerica,Brazil,FSC,ENV,grounddisturbance,strength3
+1.19.1,-1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.10,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.11,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.12,0,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.13,0,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.2,0,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.3,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.4,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.5,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.6,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.7,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.8,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.19.9,1,southandcentralamerica,Bolivia,FSC,ECON,pricepremium,strength3
+1.20.1,1,asia,Indonesia,FSC,ENV,canopylossgapsize,strength3
+1.20.2,1,asia,Indonesia,FSC,ENV,collateraldamage,strength3
+1.20.3,0,asia,Indonesia,FSC,ENV,collateraldamage,strength3
+1.20.4,0,asia,Indonesia,FSC,ENV,collateraldamage,strength3
+1.20.5,1,asia,Indonesia,FSC,ENV,roadandskidtraildensity,strength3
+1.21.1,0,africa,Cameroon,FSC,ENV,collateraldamage,strength3
+1.22.1,1,asia,Malaysia,FSC,ENV,carbonstockemissions,strength3
+1.22.2,1,asia,Malaysia,FSC,ENV,collateraldamage,strength3
+1.23.1,1,asia,Malaysia,FSC,ENV,collateraldamage,strength3
+1.23.2,1,asia,Malaysia,FSC,ENV,collateraldamage,strength3
+1.23.3,1,asia,Malaysia,FSC,ENV,grounddisturbance,strength3
+1.23.4,-1,asia,Malaysia,FSC,ECON,totalcostofloggingoperations,strength3
+1.23.5,-1,asia,Malaysia,FSC,ECON,workerproductivity,strength3
+1.26.1,-1,pantropical,Pan-tropical (countries not available),FSC,ECON,profit,strength0
+1.27.1,-1,southandcentralamerica,Brazil,FSC,SOC,accesstoland,strength3
+1.27.2,1,southandcentralamerica,Brazil,FSC,SOC,awarenessempowermentparticipation,strength3
+1.27.3,1,southandcentralamerica,Brazil,FSC,SOC,compliancewithlawsandregulations,strength3
+1.27.4,0,southandcentralamerica,Brazil,FSC,SOC,directeconomicbenefits,strength3
+1.27.5,1,southandcentralamerica,Brazil,FSC,SOC,infrastructureandinstitutions,strength3
+1.27.6,1,southandcentralamerica,Brazil,FSC,SOC,livingandworkingconditionsofemployees,strength3
+1.28.1,1,pantropical,"Bolivia, Brazil, French Guiana, Guyana, Malaysia, Republic of Congo, Uganda, Venezuela",FSC,ENV,animaldiversity,strength3
+1.29.1,1,pantropical,Pan-tropical (countries not available),FSC,ENV,animaldiversity,strength3
+1.3.1,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,accesstoland,strength1
+1.3.10,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,livingandworkingconditionsofemployees,strength1
+1.3.11,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,livingandworkingconditionsofemployees,strength1
+1.3.12,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,livingandworkingconditionsofemployees,strength1
+1.3.2,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,ENV,deforestationfragmentationanddegradation,strength1
+1.3.3,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,ENV,illegalhuntingloggingmining,strength1
+1.3.4,0,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,equalityequitylessmarginalization,strength1
+1.3.5,1,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,infrastructureandinstitutions,strength1
+1.3.6,1,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,infrastructureandinstitutions,strength1
+1.3.7,1,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,communitywellbeingandlivelihoods,strength1
+1.3.8,1,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,livingandworkingconditionsofemployees,strength1
+1.3.9,1,africa,"Cameroon, Gabon, Republic of Congo",FSC,SOC,livingandworkingconditionsofemployees,strength1
+1.30.1,1,asia,Malaysia,FSC,ENV,carbonstockemissions,strength3
+1.30.2,1,asia,Malaysia,FSC,ENV,carbonstockemissions,strength3
+1.30.3,1,asia,Malaysia,FSC,ENV,carbonstockemissions,strength3
+1.30.4,1,asia,Malaysia,FSC,ENV,carbonstockemissions,strength3
+1.32.1,1,asia,Malaysia,FSC,ECON,pricepremium,strength3
+1.33.1,1,southandcentralamerica,Brazil,FSC,SOC,conflict,strength3
+1.33.2,1,southandcentralamerica,Brazil,FSC,ECON,managementandadministration,strength3
+1.33.3,0,southandcentralamerica,Brazil,FSC,ECON,managementandadministration,strength3
+1.33.4,1,southandcentralamerica,Brazil,FSC,ECON,marketaccess,strength3
+1.33.5,0,southandcentralamerica,Brazil,FSC,ECON,pricepremium,strength3
+1.33.6,0,southandcentralamerica,Brazil,FSC,ECON,profit,strength3
+1.35.1,-1,southandcentralamerica,Guyana,FSC,ENV,canopylossgapsize,strength3
+1.35.10,-1,southandcentralamerica,Guyana,FSC,ECON,workerproductivity,strength3
+1.35.2,-1,southandcentralamerica,Guyana,FSC,ENV,canopylossgapsize,strength3
+1.35.3,1,southandcentralamerica,Guyana,FSC,ENV,collateraldamage,strength3
+1.35.4,1,southandcentralamerica,Guyana,FSC,ENV,grounddisturbance,strength3
+1.35.5,-1,southandcentralamerica,Guyana,FSC,ECON,preloggingcosts,strength3
+1.35.6,-1,southandcentralamerica,Guyana,FSC,ECON,profit,strength3
+1.35.7,1,southandcentralamerica,Guyana,FSC,ECON,skiddingcost,strength3
+1.35.8,-1,southandcentralamerica,Guyana,FSC,ECON,totalcostofloggingoperations,strength3
+1.35.9,1,southandcentralamerica,Brazil,FSC,ECON,totalcostofloggingoperations,strength3
+1.36.1,1,southandcentralamerica,Ecuador,FSC,ENV,grounddisturbance,strength3
+1.36.2,-1,southandcentralamerica,Ecuador,FSC,ECON,preloggingcosts,strength3
+1.36.3,-1,southandcentralamerica,Ecuador,FSC,ECON,skiddingcost,strength3
+1.36.4,-1,southandcentralamerica,Ecuador,FSC,ECON,totalcostofloggingoperations,strength3
+1.36.5,-1,southandcentralamerica,Ecuador,FSC,ECON,workerproductivity,strength3
+1.37.1,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.37.2,0,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.37.3,0,southandcentralamerica,Brazil,FSC,ENV,collateraldamage,strength3
+1.37.4,1,southandcentralamerica,Brazil,FSC,ENV,grounddisturbance,strength3
+1.37.5,-1,southandcentralamerica,Brazil,FSC,ECON,preloggingcosts,strength3
+1.37.6,1,southandcentralamerica,Brazil,FSC,ECON,profit,strength3
+1.37.7,1,southandcentralamerica,Brazil,FSC,ECON,skiddingcost,strength3
+1.37.8,-1,southandcentralamerica,Brazil,FSC,ECON,workerproductivity,strength3
+1.38.1,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.38.10,-1,southandcentralamerica,Brazil,FSC,ECON,preloggingcosts,strength3
+1.38.11,1,southandcentralamerica,Brazil,FSC,ECON,profit,strength3
+1.38.12,1,southandcentralamerica,Brazil,FSC,ECON,profit,strength3
+1.38.13,1,southandcentralamerica,Brazil,FSC,ECON,skiddingcost,strength3
+1.38.14,1,southandcentralamerica,Brazil,FSC,ECON,workerproductivity,strength3
+1.38.15,1,southandcentralamerica,Brazil,FSC,ECON,totalcostofloggingoperations,strength3
+1.38.16,1,southandcentralamerica,Brazil,FSC,ECON,totalcostofloggingoperations,strength3
+1.38.17,-1,southandcentralamerica,Brazil,FSC,ECON,workerproductivity,strength3
+1.38.18,1,southandcentralamerica,Brazil,FSC,ECON,skiddingcost,strength3
+1.38.2,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.38.3,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.38.4,1,southandcentralamerica,Brazil,FSC,ENV,canopylossgapsize,strength3
+1.38.5,1,southandcentralamerica,Brazil,FSC,ENV,collateraldamage,strength3
+1.38.6,1,southandcentralamerica,Brazil,FSC,ENV,collateraldamage,strength3
+1.38.7,1,southandcentralamerica,Brazil,FSC,ENV,grounddisturbance,strength3
+1.38.8,1,southandcentralamerica,Brazil,FSC,ENV,grounddisturbance,strength3
+1.38.9,-1,southandcentralamerica,Brazil,FSC,ECON,preloggingcosts,strength3
+1.39.1,1,southandcentralamerica,Guyana,FSC,ECON,preloggingcosts,strength3
+1.39.2,1,southandcentralamerica,Guyana,FSC,ECON,skiddingcost,strength3
+1.39.3,1,southandcentralamerica,Guyana,FSC,ECON,totalcostofloggingoperations,strength3
+1.40.1,0,pantropical,"Malaysia, Ethiopia, Indonesia, Papua New Guinea, Brazil, Bolivia, Cameroon, Cambodia, Gabon, Guyana, Costa Rica, Belize, French Guiana, Central Africal Republic, Nigeria, Ghana, Laos",FSC,ENV,carbonstockemissions,strength3
+1.40.2,1,pantropical,Pan-tropical (countries not available),FSC,ENV,collateraldamage,strength3
+1.40.3,0,pantropical,Pan-tropical (countries not available),FSC,ENV,treediversity,strength3
+1.42.1,1,asia,Indonesia,FSC,ENV,canopylossgapsize,strength3
+1.42.10,-1,asia,Malaysia,FSC,ECON,profit,strength3
+1.42.11,-1,asia,Malaysia,FSC,ECON,profit,strength3
+1.42.12,1,asia,Indonesia,FSC,ECON,profit,strength3
+1.42.13,1,southandcentralamerica,Brazil,FSC,ECON,skiddingcosts,strength3
+1.42.2,1,southandcentralamerica,Brazil,FSC,SOC,jobs,strength3
+1.42.3,1,asia,Indonesia,FSC,SOC,jobs,strength3
+1.42.4,0,asia,Malaysia,FSC,SOC,jobs,strength3
+1.42.5,1,asia,Indonesia,FSC,ECON,managementandadministration,strength3
+1.42.6,1,asia,Malaysia,FSC,ECON,marketaccess,strength3
+1.42.7,1,southandcentralamerica,Brazil,FSC,ECON,pricepremium,strength3
+1.42.8,0,asia,Malaysia,FSC,ECON,pricepremium,strength3
+1.42.9,-1,southandcentralamerica,Brazil,FSC,ECON,profit,strength3
+1.43.1,1,asia,Indonesia,FSC,SOC,communitywellbeingandlivelihoods,strength2
+1.43.10,0,asia,Indonesia,FSC,SOC,infrastructureandinstitutions,strength2
+1.43.2,1,asia,Indonesia,FSC,SOC,directeconomicbenefits,strength2
+1.43.3,1,asia,Indonesia,FSC,SOC,communitywellbeingandlivelihoods,strength2
+1.43.4,1,asia,Indonesia,FSC,SOC,communitywellbeingandlivelihoods,strength2
+1.43.5,1,asia,Indonesia,FSC,SOC,communitywellbeingandlivelihoods,strength2
+1.43.6,0,asia,Indonesia,FSC,ENV,waterregulationerosionprevention,strength2
+1.43.7,1,asia,Indonesia,FSC,ENV,deforestationfragmentationanddegradation,strength2
+1.43.8,0,asia,Indonesia,FSC,ENV,deforestationfragmentationanddegradation,strength2
+1.43.9,0,asia,Indonesia,FSC,SOC,infrastructureandinstitutions,strength2
+1.44.1,1,asia,Malaysia,FSC,ENV,collateraldamage,strength3
+1.44.10,-1,asia,Malaysia,FSC,ECON,workerproductivity,strength3
+1.44.2,1,asia,Malaysia,FSC,SOC,compliancewithharvestregulations,strength3
+1.44.3,-1,asia,Malaysia,FSC,ECON,preloggingcosts,strength3
+1.44.4,-1,asia,Malaysia,FSC,ECON,profit,strength3
+1.44.5,-1,asia,Malaysia,FSC,ECON,profit,strength3
+1.44.6,1,asia,Malaysia,FSC,ENV,roadandskidtraildensity,strength3
+1.44.7,1,asia,Malaysia,FSC,ENV,setasidesandbufferzones,strength3
+1.44.8,1,asia,Malaysia,FSC,ECON,timberstock(sustainabilityofincome),strength3
+1.44.9,-1,asia,Malaysia,FSC,ECON,totalcostofloggingoperations,strength3
+1.45.1,-1,asia,Indonesia,FSC,ECON,profit,strength3
+1.45.2,0,asia,Indonesia,FSC,ECON,totalcostofloggingoperations,strength3
+1.46.1,-1,asia,Malaysia,FSC,ECON,profit,strength3
+1.46.2,-1,asia,Malaysia,FSC,ECON,totalcostofloggingoperations,strength3
+1.47.1,0,africa,Gabon,FSC,ECON,profit,strength3
+1.47.2,-1,africa,Gabon,FSC,ECON,totalcostofloggingoperations,strength3
+1.48.1,-1,asia,Malaysia,FSC,ECON,profit,strength3
+1.48.2,0,asia,Malaysia,FSC,ECON,totalcostofloggingoperations,strength3
+1.49.1,0,asia,Malaysia,FSC,ECON,profit,strength3
+1.49.2,1,asia,Malaysia,FSC,ECON,totalcostofloggingoperations,strength3
+1.51.1,0,southandcentralamerica,Mexico,FSC,ENV,deforestationfragmentationanddegradation,strength3
+1.52.1,1,southandcentralamerica,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia,",FSC,ENV,animaldiversity,strength2
+1.52.2,1,pantropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia,",FSC,ENV,animaldiversity,strength3
+1.52.3,1,pantropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia,",FSC,ENV,animaldiversity,strength3
+1.52.4,1,pantropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia,",FSC,ENV,treediversity,strength3
+1.52.5,0,pantropical,"Belize, Bolivia, Brazil, Ghana, Malaysia, Costa Rica, Ecuador, India, Indonesia, Malaysia,",FSC,ENV,animaldiversity,strength3
+1.7.1,1,pantropical,Malaysia,FSC,ENV,animaldiversity,strength3
+1.7.2,1,asia,Malaysia,FSC,ENV,carbonstockemissions,strength3
+1.7.3,1,asia,Malaysia,FSC,ENV,setasidesandbufferzones,strength3
