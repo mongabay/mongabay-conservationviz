@@ -20,13 +20,13 @@ config[themes.top] = {
   rowpadding: 10,                 // padding between rows
 };
 config[themes.bottom] = {
-  svgwidth:   700,       
+  svgwidth:   1000,       
   svgmargin:  { top:    0,        
                 bottom: 0,        
                 right:  0, 
-                left:   120 },      
+                left:   140 },      
   ncols:      3,                 
-  sqsize:     20,                 
+  sqsize:     17,                 
   rowpadding: 10,                 
 };
 

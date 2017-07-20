@@ -618,7 +618,7 @@ function find_longest_text_node(container) {
 }
 
 function fitsvg() {
-  var svg = document.getElementById("svgtop");
+  var svg = document.getElementById("svgbottom");
   var bbox = svg.getBBox();
   svg.setAttribute("width", bbox.x + bbox.width);
   svg.setAttribute("height", bbox.y + bbox.height);
