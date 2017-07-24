@@ -6,22 +6,34 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-svg {
-  box-shadow:none;
-  background:#fff;
+div.outergroup {
+  position:relative;
 }
 
-svg.top {
+div.top {
   margin-top:10px;
   margin-bottom:10px;
 }
 
-svg.bottom {
+div.bottom {
   margin-top:10px;
 }
 
-svg g {
-  opacity: 1;
+div.row {
+  position:absolute;
+}
+
+div.chart {
+  position: absolute;
+  height: 100%;
+}
+
+div.text {
+  white-space: pre-wrap;      /* CSS3 */   
+  white-space: -moz-pre-wrap; /* Firefox */    
+  white-space: -pre-wrap;     /* Opera <7 */   
+  white-space: -o-pre-wrap;   /* Opera 7 */    
+  word-wrap: break-word;      /* IE */
 }
 
 rect.plus {
