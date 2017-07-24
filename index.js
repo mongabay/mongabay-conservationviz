@@ -209,11 +209,11 @@ dispatch.on("load.leaflet", function(data) {
 dispatch.on("load.topchart", function(map) {
 
   // INITIAL SVG SETUP
-  // create an svg element to hold our chart parts
-  var svg = d3.select("svg.top")
+  // select the element to hold our top charts
+  var container = d3.select(".top")
     .attr("width", config[themes.top]["svgwidth"])
     .attr("height", config[themes.top]["svgheight"])
-    .append("g")
+    .append("div")
       .attr("transform", "translate(" + config[themes.top]["svgmargin"]["left"] + ",0)")
       .attr("class","outergroup")
 
@@ -221,7 +221,7 @@ dispatch.on("load.topchart", function(map) {
   dispatch.on("statechange.topchart", function(data) {
     var data = nest(data,themes.top);
     calcOffsets(data,themes.top);
-    update(data, svg, tfast, themes.top);
+    update(data, container, tfast, themes.top);
   });
 });
 
@@ -229,8 +229,8 @@ dispatch.on("load.topchart", function(map) {
 dispatch.on("load.bottomchart", function(map) {
 
   // INITIAL SVG SETUP
-  // create an svg element to hold our chart parts
-  var svg = d3.select("svg.bottom")
+  // select the element to hold our bottom charts
+  var container = d3.select(".bottom")
     .attr("width", config[themes.bottom]["svgwidth"])
     .attr("height", config[themes.bottom]["svgheight"])
     .append("g")
@@ -241,24 +241,24 @@ dispatch.on("load.bottomchart", function(map) {
   dispatch.on("statechange.bottomchart", function(data) {
     var data = nest(data,themes.bottom);
     calcOffsets(data, themes.bottom);
-    update(data, svg, tfast, themes.bottom);
+    update(data, container, tfast, themes.bottom);
   });
 
 });
 
-function update(data, svg, tfast, group) {
+function update(data, container, tfast, group) {
 
   console.log("statechange data: ", data);
 
-  // bind our new piece of data to our svg element
-  // could also do `svg.data([data.values]);`
-  svg.datum(data);  
+  // bind our new piece of data to our container element
+  // could also do `container.data([data.values]);`
+  container.datum(data);  
 
   // 
   // ROWS
   //
-  // create svg groups for each data grouping (the top level of nest())
-  var rows = svg.selectAll("g.row")
+  // create row groups for each data grouping (the top level of nest())
+  var rows = container.selectAll("div.row")
     .data(function(d,i) { return d; }, function(d) {return d.key});
 
   // remove old rows
@@ -267,97 +267,66 @@ function update(data, svg, tfast, group) {
   // update existing ones left over
   rows.attr("class", "row")
     .transition(tfast)
-    .attr("transform", function(d,i) {
-      var x = 0; // col offset
-      // which column are we in? Row is zero indexed, so add 1 to it
-      var col = Math.ceil((i + 1)/config[group]["rowspercol"]);
-      // define the start position, column * colwidth, minus one colwidth
-      // a full column in this case is the chart column, plus the margin for text
-      var fullcol = config[group]["colwidth"] + config[group]["svgmargin"]["left"];
-      var x = (col * fullcol) - fullcol;
-      var y = config[group][d.key]["offset_y"]; // row offset
-      return "translate(" + x + "," + y + ")";
-    });
-
-  // create new rows if our updated dataset has more than the previous
-  var rowenter = rows.enter().append("g")
-    .attr("class", "row")
-    .attr("transform", function(d,i) {
+    .style("left", function(d,i) {
       var x = 0; // col offset
       // which column are we in? Row is zero indexed, so add 1 to it
       var col = Math.ceil((i + 1)/config[group]["rowspercol"]);
       // define the start x position, column * colwidth, minus one colwidth
       var fullcol = config[group]["colwidth"] + config[group]["svgmargin"]["left"];
       var x = (col * fullcol) - fullcol;
-      var y = config[group][d.key]["offset_y"]; // row offset
-      return "translate(" + x + "," + y + ")";
+      return x + "px";
+    })
+    .style("top", function(d, i) {
+        // var y = config[group][d.key]["offset_y"]; // row offset
+        // return y;
+        return i * 40 + "px";
     });
 
-
-  // 
-  // TEXT GROUPS
-  //
-  
-  var rows = svg.selectAll("g.row");
-  var textgroups = rows.selectAll("g.text")
-    .data(function(d) {return [d]}, function(d) {return d.key});
-
-  // get rid of ones we don't need
-  textgroups.exit().remove();
-
-  // update existing ones left over
-  textgroups
-    .attr("transform", function(d) {
-      // pull x pos back the same distance as svgmargin
-      var x = -1 * config[group]["svgmargin"]["left"];
-      // TO DO: text is currently 14px, not sure why the
-      // addition of 5 seems to center things, but it does
-      var totalheight = config[group][d.key]["totalrows"] * config[group]["sqsize"];
-      var y = (totalheight / 2) + 5;
-      return "translate(" + x + "," + y + ")";
+  // create new rows if our updated dataset has more than the previous
+  var rowenter = rows.enter().append("div")
+    .attr("class", "row")
+    .style("left", function(d,i) {
+      var x = 0; // col offset
+      // which column are we in? Row is zero indexed, so add 1 to it
+      var col = Math.ceil((i + 1)/config[group]["rowspercol"]);
+      // define the start x position, column * colwidth, minus one colwidth
+      var fullcol = config[group]["colwidth"] + config[group]["svgmargin"]["left"];
+      var x = (col * fullcol) - fullcol;
+      return x + "px";
+    })
+    .style("top", function(d, i) {
+        // var y = config[group][d.key]["offset_y"]; // row offset
+        // return y;
+        return i * 80 + "px";
     });
-      
-  // add new ones
-  textgroups.enter().append("g")
-    .attr("class","text")
-    .attr("transform", function(d) {
-      // pull x pos back the same distance as svgmargin
-      var x = -1 * config[group]["svgmargin"]["left"];
-      // TO DO: text is currently 14px, not sure why the
-      // addition of 5 seems to center things, but it does
-      var totalheight = config[group][d.key]["totalrows"] * config[group]["sqsize"];
-      var y = (totalheight / 2) + 5;
-      return "translate(" + x + "," + y + ")";
-    });
+
 
   //
   // TEXT LABELS
   //
-  var textgroups = rows.selectAll("g.text");
-  var text = textgroups.selectAll("text")
+  var rows = container.selectAll("div.row");
+  var text = rows.selectAll("div.text")
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // exit
   text.exit().remove();
 
   // update
-  text.text(function(d) {return lookup[d.key]["name"]})
-    .call(wrap, config[group]["svgmargin"]["left"]);
+  text.text(function(d) {return lookup[d.key]["name"]});
 
   // enter
-  text.enter().append("text")
-    .text(function(d) {return lookup[d.key]["name"]})
-    .call(wrap, config[group]["svgmargin"]["left"]);
+  text.enter().append("div")
+    .attr("class","text")
+    .text(function(d) {return lookup[d.key]["name"]});
 
 
   //
   // CHART GROUPS
   //
-  // tell d3 we want svg groups for each of our chart categories
+  // create chart groups for each of our chart categories
   // there are currently only two: plus and minus
-  // same select-again issue as below?  appears to be so
-  var rows = svg.selectAll("g.row");
-  var charts = rows.selectAll("g.chart")
+  var rows = container.selectAll("div.row");
+  var charts = rows.selectAll("div.chart")
     .data(function(d) { return d.values; }, function(d) {return d.key});
 
   // get rid of the old ones we don't need when doing an update
@@ -371,33 +340,36 @@ function update(data, svg, tfast, group) {
 
   // update existing ones left over
   charts.attr("class", "chart")
-    .attr("transform", function(d, i) {
-      // get the offset, saved in offset{} by the parent node's key
+    .style("top", function(d, i) {
       var key = d3.select(this.parentNode).datum().key;
-      // offset never applies to the first row (plus), but only the second row (minus)
-      // and only when the first row has to wrap, which we pre-calculated in load.setup
       var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      return "translate(" + 0 + "," + offset + ")";
+      return offset + "px";
     });
 
   // create new ones if our updated dataset has more then the previous
-  charts.enter().append("g")
+  charts.enter().append("div")
     .attr("class","chart")
-    .attr("transform", function(d, i) {
-      // get the offset, saved in config{} by the parent node's key
+    .style("left", "100px")
+    .style("top", function(d, i) {
       var key = d3.select(this.parentNode).datum().key;
-      // offset never applies to the first row (plus), but only the second row (minus)
-      // and only when the first row has to wrap, which we pre-calculated in load.setup
       var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      return "translate(" + 0 + ", " + offset + ")";
+      return offset + "px";
     });
+    // .attr("transform", function(d, i) {
+    //   // get the offset, saved in config{} by the parent node's key
+    //   var key = d3.select(this.parentNode).datum().key;
+    //   // offset never applies to the first row (plus), but only the second row (minus)
+    //   // and only when the first row has to wrap, which we pre-calculated in load.setup
+    //   var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
+    //   return "translate(" + 0 + ", " + offset + ")";
+    // });
 
 
   // 
   // CHARTS: outer svg wrapper
   // 
-  
-  charts = rows.selectAll("g.chart");
+
+  charts = rows.selectAll("div.chart");
   var chartcontainers = charts.selectAll("svg")
     .data(function(d) { return [d] }, function(d) { return d.key });
 
@@ -407,7 +379,10 @@ function update(data, svg, tfast, group) {
 
   // enter
   chartcontainers.enter().append("svg")
-    .attr("class","chartcontainer");
+    .attr("class","chartcontainer")
+    .attr("width", function(d) {
+      return config[group]["colwidth"];
+    });
 
   //
   // SQUARES: bind data
