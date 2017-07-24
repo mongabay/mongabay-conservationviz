@@ -1,85 +1,360 @@
-key,name,description,author,pubyear,url
-ENV,Environnmental,,,,
-ECON,Social,,,,
-SOC,Economic,,,,
-strength0,Unknown,,,,
-strength1,Case study (loose correlation),,,,
-strength2,Causal,,,,
-strength3,Direct Correlation,,,,
-1.1,"Certified and uncertified logging concessions compared in Gabon: Changes in stand structure, tree species, and biomass.",,Medjibe et al. 2013,2013,
-1.10,"Unsustainable timber harvesting, deforestation and the role of certification.",,Damette and Delacote 2011,2011,
-1.11,Canopy Damage and Recovery After Selective Logging in Amazonia: Field and Satellite Studies,,Asner et al. 2004,2004,
-1.12,Does Reduced-Impact Logging Help Preserve Biodiversity in Tropical Rainforests? A Case Study from Borneo using Dung Beetles (Coleoptera: Scarabaeoidea) as Indicators.,,Davis 2000,2000,
-1.13,"An experimental comparison of different harvesting intensities with reduced- impact and conventional logging in East Kalimantan, Indonesia.",,Bertault and Sist 1997,1997,
-1.14,When big trees fall?: Damage and carbon export by reduced impact logging in southern Amazonia.,,Feldpausch et al. 2005,2005,
-1.16,Financial returns under uncertainty for conventional and reduced-impact logging in permanent production forests of the Brazilian Amazon.,,Boltz et al. 2001,2001,
-1.17,Environmentally Sound Forest Harvesting: Testing the Applicability of the FAO Model Code in the Amazon in Brazil,,Winkler 1997,1997,
-1.18,"Forest canopy damage and recovery in reduced-impact and conventional selective logging in eastern Para, Brazil.",,Pereira et al. 2002,2002,
-1.19,Development and economic significance of forest certification: The case of FSC in Bolivia.,,Nebel et al. 2005,2005,
-1.20,Reduced-impact logging in Indonesian Borneo: Some results confirming the need for new silvicultural prescriptions.,,Sist et al. 2003,2003,
-1.21,Does climber cutting reduce felling damage in southern Cameroon?,,Parren and Bongers 2001,2001,
-1.22,Retaining forest biomass by reducing logging damage.,,Pinard and Putz 1996,1996,
-1.23,"Lessons learned from the implementation of reduced-impact logging in hilly terrain in Sabah, Malaysia.",,Pinard et al. 2000,2000,
-1.26,Sustainable forestry in the tropics: panacea or folly?,,Pearce et al. 2003,2003,
-1.27,"Profitability and social impacts of reduced impact logging in the Tapajos National Forest, Brazil – A case study",,Bacha and Rodriguez 2007,2007,
-1.28,Avian responses to selective logging shaped by species traits and logging practices.,,Burivalova et al. 2015,2015,
-1.29,Improved timber harvest techniques maintain biodiversity in tropical forests.,,Bicknell et al. 2014,2014,
-1.3,Social impacts of the Forest Stewardship Council certification in the Congo basin,,Cerutti et al. 2017,2017,
-1.30,Reduced-Impact Logging as a Carbon-Offset Method.,,Putz and Pinard 1993,1993,
-1.32,"Do certified tropical logs fetch a market premium? A comparative price analysis from Sabah, Malaysia.",,Kollert and Lagan 2007,2007,
-1.33,Why Brazilian companies are certifying their forests?,,Araujo et al. 2009,2009,
-1.35,"Reduced Impact Logging in the Tropical Rain Forest of Guyana: Ecological, Economic, and Silvicultural Consequences.",,Van Der Hout 1998,1998,
-1.36,Extraccion Forestal de Bajo Impacto en La Mayronga.,,Montenegro 1996,1996,
-1.37,Financial and ecological indicators of reduced impact logging performance in the eastern Amazon.,,Holmes et al. 2002,2002,
-1.38,Costs and benefits of forest management for timber pro- duction in eastern Amazonia.,,Baretto et al. 1998,1998,
-1.39,Report by Edinburgh Center for Tropical Forests (ECTF) On Reduced Impact Logging Research: Activities and Outputs for the Barama Company Limited,,Armstrong 2000,2000,
-1.40,Impacts of tropical selective logging on carbon storage and tree species richness: A meta-analysis.,,Martin et al. 2015,2015,
-1.42,Financial Cost-Benfit Analysis of Forest Certification and Implementation of Phased Approaches,,Simula et al. 2004,2004,
-1.43,Social and Environmental Impacts of Forest Management Certification in Indonesia.,,Miteva et al. 2015,2015,
-1.44,"Financial assessment of reduced-impact logging techniques in Sabah, Malaysia",,Tay et al. 2002,2002,
-1.45,"Cost-benefit analysis of reduced-impact logging in a lowland Dipterocart forest of Malinau, East Kalimantan.",,Dwiprabowo et al. 2002,2002,
-1.46,Financial and economic analyses of conventional and reduced impact harvesting systems in Sarawak,,Dagang et al. 2002,2002,
-1.47,Cost comparisons of reduced-impact and conventional logging in the tropics.,,Medjibe and Putz 2012,2012,
-1.48,"Analysis of two alternative harvesting systems in Peninsular Malaysia: sensitivity analysis of costs, logging damage and buffers.",,Saharudin et al. 1999,1999,
-1.49,Planning and cost studies in harvesting in the mixed dipterocarp forest of Sarawak,,Mattson-Marn et al. 1981,1981,
-1.51,Does Eco-certification Stem Tropical Deforestation? Forest Stewardship Council Certification in Mexico,,Blackman et al. 2015,2015,
-1.52,Impact of Forest Management on Species Richness: Global Meta-Analysis and Economic Trade-Offs,,Chaudhary et al. 2016,2016,
-1.7,Co-benefits of sustainable forest management in biodiversity conservation and carbon sequestration.,,Imai et al. 2009,2009,
-africa,Africa,,,,
-southandcentralamerica,South and Central America,,,,
-asia,Asia,,,,
-global,Global,,,,
-pantropical,Pan-tropical,,,,
-canopylossgapsize,"Canopy loss, gap size",,,,
-carbonstockemissions,"Carbon stock, emissions",,,,
-collateraldamage,Collateral damage,,,,
-grounddisturbance,Ground disturbance,,,,
-harvestefficiency,Harvest efficiency,,,,
-roadandskidtraildensity,Road and skid trail density,,,,
-timberstock(sustainabilityofincome),Timber stock (sustainability of income),,,,
-treediversity,Tree diversity,,,,
-deforestationfragmentationanddegradation,"Deforestation, fragmentation and degradation",,,,
-animaldiversity,Animal diversity,,,,
-profit,Profit,,,,
-preloggingcosts,Pre-logging costs,,,,
-skiddingcost,Skidding cost,,,,
-workerproductivity,Worker productivity,,,,
-pricepremium,Price premium,,,,
-totalcostofloggingoperations,Total cost of logging operations,,,,
-accesstoland,Access to land,,,,
-awarenessempowermentparticipation,"Awareness, empowerment, participation",,,,
-compliancewithlawsandregulations,Compliance with laws and regulations,,,,
-directeconomicbenefits,Direct economic benefits,,,,
-infrastructureandinstitutions,Infrastructure and Institutions,,,,
-livingandworkingconditionsofemployees,Living and working conditions of employees,,,,
-illegalhuntingloggingmining,"Illegal hunting, logging, mining",,,,
-equalityequitylessmarginalization,"Equality, equity, less marginalization",,,,
-communitywellbeingandlivelihoods,Community wellbeing and livelihoods,,,,
-conflict,Conflict,,,,
-managementandadministration,Management and administration,,,,
-marketaccess,Market access,,,,
-skiddingcosts,Skidding costs,,,,
-jobs,Jobs,,,,
-waterregulationerosionprevention,"Water regulation, erosion prevention",,,,
-compliancewithharvestregulations,Compliance with harvest regulations,,,,
-setasidesandbufferzones,Set asides and buffer zones,,,,
+key,name,description,author,pubyear,url,latitude,longitude
+ENV,Environnmental,,,,,,
+ECON,Social,,,,,,
+SOC,Economic,,,,,,
+strength0,Unknown,,,,,,
+strength1,Case study (loose correlation),,,,,,
+strength2,Causal,,,,,,
+strength3,Direct Correlation,,,,,,
+1.1,"Certified and uncertified logging concessions compared in Gabon: Changes in stand structure, tree species, and biomass.",,Medjibe et al. 2013,2013,,,
+1.10,"Unsustainable timber harvesting, deforestation and the role of certification.",,Damette and Delacote 2011,2011,,,
+1.11,Canopy Damage and Recovery After Selective Logging in Amazonia: Field and Satellite Studies,,Asner et al. 2004,2004,,,
+1.12,Does Reduced-Impact Logging Help Preserve Biodiversity in Tropical Rainforests? A Case Study from Borneo using Dung Beetles (Coleoptera: Scarabaeoidea) as Indicators.,,Davis 2000,2000,,,
+1.13,"An experimental comparison of different harvesting intensities with reduced- impact and conventional logging in East Kalimantan, Indonesia.",,Bertault and Sist 1997,1997,,,
+1.14,When big trees fall?: Damage and carbon export by reduced impact logging in southern Amazonia.,,Feldpausch et al. 2005,2005,,,
+1.16,Financial returns under uncertainty for conventional and reduced-impact logging in permanent production forests of the Brazilian Amazon.,,Boltz et al. 2001,2001,,,
+1.17,Environmentally Sound Forest Harvesting: Testing the Applicability of the FAO Model Code in the Amazon in Brazil,,Winkler 1997,1997,,,
+1.18,"Forest canopy damage and recovery in reduced-impact and conventional selective logging in eastern Para, Brazil.",,Pereira et al. 2002,2002,,,
+1.19,Development and economic significance of forest certification: The case of FSC in Bolivia.,,Nebel et al. 2005,2005,,,
+1.20,Reduced-impact logging in Indonesian Borneo: Some results confirming the need for new silvicultural prescriptions.,,Sist et al. 2003,2003,,,
+1.21,Does climber cutting reduce felling damage in southern Cameroon?,,Parren and Bongers 2001,2001,,,
+1.22,Retaining forest biomass by reducing logging damage.,,Pinard and Putz 1996,1996,,,
+1.23,"Lessons learned from the implementation of reduced-impact logging in hilly terrain in Sabah, Malaysia.",,Pinard et al. 2000,2000,,,
+1.26,Sustainable forestry in the tropics: panacea or folly?,,Pearce et al. 2003,2003,,,
+1.27,"Profitability and social impacts of reduced impact logging in the Tapajos National Forest, Brazil – A case study",,Bacha and Rodriguez 2007,2007,,,
+1.28,Avian responses to selective logging shaped by species traits and logging practices.,,Burivalova et al. 2015,2015,,,
+1.29,Improved timber harvest techniques maintain biodiversity in tropical forests.,,Bicknell et al. 2014,2014,,,
+1.3,Social impacts of the Forest Stewardship Council certification in the Congo basin,,Cerutti et al. 2017,2017,,,
+1.30,Reduced-Impact Logging as a Carbon-Offset Method.,,Putz and Pinard 1993,1993,,,
+1.32,"Do certified tropical logs fetch a market premium? A comparative price analysis from Sabah, Malaysia.",,Kollert and Lagan 2007,2007,,,
+1.33,Why Brazilian companies are certifying their forests?,,Araujo et al. 2009,2009,,,
+1.35,"Reduced Impact Logging in the Tropical Rain Forest of Guyana: Ecological, Economic, and Silvicultural Consequences.",,Van Der Hout 1998,1998,,,
+1.36,Extraccion Forestal de Bajo Impacto en La Mayronga.,,Montenegro 1996,1996,,,
+1.37,Financial and ecological indicators of reduced impact logging performance in the eastern Amazon.,,Holmes et al. 2002,2002,,,
+1.38,Costs and benefits of forest management for timber pro- duction in eastern Amazonia.,,Baretto et al. 1998,1998,,,
+1.39,Report by Edinburgh Center for Tropical Forests (ECTF) On Reduced Impact Logging Research: Activities and Outputs for the Barama Company Limited,,Armstrong 2000,2000,,,
+1.40,Impacts of tropical selective logging on carbon storage and tree species richness: A meta-analysis.,,Martin et al. 2015,2015,,,
+1.42,Financial Cost-Benfit Analysis of Forest Certification and Implementation of Phased Approaches,,Simula et al. 2004,2004,,,
+1.43,Social and Environmental Impacts of Forest Management Certification in Indonesia.,,Miteva et al. 2015,2015,,,
+1.44,"Financial assessment of reduced-impact logging techniques in Sabah, Malaysia",,Tay et al. 2002,2002,,,
+1.45,"Cost-benefit analysis of reduced-impact logging in a lowland Dipterocart forest of Malinau, East Kalimantan.",,Dwiprabowo et al. 2002,2002,,,
+1.46,Financial and economic analyses of conventional and reduced impact harvesting systems in Sarawak,,Dagang et al. 2002,2002,,,
+1.47,Cost comparisons of reduced-impact and conventional logging in the tropics.,,Medjibe and Putz 2012,2012,,,
+1.48,"Analysis of two alternative harvesting systems in Peninsular Malaysia: sensitivity analysis of costs, logging damage and buffers.",,Saharudin et al. 1999,1999,,,
+1.49,Planning and cost studies in harvesting in the mixed dipterocarp forest of Sarawak,,Mattson-Marn et al. 1981,1981,,,
+1.51,Does Eco-certification Stem Tropical Deforestation? Forest Stewardship Council Certification in Mexico,,Blackman et al. 2015,2015,,,
+1.52,Impact of Forest Management on Species Richness: Global Meta-Analysis and Economic Trade-Offs,,Chaudhary et al. 2016,2016,,,
+1.7,Co-benefits of sustainable forest management in biodiversity conservation and carbon sequestration.,,Imai et al. 2009,2009,,,
+africa,Africa,,,,,,
+southandcentralamerica,South and Central America,,,,,,
+asia,Asia,,,,,,
+global,Global,,,,,,
+pantropical,Pan-tropical,,,,,,
+canopylossgapsize,"Canopy loss, gap size",,,,,,
+carbonstockemissions,"Carbon stock, emissions",,,,,,
+collateraldamage,Collateral damage,,,,,,
+grounddisturbance,Ground disturbance,,,,,,
+harvestefficiency,Harvest efficiency,,,,,,
+roadandskidtraildensity,Road and skid trail density,,,,,,
+timberstock(sustainabilityofincome),Timber stock (sustainability of income),,,,,,
+treediversity,Tree diversity,,,,,,
+deforestationfragmentationanddegradation,"Deforestation, fragmentation and degradation",,,,,,
+animaldiversity,Animal diversity,,,,,,
+profit,Profit,,,,,,
+preloggingcosts,Pre-logging costs,,,,,,
+skiddingcost,Skidding cost,,,,,,
+workerproductivity,Worker productivity,,,,,,
+pricepremium,Price premium,,,,,,
+totalcostofloggingoperations,Total cost of logging operations,,,,,,
+accesstoland,Access to land,,,,,,
+awarenessempowermentparticipation,"Awareness, empowerment, participation",,,,,,
+compliancewithlawsandregulations,Compliance with laws and regulations,,,,,,
+directeconomicbenefits,Direct economic benefits,,,,,,
+infrastructureandinstitutions,Infrastructure and Institutions,,,,,,
+livingandworkingconditionsofemployees,Living and working conditions of employees,,,,,,
+illegalhuntingloggingmining,"Illegal hunting, logging, mining",,,,,,
+equalityequitylessmarginalization,"Equality, equity, less marginalization",,,,,,
+communitywellbeingandlivelihoods,Community wellbeing and livelihoods,,,,,,
+conflict,Conflict,,,,,,
+managementandadministration,Management and administration,,,,,,
+marketaccess,Market access,,,,,,
+skiddingcosts,Skidding costs,,,,,,
+jobs,Jobs,,,,,,
+waterregulationerosionprevention,"Water regulation, erosion prevention",,,,,,
+compliancewithharvestregulations,Compliance with harvest regulations,,,,,,
+setasidesandbufferzones,Set asides and buffer zones,,,,,,
+AF,Afghanistan,,,,,33.93911,67.709953
+AX,Akrotiri,,,,,33.93911,67.709953
+AL,Albania,,,,,41.153332,20.168331
+AG,Algeria,,,,,28.033886,1.659626
+AQ,American Samoa,,,,,-14.270972,-170.132217
+AN,Andorra,,,,,42.546245,1.601554
+AO,Angola,,,,,-11.202692,17.873887
+AV,Anguilla,,,,,18.220554,-63.068615
+AY,Antarctica,,,,,-75.250973,-0.071389
+AC,Antigua and Barbuda,,,,,17.060816,-61.796428
+AR,Argentina,,,,,-38.416097,-63.616672
+AM,Armenia,,,,,40.069099,45.038189
+AA,Aruba,,,,,12.52111,-69.968338
+AT,Ashmore and Cartier Islands,,,,,,
+AS,Australia,,,,,-25.274398,133.775136
+AU,Austria,,,,,47.516231,14.550072
+AJ,Azerbaijan,,,,,40.143105,47.576927
+BF,"Bahamas, The",,,,,25.03428,-77.39628
+BA,Bahrain,,,,,25.930414,50.637772
+FQ,Baker Island,,,,,,
+BG,Bangladesh,,,,,23.684994,90.356331
+BB,Barbados,,,,,13.193887,-59.543198
+BS,Bassas da India,,,,,,
+BO,Belarus,,,,,53.709807,27.953389
+BE,Belgium,,,,,50.503887,4.469936
+BH,Belize,,,,,17.189877,-88.49765
+BN,Benin,,,,,9.30769,2.315834
+BD,Bermuda,,,,,32.321384,-64.75737
+BT,Bhutan,,,,,27.514162,90.433601
+BL,Bolivia,,,,,-16.290154,-63.588653
+BK,Bosnia and Herzegovina,,,,,43.915886,17.679076
+BC,Botswana,,,,,-22.328474,24.684866
+BV,Bouvet Island,,,,,-54.423199,3.413194
+BR,Brazil,,,,,-14.235004,-51.92528
+IO,British Indian Ocean Territory,,,,,-6.343194,71.876519
+BX,Brunei,,,,,4.535277,114.727669
+BU,Bulgaria,,,,,42.733883,25.48583
+UV,Burkina Faso,,,,,12.238333,-1.561593
+BM,Burma,,,,,12.238333,-1.561593
+BY,Burundi,,,,,-3.373056,29.918886
+CB,Cambodia,,,,,12.565679,104.990963
+CM,Cameroon,,,,,7.369722,12.354722
+CA,Canada,,,,,56.130366,-106.346771
+CV,Cape Verde,,,,,16.002082,-24.013197
+CJ,Cayman Islands,,,,,19.513469,-80.566956
+CT,Central African Republic,,,,,6.611111,20.939444
+CD,Chad,,,,,15.454166,18.732207
+CI,Chile,,,,,-35.675147,-71.542969
+CH,China,,,,,35.86166,104.195397
+KT,Christmas Island,,,,,-10.447525,105.690449
+IP,Clipperton Island,,,,,,
+CK,Cocos (Keeling) Islands,,,,,,
+CO,Colombia,,,,,4.570868,-74.297333
+CN,Comoros,,,,,-11.875001,43.872219
+CG,"Congo, Democratic Republic of the",,,,,-4.038333,21.758664
+CF,"Congo, Republic of the",,,,,-0.228021,15.827659
+CW,Cook Islands,,,,,-21.236736,-159.777671
+CR,Coral Sea Islands,,,,,,
+CS,Costa Rica,,,,,9.748917,-83.753428
+IV,Cote d'Ivoire,,,,,7.539989,-5.54708
+HR,Croatia,,,,,45.1,15.2
+CU,Cuba,,,,,21.521757,-77.781167
+UC,Curacao,,,,,,
+CY,Cyprus,,,,,35.126413,33.429859
+EZ,Czech Republic,,,,,49.817492,15.472962
+DA,Denmark,,,,,56.26392,9.501785
+DX,Dhekelia,,,,,,
+DJ,Djibouti,,,,,11.825138,42.590275
+DO,Dominica,,,,,15.414999,-61.370976
+DR,Dominican Republic,,,,,18.735693,-70.162651
+EC,Ecuador,,,,,-1.831239,-78.183406
+EG,Egypt,,,,,26.820553,30.802498
+ES,El Salvador,,,,,13.794185,-88.89653
+EK,Equatorial Guinea,,,,,1.650801,10.267895
+ER,Eritrea,,,,,15.179384,39.782334
+EN,Estonia,,,,,58.595272,25.013607
+ET,Ethiopia,,,,,9.145,40.489673
+PJ,"Etorofu, Habomai, Kunashiri, and Shikotan Islands",,,,,,
+EU,Europa Island,,,,,,
+FK,Falkland Islands (Islas Malvinas),,,,,,
+FO,Faroe Islands,,,,,61.892635,-6.911806
+FJ,Fiji,,,,,-16.578193,179.414413
+FI,Finland,,,,,61.92411,25.748151
+FR,France,,,,,46.227638,2.213749
+FG,French Guiana,,,,,3.933889,-53.125782
+FP,French Polynesia,,,,,-17.679742,-149.406843
+FS,French Southern and Antarctic Lands,,,,,,
+GB,Gabon,,,,,-0.803689,11.609444
+GA,"Gambia, The",,,,,13.443182,-15.310139
+GZ,Gaza Strip,,,,,31.354676,34.308825
+GG,Georgia,,,,,42.315407,43.356892
+GM,Germany,,,,,51.165691,10.451526
+GH,Ghana,,,,,7.946527,-1.023194
+GI,Gibraltar,,,,,36.137741,-5.345374
+GLOBE,Global,,,,,,
+GO,Glorioso Islands,,,,,,
+GR,Greece,,,,,39.074208,21.824312
+GL,Greenland,,,,,71.706936,-42.604303
+GJ,Grenada,,,,,12.262776,-61.604171
+GP,Guadeloupe,,,,,16.995971,-62.067641
+GQ,Guam,,,,,13.444304,144.793731
+GT,Guatemala,,,,,15.783471,-90.230759
+GK,Guernsey,,,,,49.465691,-2.585278
+GV,Guinea,,,,,9.945587,-9.696645
+PU,Guinea-Bissau,,,,,11.803749,-15.180413
+GY,Guyana,,,,,4.860416,-58.93018
+HA,Haiti,,,,,18.971187,-72.285215
+HM,Heard Island and McDonald Islands,,,,,-53.08181,73.504158
+HO,Honduras,,,,,15.199999,-86.241905
+HK,Hong Kong,,,,,22.396428,114.109497
+HQ,Howland Island,,,,,,
+HU,Hungary,,,,,47.162494,19.503304
+IC,Iceland,,,,,64.963051,-19.020835
+IN,India,,,,,20.593684,78.96288
+ID,Indonesia,,,,,-0.789275,113.921327
+IR,Iran,,,,,32.427908,53.688046
+IZ,Iraq,,,,,33.223191,43.679291
+EI,Ireland,,,,,53.41291,-8.24389
+IM,Isle of Man,,,,,54.236107,-4.548056
+IS,Israel,,,,,31.046051,34.851612
+IT,Italy,,,,,41.87194,12.56738
+JM,Jamaica,,,,,18.109581,-77.297508
+JN,Jan Mayen,,,,,,
+JA,Japan,,,,,36.204824,138.252924
+DQ,Jarvis Island,,,,,,
+JE,Jersey,,,,,49.214439,-2.13125
+JQ,Johnston Atoll,,,,,,
+JO,Jordan,,,,,30.585164,36.238414
+JU,Juan de Nova Island,,,,,,
+KZ,Kazakhstan,,,,,48.019573,66.923684
+KE,Kenya,,,,,-0.023559,37.906193
+KQ,Kingman Reef,,,,,,
+KR,Kiribati,,,,,-3.370417,-168.734039
+KN,"Korea, North",,,,,40.339852,127.510093
+KS,"Korea, South",,,,,35.907757,127.766922
+KV,Kosovo,,,,,42.602636,20.902977
+KU,Kuwait,,,,,29.31166,47.481766
+KG,Kyrgyzstan,,,,,41.20438,74.766098
+LA,Laos,,,,,19.85627,102.495496
+LG,Latvia,,,,,56.879635,24.603189
+LE,Lebanon,,,,,33.854721,35.862285
+LT,Lesotho,,,,,-29.609988,28.233608
+LI,Liberia,,,,,6.428055,-9.429499
+LY,Libya,,,,,26.3351,17.228331
+LS,Liechtenstein,,,,,47.166,9.555373
+LH,Lithuania,,,,,55.169438,23.881275
+LU,Luxembourg,,,,,49.815273,6.129583
+MC,Macau,,,,,22.198745,113.543873
+MK,Macedonia,,,,,22.198745,113.543873
+MA,Madagascar,,,,,-18.766947,46.869107
+MI,Malawi,,,,,-13.254308,34.301525
+MY,Malaysia,,,,,4.210484,101.975766
+MV,Maldives,,,,,3.202778,73.22068
+ML,Mali,,,,,17.570692,-3.996166
+MT,Malta,,,,,35.937496,14.375416
+RM,Marshall Islands,,,,,7.131474,171.184478
+MB,Martinique,,,,,14.641528,-61.024174
+MR,Mauritania,,,,,21.00789,-10.940835
+MP,Mauritius,,,,,-20.348404,57.552152
+MF,Mayotte,,,,,-12.8275,45.166244
+MX,Mexico,,,,,23.634501,-102.552784
+FM,"Micronesia, Federated States of",,,,,7.425554,150.550812
+MQ,Midway Islands,,,,,,
+MD,Moldova,,,,,47.411631,28.369885
+MN,Monaco,,,,,43.750298,7.412841
+MG,Mongolia,,,,,46.862496,103.846656
+MJ,Montenegro,,,,,42.708678,19.37439
+MH,Montserrat,,,,,16.742498,-62.187366
+MO,Morocco,,,,,31.791702,-7.09262
+MZ,Mozambique,,,,,-18.665695,35.529562
+BM,Myanmar,,,,,21.913965,95.956223
+WA,Namibia,,,,,-22.95764,18.49041
+NR,Nauru,,,,,-0.522778,166.931503
+BQ,Navassa Island,,,,,-0.522778,166.931503
+NP,Nepal,,,,,28.394857,84.124008
+NL,Netherlands,,,,,52.132633,5.291266
+NC,New Caledonia,,,,,-20.904305,165.618042
+NZ,New Zealand,,,,,-40.900557,174.885971
+NU,Nicaragua,,,,,12.865416,-85.207229
+NG,Niger,,,,,17.607789,8.081666
+NI,Nigeria,,,,,9.081999,8.675277
+NE,Niue,,,,,-19.054445,-169.867233
+NF,Norfolk Island,,,,,-29.040835,167.954712
+CQ,Northern Mariana Islands,,,,,17.33083,145.38469
+NO,Norway,,,,,60.472024,8.468946
+MU,Oman,,,,,21.512583,55.923255
+PK,Pakistan,,,,,30.375321,69.345116
+PS,Palau,,,,,7.51498,134.58252
+LQ,Palmyra Atoll,,,,,31.952162,35.233154
+PM,Panama,,,,,8.537981,-80.782127
+PAN,Pan-tropical (countries not available),,,,,,
+PP,Papua New Guinea,,,,,-6.314993,143.95555
+PF,Paracel Islands,,,,,,
+PA,Paraguay,,,,,-23.442503,-58.443832
+PE,Peru,,,,,-9.189967,-75.015152
+RP,Philippines,,,,,12.879721,121.774017
+PC,Pitcairn Islands,,,,,-24.703615,-127.439308
+PL,Poland,,,,,51.919438,19.145136
+PO,Portugal,,,,,39.399872,-8.224454
+RQ,Puerto Rico,,,,,18.220833,-66.590149
+QA,Qatar,,,,,25.354826,51.183884
+RE,Reunion,,,,,-21.115141,55.536384
+CF,Republic of Congo,,,,,-0.228021,15.827659
+RO,Romania,,,,,45.943161,24.96676
+RS,Russia,,,,,61.52401,105.318756
+RW,Rwanda,,,,,-1.940278,29.873888
+TB,Saint Barthelemy,,,,,,
+SH,Saint Helena,,,,,-24.143474,-10.030696
+SC,Saint Kitts and Nevis,,,,,17.357822,-62.782998
+ST,Saint Lucia,,,,,13.909444,-60.978893
+RN,Saint Martin,,,,,,
+SB,Saint Pierre and Miquelon,,,,,46.941936,-56.27111
+VC,Saint Vincent and the Grenadines,,,,,12.984305,-61.287228
+WS,Samoa,,,,,-13.759029,-172.104629
+SM,San Marino,,,,,43.94236,12.457777
+TP,Sao Tome and Principe,,,,,,
+SA,Saudi Arabia,,,,,23.885942,45.079162
+SG,Senegal,,,,,14.497401,-14.452362
+RI,Serbia,,,,,44.016521,21.005859
+SE,Seychelles,,,,,-4.679574,55.491977
+SL,Sierra Leone,,,,,8.460555,-11.779889
+SN,Singapore,,,,,1.352083,103.819836
+NN,Sint Maarten,,,,,1.352083,103.819836
+LO,Slovakia,,,,,48.669026,19.699024
+SI,Slovenia,,,,,46.151241,14.995463
+BP,Solomon Islands,,,,,-9.64571,160.156194
+SO,Somalia,,,,,5.152149,46.199616
+SF,South Africa,,,,,-30.559482,22.937506
+SX,South Georgia and the Islands,,,,,,
+OD,South Sudan,,,,,35.907757,127.766922
+SP,Spain,,,,,40.463667,-3.74922
+PG,Spratly Islands,,,,,,
+CE,Sri Lanka,,,,,7.873054,80.771797
+SU,Sudan,,,,,12.862807,30.217636
+NS,Suriname,,,,,3.919305,-56.027783
+SV,Svalbard,,,,,,
+WZ,Swaziland,,,,,-26.522503,31.465866
+SW,Sweden,,,,,60.128161,18.643501
+SZ,Switzerland,,,,,46.818188,8.227512
+SY,Syria,,,,,34.802075,38.996815
+TW,Taiwan,,,,,23.69781,120.960515
+TI,Tajikistan,,,,,38.861034,71.276093
+TZ,Tanzania,,,,,-6.369028,34.888822
+TH,Thailand,,,,,15.870032,100.992541
+TT,Timor-Leste,,,,,-8.874217,125.727539
+TO,Togo,,,,,8.619543,0.824782
+TL,Tokelau,,,,,-8.967363,-171.855881
+TN,Tonga,,,,,-21.178986,-175.198242
+TD,Trinidad and Tobago,,,,,10.691803,-61.222503
+TE,Tromelin Island,,,,,,
+TS,Tunisia,,,,,33.886917,9.537499
+TU,Turkey,,,,,38.963745,35.243322
+TX,Turkmenistan,,,,,38.969719,59.556278
+TK,Turks and Caicos Islands,,,,,21.694025,-71.797928
+TV,Tuvalu,,,,,-7.109535,177.64933
+UG,Uganda,,,,,1.373333,32.290275
+UP,Ukraine,,,,,48.379433,31.16558
+AE,United Arab Emirates,,,,,23.424076,53.847818
+UK,United Kingdom,,,,,55.378051,-3.435973
+US,United States,,,,,37.09024,-95.712891
+UY,Uruguay,,,,,-32.522779,-55.765835
+UZ,Uzbekistan,,,,,41.377491,64.585262
+NH,Vanuatu,,,,,-15.376706,166.959158
+VT,Vatican City,,,,,41.902916,12.453389
+VE,Venezuela,,,,,6.42375,-66.58973
+VM,Vietnam,,,,,14.058324,108.277199
+VI,"Virgin Islands, British",,,,,,
+VQ,"Virgin Islands, U.S.",,,,,,
+WQ,Wake Island,,,,,,
+WF,Wallis and Futuna,,,,,-13.768752,-177.156097
+WE,West Bank,,,,,,
+WI,Western Sahara,,,,,,
+YM,Yemen,,,,,15.552727,48.516388
+ZA,Zambia,,,,,-13.133897,27.849332
+ZI,Zimbabwe,,,,,-19.015438,29.154857

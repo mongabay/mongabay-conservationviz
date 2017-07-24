@@ -20,14 +20,13 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
 // get data and a callback when download is complete
 d3.queue()
-    .defer(d3.csv, 'data/countries.csv')
     .defer(d3.csv, 'data/lookup.csv')
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
 // callback from d3.queue()
 // countries TO DO: save this with the lookup, to have a single source
-function main(error, countries, lookups, data) {
+function main(error, lookups, data) {
   if (error) throw error;
   
   // Pre-processing of lookup table: parse lookup list into a global lookup object
@@ -35,62 +34,47 @@ function main(error, countries, lookups, data) {
     lookup[d.key] = d;    
   });
   
-  // Pre-processing of country data:  
-  // 1) parse country data, and add a count field, for use in Leaflet
-  var countries_keyed = _.keyBy(countries, o => o.name);
-  _.mapValues(countries_keyed, function(val) {
-    val.count = 0;
-  });
-  
   // Pre-processing of data
   // 1) get a count of countries in the data, and save to countries_keyed
+  // 2) coerce string valence into intenger
+  // 3) generate list of strengths present in the data
+  countries_keyed = {};
+  strengthlist = [];
   data.forEach(function(d) {
     // d.country can be a list of countries, so check for that, and split if so
-    var names = d.country.indexOf(",") ? d.country.split(",") : [d.country];
-    names.forEach(function(name){
-      // trim whitespace, and skip bad matches 
-      name = name.trim();
-      if (countries_keyed[name] === undefined) return;
-      countries_keyed[name]["count"] = countries_keyed[name]["count"] += 1;
-    
-
+    var names = d.fips.indexOf(",") ? d.fips.split(",") : [d.fips];
+    names.forEach(function(fips){
+      // trim whitespace
+      if (fips == "") return;
+      fips = fips.trim();
+      if (typeof countries_keyed[fips] === "undefined") countries_keyed[fips] = {"count": 0};
+      countries_keyed[fips]["count"] += 1;
+      countries_keyed[fips]["name"] = lookup[fips]["name"];
+      countries_keyed[fips]["latitude"] = lookup[fips]["latitude"];
+      countries_keyed[fips]["longitude"] = lookup[fips]["longitude"];
     });  
-  });
-
-  // 2) generate a list of countries present in data
-  // TO DO: combine 1 & 2
-  var countrylist = [];
-  data.forEach(function(d) {
-    // d.country can be a list of countries, so check for that, and split if so
-    var country = d.country;
-    country = country.indexOf(",") ? country.split(",") : [country];
-    countrylist = _.union(countrylist, country.map(function(c) { return c.trim() }));
-  });
-
-  // misc: 
-  var strengthlist = [];
-  data.forEach(function(d) {
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
     strengthlist.push(d.strength.trim());
+    
   });
-  // sort and remove duplicates, then generate select options
-  strengthlist = _.without(_.uniq(strengthlist.sort()), "");
 
-  // keep global reference to raw data
+  // Post-processing:
+  // - sort and remove duplicates, then generate select options
+  strengthlist = _.without(_.uniq(strengthlist.sort()), "");
+  // - keep global reference to raw data
   rawdata = data;
 
+  // Data prep all done: 
   // call our dispatch events with `this` context, and corresponding data
-  dispatch.call("load", this, {countries: countrylist, stengths: strengthlist, countries_keyed: countries_keyed}); 
+  dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
   dispatch.call("statechange", this, data);
 
 }
 
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
-// This could be extended to the map container in the future as well
-
 dispatch.on("load.setup", function(options) {
   // calc height and width needed for top data, saved to config
   var data = nest(rawdata,themes.top);
@@ -104,12 +88,14 @@ dispatch.on("load.setup", function(options) {
 
 // register a listener for "load" and create dropdowns for various fiters
 dispatch.on("load.menus", function(options) {
-  
+  // get countries names from countries_keyed
+  var countries = _.map(options["countries_keyed"], function(c) {return c.name});
+
   // COUNTRY FILTER
   var select = d3.select("select#country");
   // append options to select dropdown
   select.selectAll("option")
-      .data(options["countries"])
+      .data(countries)
     .enter().append("option")
       .attr("value", function(d) { return d.trim(); })
       .text(function(d) { return d.trim(); });
@@ -175,8 +161,9 @@ dispatch.on("load.leaflet", function(data) {
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
-    if (countries_keyed[name].count === undefined) return;
+    if (countries_keyed[name].count === undefined || countries_keyed[name].count == 0) return;
     if (countries_keyed[name].latitude === undefined || countries_keyed[name].longitude === undefined) return;
+    if (countries_keyed[name].latitude === "" || countries_keyed[name].longitude === "") return;
     if (countries_keyed[name].count > 0) {
       var country = countries_keyed[name];
       var icon = L.divIcon({
@@ -195,8 +182,6 @@ dispatch.on("load.leaflet", function(data) {
       marker.on('mouseout', function (e) {
         // this.closePopup();
       });
-
-
     }
   });
   map.fitBounds(markers.getBounds());
