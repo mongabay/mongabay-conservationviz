@@ -6,10 +6,8 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-
 div.outergroup {
   position:relative;
-  height:500px;
 }
 
 div.top {
@@ -27,8 +25,16 @@ div.row {
 
 div.chart {
   position: absolute;
+  height: 100%;
 }
 
+div.text {
+  white-space: pre-wrap;      /* CSS3 */   
+  white-space: -moz-pre-wrap; /* Firefox */    
+  white-space: -pre-wrap;     /* Opera <7 */   
+  white-space: -o-pre-wrap;   /* Opera 7 */    
+  word-wrap: break-word;      /* IE */
+}
 
 rect.plus {
   fill: #309223;
