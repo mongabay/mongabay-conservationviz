@@ -33,4 +33,4 @@ config[themes.bottom] = {
 // update things that depend on the above config being set
 // ahh the mysteries of svg
 config[themes.top]["svgwidthscaled"] = config[themes.top]["svgwidth"] - (config[themes.top]["svgmargin"]["left"] * 1.2);
-config[themes.bottom]["svgwidthscaled"] = config[themes.bottom]["svgwidth"] - config[themes.bottom]["svgmargin"]["left"] - 100;
+config[themes.bottom]["svgwidthscaled"] = (config[themes.bottom]["svgwidth"] - config[themes.bottom]["svgmargin"]["left"] * 2);

@@ -392,13 +392,30 @@ function update(data, svg, tfast, group) {
       return "translate(" + 0 + ", " + offset + ")";
     });
 
-  // reselect the chart groups, so that we get any new ones that were made
-  // our previous selection would not contain them
+
+  // 
+  // CHARTS: outer svg wrapper
+  // 
+  
   charts = rows.selectAll("g.chart");
+  var chartcontainers = charts.selectAll("svg")
+    .data(function(d) { return [d] }, function(d) { return d.key });
+
+  // exit
+  chartcontainers.exit()
+    .remove();
+
+  // enter
+  chartcontainers.enter().append("svg")
+    .attr("class","chartcontainer");
 
   //
   // SQUARES: bind data
   //
+
+  // reselect the chart groups, so that we get any new ones that were made
+  // our previous selection would not contain them
+  charts = rows.selectAll("svg");
   var squares = charts.selectAll("rect")
     .data(function(d) { return _.sortBy(d.values,"valence","strength") }, function(d) {return d.zb_id});
 
@@ -422,22 +439,24 @@ function update(data, svg, tfast, group) {
       });
 
   // make new squares
-  squares.enter().append("rect")
-    .classed("neutral",function(d) { return d.valence == 0 })
-    .classed("plus",function(d) { return d.valence > 0 })
-    .classed("minus",function(d) { return d.valence < 0 })
-    .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
-    .style("width",function(d) {return config[group]["sqsize"] - 1})
-    .style("height",function(d) {return config[group]["sqsize"] - 1})
-    .transition(tfast)
-      .attr("x",function(d,i) {
-        var x = calcx(i, config[group]["colwidth"], config[group]["sqsize"]);
-        return x;
-      })
-      .attr("y", function(d,i) {
-        var y = calcy(i, config[group]["colwidth"], config[group]["sqsize"]);
-        return y;
-      });
+  squares.enter()
+    // .append("svg")
+      .append("rect")
+      .classed("neutral",function(d) { return d.valence == 0 })
+      .classed("plus",function(d) { return d.valence > 0 })
+      .classed("minus",function(d) { return d.valence < 0 })
+      .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
+      .style("width",function(d) {return config[group]["sqsize"] - 1})
+      .style("height",function(d) {return config[group]["sqsize"] - 1})
+      .transition(tfast)
+        .attr("x",function(d,i) {
+          var x = calcx(i, config[group]["colwidth"], config[group]["sqsize"]);
+          return x;
+        })
+        .attr("y", function(d,i) {
+          var y = calcy(i, config[group]["colwidth"], config[group]["sqsize"]);
+          return y;
+        });
 
 
 } // update
@@ -618,10 +637,10 @@ function find_longest_text_node(container) {
 }
 
 function fitsvg() {
-  var svg = document.getElementById("svgbottom");
+  var svg = d3.select("svg.bottom").node();
   var bbox = svg.getBBox();
-  svg.setAttribute("width", bbox.x + bbox.width);
-  svg.setAttribute("height", bbox.y + bbox.height);
+  svg.attr("width", bbox.x + bbox.width);
+  svg.attr("height", bbox.y + bbox.height);
 }
 
 // test text widths. Note if we wrap multiple lines, this could also impact row spacing 
