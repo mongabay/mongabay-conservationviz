@@ -10,6 +10,12 @@ div.outergroup {
   position:relative;
 }
 
+div.main {
+  width: inherit;
+  max-width: 100%;
+  margin:10px;
+}
+
 div.top {
   margin-top:10px;
   margin-bottom:10px;
@@ -21,6 +27,12 @@ div.bottom {
 
 div.row {
   position:absolute;
+  display:table;
+}
+
+div.text {
+  display:table-cell;
+  vertical-align: middle;
 }
 
 div.chart {
@@ -28,12 +40,20 @@ div.chart {
   height: 100%;
 }
 
-div.text {
-  white-space: pre-wrap;      /* CSS3 */   
-  white-space: -moz-pre-wrap; /* Firefox */    
-  white-space: -pre-wrap;     /* Opera <7 */   
-  white-space: -o-pre-wrap;   /* Opera 7 */    
-  word-wrap: break-word;      /* IE */
+/*d3 tooltips on the chart*/
+div.tooltip {
+  background: rgba(255,255,255,0.85);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
+  padding: 4px;
+  position: absolute;
+  z-index: 1000;
+  max-width:150px;
+}
+
+rect.hover {
+  
+  opacity:0.3;
+  cursor:pointer;
 }
 
 rect.plus {
