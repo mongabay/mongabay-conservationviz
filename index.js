@@ -216,7 +216,7 @@ dispatch.on("load.leaflet", function(data) {
         this.openPopup();
       });
       marker.on('mouseout', function (e) {
-        // this.closePopup();
+        setTimeout(function() {map.closePopup()}, 800); 
       });
     }
   });
@@ -392,7 +392,7 @@ function update(data, container, tfast, group) {
       });
 
   // make new squares
-  squares.enter()
+  var sqenter = squares.enter()
       .append("rect")
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
@@ -400,6 +400,9 @@ function update(data, container, tfast, group) {
       .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
       .style("width",function(d) {return config[group]["sqsize"] - 1})
       .style("height",function(d) {return config[group]["sqsize"] - 1})
+      .on("mouseover", mouseoverTooltip)
+      .on("mousemove", mousemoveTooltip)
+      .on("mouseout", mouseoutTooltip)
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -417,6 +420,35 @@ function handleMarkerClick(markerdata) {
   // several benefits: other filters are applied, and the dropdown state mirrors map state
   $("select#country").val(markerdata.name).trigger("change");
 }
+
+// define tooltip behavior on mouseover
+function mouseoverTooltip(d) {
+  d3.select(this).classed("hover", true);
+  var split = d.zb_id.split(".");
+  var id = (split[0] + "." + split[1]) * 1;
+  console.log(id);
+  tooltip.text(lookup[id].name);
+  tooltip.style("visibility","visible");
+}
+
+// define tooltip behavior on mousemove
+function mousemoveTooltip(d) {
+  tooltip
+    .style("top",(d3.event.pageY-10)+"px")
+    .style("left",(d3.event.pageX+10)+"px")
+    .style("top",(d3.event.pageY-30)+"px");
+}
+
+// define tooltip behavior on mouseout
+function mouseoutTooltip(d) {
+  d3.select(this).classed("hover", false);
+  tooltip.style("visibility", "hidden");
+}
+
+var tooltip = d3.select("body")
+    .append("div")
+    .attr("class","tooltip");
+
 
 // UTILITY FUNCTIONS
 

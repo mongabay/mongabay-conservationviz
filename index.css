@@ -40,6 +40,22 @@ div.chart {
   height: 100%;
 }
 
+/*d3 tooltips on the chart*/
+div.tooltip {
+  background: rgba(255,255,255,0.85);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
+  padding: 4px;
+  position: absolute;
+  z-index: 1000;
+  max-width:150px;
+}
+
+rect.hover {
+  
+  opacity:0.3;
+  cursor:pointer;
+}
+
 rect.plus {
   fill: #309223;
 }
