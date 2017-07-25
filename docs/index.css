@@ -51,7 +51,6 @@ div.tooltip {
 }
 
 rect.hover {
-  
   opacity:0.3;
   cursor:pointer;
 }
@@ -99,17 +98,14 @@ div.country-icon {
   opacity:0.7;
 }
 
+div.country-icon.selected {
+  opacity:1;
+  background:#EA7241 !important;
+}
+
 div.country-icon:hover {
   opacity:1;
 }
-
-div.country-icon:focus {
-  border:2px dotted #ff006e;
-  opacity: 1;
-  background: #0a75ef;
-  width: 20px !important; height: 20px !important;
-}
-
 
 span.icon-text {
   display:block;
