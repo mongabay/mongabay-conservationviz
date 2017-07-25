@@ -10,7 +10,6 @@ var map;
 var min_zoom= 2;
 var max_zoom= 18;
 
-
 // define a transition, will occur over 750 milliseconds
 // TO DO: Best place to put this? 
 var tfast = d3.transition().duration(750);
@@ -25,7 +24,9 @@ d3.queue()
     .await(main);
 
 // set a window resize callback
-// d3.select(window).on('resize', resize); 
+$(window).on('resize', _.debounce(function () {
+  updateall()
+}, 250));
 
 // callback from d3.queue()
 // countries TO DO: save this with the lookup, to have a single source
@@ -488,20 +489,24 @@ function filter(data, key, value) {
 function delegate_event(elem) {
   // use event delegation to dispatch change function from select2 options
   $("body").on("change", elem, function() {
-    // start with the raw data
-    var data = rawdata;
-
-    // apply country filter, if there is one
-    var countryoption = d3.select("select#country").node().value;
-    if (countryoption) data = filter(data, "country", countryoption);
-
-    // apply strength filter, if there is one
-    var strengthoption = d3.select("select#strength").node().value;
-    if (strengthoption) data = filter(data, "strength", strengthoption);
-
-    // All done. Dispatch!
-    dispatch.call("statechange",this,data);
+    updateall();
   });
+}
+
+function updateall() {
+  // start with the raw data
+  var data = rawdata;
+
+  // apply country filter, if there is one
+  var countryoption = d3.select("select#country").node().value;
+  if (countryoption) data = filter(data, "country", countryoption);
+
+  // apply strength filter, if there is one
+  var strengthoption = d3.select("select#strength").node().value;
+  if (strengthoption) data = filter(data, "strength", strengthoption);
+
+  // All done. Dispatch!
+  dispatch.call("statechange",this,data);
 }
 
 // custom sort data with optional order
