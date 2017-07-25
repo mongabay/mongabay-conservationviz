@@ -24,8 +24,10 @@ d3.queue()
     .await(main);
 
 // set a window resize callback
-$(window).on('resize', _.debounce(function () {
-  updateall()
+$(window).on("resize", _.debounce(function () {
+  updateall();
+  $("div.top.outergroup").height(config[themes.top]["height"]);
+  $("div.bottom.outergroup").height(config[themes.bottom]["height"]);
 }, 250));
 
 // callback from d3.queue()
@@ -352,6 +354,17 @@ function update(data, container, tfast, group) {
   chartcontainers.exit()
     .remove();
 
+  // update
+  chartcontainers
+    .attr("class","chartcontainer")
+    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
+    .attr("height",function(d) {
+      var len   = d.values.length * config[group]["sqsize"];
+      var width = (config[group]["colwidth"] - config[group]["textwidth"]);
+      var rows  = Math.ceil(len/width)
+      return (rows * config[group]["sqsize"]) + "px";
+    });
+
   // enter
   chartcontainers.enter().append("svg")
     .attr("class","chartcontainer")
@@ -382,6 +395,15 @@ function update(data, container, tfast, group) {
   // update existing squares, transition
   squares
     .style("fill-opacity", 1)
+    .classed("neutral",function(d) { return d.valence == 0 })
+    .classed("plus",function(d) { return d.valence > 0 })
+    .classed("minus",function(d) { return d.valence < 0 })
+    .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
+    .style("width",function(d) {return config[group]["sqsize"] - 1})
+    .style("height",function(d) {return config[group]["sqsize"] - 1})
+    .on("mouseover", mouseoverTooltip)
+    .on("mousemove", mousemoveTooltip)
+    .on("mouseout", mouseoutTooltip)
     .transition(tfast)
       .attr("x",function(d,i) {
         var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -427,7 +449,6 @@ function mouseoverTooltip(d) {
   d3.select(this).classed("hover", true);
   var split = d.zb_id.split(".");
   var id = (split[0] + "." + split[1]) * 1;
-  console.log(id);
   tooltip.text(lookup[id].name);
   tooltip.style("visibility","visible");
 }
