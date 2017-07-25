@@ -10,6 +10,12 @@ div.outergroup {
   position:relative;
 }
 
+div.main {
+  width: inherit;
+  max-width: 100%;
+  margin:10px;
+}
+
 div.top {
   margin-top:10px;
   margin-bottom:10px;

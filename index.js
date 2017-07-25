@@ -24,6 +24,9 @@ d3.queue()
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
+// set a window resize callback
+// d3.select(window).on('resize', resize); 
+
 // callback from d3.queue()
 // countries TO DO: save this with the lookup, to have a single source
 function main(error, lookups, data) {
@@ -128,6 +131,39 @@ dispatch.on("load.menus", function(options) {
   delegate_event("select#sort");
 }); // load.menu
 
+
+// Top chart setup after data load
+dispatch.on("load.topchart", function(map) {
+  // select the element to hold our top charts
+  var container = d3.select(".top")
+    .style("width", config[themes.top]["width"] + "px")
+    .style("height", config[themes.top]["height"] + "px")
+    .classed("outergroup",true);
+
+  // register a callback to be invoked which updates the chart when "statechange" occurs
+  dispatch.on("statechange.topchart", function(data) {
+    var data = nest(data,themes.top);
+    calcOffsets(data,themes.top);
+    update(data, container, tfast, themes.top);
+  });
+});
+
+// Bottom chart setup after data load
+dispatch.on("load.bottomchart", function(map) {
+  // select the element to hold our bottom charts
+  var container = d3.select(".bottom")
+    .style("width", config[themes.bottom]["width"] + "px")
+    .style("height", config[themes.bottom]["height"] + "px")
+    .classed("outergroup",true);
+
+  // register a callback to be invoked which updates the chart when "statechange" occurs
+  dispatch.on("statechange.bottomchart", function(data) {
+    var data = nest(data,themes.bottom);
+    calcOffsets(data, themes.bottom);
+    update(data, container, tfast, themes.bottom);
+  });
+});
+
 // 
 // Map setup after data load
 //
@@ -187,41 +223,6 @@ dispatch.on("load.leaflet", function(data) {
   map.fitBounds(markers.getBounds());
 }); // load.leaflet
 
-// Top chart setup after data load
-dispatch.on("load.topchart", function(map) {
-  // select the element to hold our top charts
-  var container = d3.select(".top")
-    .append("div")
-      .style("width", config[themes.top]["width"] + "px")
-      .style("height", config[themes.top]["height"] + "px")
-      .attr("class","outergroup")
-
-  // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.topchart", function(data) {
-    var data = nest(data,themes.top);
-    calcOffsets(data,themes.top);
-    update(data, container, tfast, themes.top);
-  });
-});
-
-// Bottom chart setup after data load
-dispatch.on("load.bottomchart", function(map) {
-  // select the element to hold our bottom charts
-  var container = d3.select(".bottom")
-    .append("div")
-      .style("width", config[themes.bottom]["width"] + "px")
-      .style("height", config[themes.bottom]["height"] + "px")
-      .attr("class","outergroup")
-
-  // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.bottomchart", function(data) {
-    var data = nest(data,themes.bottom);
-    calcOffsets(data, themes.bottom);
-    update(data, container, tfast, themes.bottom);
-  });
-
-});
-
 function update(data, container, tfast, group) {
 
   console.log("statechange data: ", data);
@@ -250,11 +251,15 @@ function update(data, container, tfast, group) {
       // define the start x position, column * colwidth, minus one colwidth
       var fullcol = config[group]["colwidth"];
       var x = (col * fullcol) - fullcol;
+      if (x > 0) x += config[group]["colmargin"];
       return x + "px";
     })
     .style("top", function(d) {
-        var y = config[group][d.key]["offset_y"]; // row offset
-        return y + "px";
+      var y = config[group][d.key]["offset_y"]; // row offset
+      return y + "px";
+    })
+    .style("height", function(d,i) {
+      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
     });
 
   // create new rows if our updated dataset has more than the previous
@@ -276,7 +281,7 @@ function update(data, container, tfast, group) {
     })
     .style("height", function(d,i) {
       return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
-    })
+    });
 
   //
   // TEXT LABELS
@@ -296,9 +301,6 @@ function update(data, container, tfast, group) {
     .attr("class","text")
     .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
     .text(function(d) {return lookup[d.key]["name"]});
-    // .style("line-height", function(d,i) {
-    //   return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
-    // });
 
   //
   // CHART GROUPS
@@ -329,6 +331,13 @@ function update(data, container, tfast, group) {
       var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
       return offset + "px";
     })
+    .style("height",function(d) {
+      var len   = d.values.length * config[group]["sqsize"];
+      var width = (config[group]["colwidth"] - config[group]["textwidth"]);
+      var rows  = Math.ceil(len/width)
+      return (rows * config[group]["sqsize"]) + "px";
+    });
+
 
   // 
   // CHARTS: outer svg wrapper
@@ -350,9 +359,7 @@ function update(data, container, tfast, group) {
       var len   = d.values.length * config[group]["sqsize"];
       var width = (config[group]["colwidth"] - config[group]["textwidth"]);
       var rows  = Math.ceil(len/width)
-      return rows * config[group]["sqsize"];
-      // debugger;
-      // return (config[group][key]["totalrows"] * config[group]["sqsize"]) + "px";
+      return (rows * config[group]["sqsize"]) + "px";
     });
 
   //
@@ -380,7 +387,7 @@ function update(data, container, tfast, group) {
         return x;
       })
       .attr("y", function(d,i) {
-        var y = calcy(i, config[group]["width"] - config[group]["textwidth"], config[group]["sqsize"]);
+        var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
         return y;
       });
 
@@ -407,8 +414,8 @@ function update(data, container, tfast, group) {
 
 // NAMED FUNCTIONS
 function handleMarkerClick(markerdata) {
-  var data = filter(rawdata, "country", markerdata.name);
-  dispatch.call("statechange", this, data);
+  // several benefits: other filters are applied, and the dropdown state mirrors map state
+  $("select#country").val(markerdata.name).trigger("change");
 }
 
 // UTILITY FUNCTIONS
@@ -501,13 +508,15 @@ function calcOffsets(data,group) {
   // as a function of the main container width
   // this will be applied to div.outergroup
   var width = $("div.main").width();
-  config[group]["width"] = width;
+  config["width"] = width;
 
   // get ncols as configured for this screen width
   var ncols = getCols(width, group);
 
   // calc col width based on this ncols
-  var colwidth = width / ncols;
+  // first, aadjust for margin padding 
+  var margin = ncols > 1 ? (ncols - 1) * config[group]["colmargin"] : 0;
+  var colwidth = (width - margin) / ncols;
   config[group]["colwidth"]   = colwidth;
 
   // loop through the chart data to an initial layout of chart rows,
@@ -578,11 +587,8 @@ function calcOffsets(data,group) {
         // if not, carry on as before
         nextoffset = nextoffset + (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
       }
-
     });
   }
-
-
 }
 
 // calc x position of rectangles, given container width, and square size
