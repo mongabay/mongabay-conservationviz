@@ -7,6 +7,7 @@ var lookup = {};
 
 // map constants
 var map;
+var markers;
 var min_zoom= 2;
 var max_zoom= 18;
 
@@ -196,7 +197,7 @@ dispatch.on("load.leaflet", function(data) {
   // count is the number of studies in that country in the raw data 
   var countries_keyed = data.countries_keyed;
   var countries = Object.keys(countries_keyed);
-  var markers = L.featureGroup().addTo(map);
+  markers = L.featureGroup().addTo(map);
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -442,6 +443,19 @@ function update(data, container, tfast, group) {
 function handleMarkerClick(markerdata) {
   // several benefits: other filters are applied, and the dropdown state mirrors map state
   $("select#country").val(markerdata.name).trigger("change");
+
+  // update the icons
+  $("div.country-icon").removeClass("selected");
+  $(event.target).parent().addClass("selected");
+}
+
+function selectMarker(country) {
+  markers.eachLayer(function(layer){
+    if (layer.data.name == country) {
+      $("div.country-icon").removeClass("selected");
+      L.DomUtil.addClass(layer._icon, "selected");
+    }
+  });
 }
 
 // define tooltip behavior on mouseover
@@ -520,7 +534,10 @@ function updateall() {
 
   // apply country filter, if there is one
   var countryoption = d3.select("select#country").node().value;
-  if (countryoption) data = filter(data, "country", countryoption);
+  if (countryoption) {
+    data = filter(data, "country", countryoption);
+    selectMarker(countryoption);
+  }
 
   // apply strength filter, if there is one
   var strengthoption = d3.select("select#strength").node().value;
