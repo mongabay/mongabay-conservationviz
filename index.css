@@ -21,19 +21,17 @@ div.bottom {
 
 div.row {
   position:absolute;
+  display:table;
+}
+
+div.text {
+  display:table-cell;
+  vertical-align: middle;
 }
 
 div.chart {
   position: absolute;
   height: 100%;
-}
-
-div.text {
-  white-space: pre-wrap;      /* CSS3 */   
-  white-space: -moz-pre-wrap; /* Firefox */    
-  white-space: -pre-wrap;     /* Opera <7 */   
-  white-space: -o-pre-wrap;   /* Opera 7 */    
-  word-wrap: break-word;      /* IE */
 }
 
 rect.plus {
