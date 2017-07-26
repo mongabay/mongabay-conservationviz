@@ -87,8 +87,6 @@ button:hover {
 /* the map */
 div#map {
     width: 100%;
-    /* height will be set dynamically with a resize on load*/
-    height: 250px; 
 }
 
 div.country-icon {

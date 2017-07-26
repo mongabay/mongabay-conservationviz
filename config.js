@@ -9,6 +9,9 @@ var themes = {
 // all measures are in pixels
 // Note: additional config variables are calculated at runtime and added to this structure
 var config = {};
+// configuration general
+config["map_height"] = 250,      // map height in px
+// configuration of the top chart
 config[themes.top] = {
   ncols_lg:    1,                // number of chart cols for lg screens > 1200px
   ncols_md:    1,                // number of chart cols for md screens > 992px
@@ -20,6 +23,7 @@ config[themes.top] = {
   textwidth:   100,              // width of the text label "column"   
   textpadding: 10,               // right side padding of text label
 };
+// configuration of the bottom chart
 config[themes.bottom] = {
   ncols_lg:    3, 
   ncols_md:    3, 

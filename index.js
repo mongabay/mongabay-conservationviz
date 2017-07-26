@@ -172,6 +172,10 @@ dispatch.on("load.bottomchart", function(map) {
 // Map setup after data load
 //
 dispatch.on("load.leaflet", function(data) {
+
+  // set the map width from config
+  document.selectElementbyId('map').style.setAttr("height",config[])
+
   // init the map with some basic settings
   map = L.map('map',{
     minZoom:min_zoom,
