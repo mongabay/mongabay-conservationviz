@@ -174,7 +174,7 @@ dispatch.on("load.bottomchart", function(map) {
 dispatch.on("load.leaflet", function(data) {
 
   // set the map width from config
-  document.selectElementbyId('map').style.setAttr("height",config[])
+  document.getElementById('map').style.height = config["map_height"] + "px";
 
   // init the map with some basic settings
   map = L.map('map',{
@@ -595,7 +595,7 @@ function calcOffsets(data,group) {
   // calc col width based on this ncols
   // first, aadjust for margin padding 
   var margin = ncols > 1 ? (ncols - 1) * config[group]["colmargin"] : 0;
-  var colwidth = (width - margin) / ncols;
+  var colwidth = width / ncols;
   config[group]["colwidth"]   = colwidth;
 
   // loop through the chart data to an initial layout of chart rows,
