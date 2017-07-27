@@ -27,8 +27,8 @@ d3.queue()
 // set a window resize callback
 $(window).on("resize", _.debounce(function () {
   updateall();
-  $("div.top.outergroup").height(config[themes.top]["height"]);
-  $("div.bottom.outergroup").height(config[themes.bottom]["height"]);
+  $("div.top.outergroup").height(config[groups.top]["height"]);
+  $("div.bottom.outergroup").height(config[groups.bottom]["height"]);
 }, 250));
 
 // callback from d3.queue()
@@ -84,12 +84,12 @@ function main(error, lookups, data) {
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
   // calc height and width needed for top data, saved to config
-  var data = nest(rawdata,themes.top);
-  calcOffsets(data,themes.top);
+  var data = nest(rawdata,groups.top);
+  calcOffsets(data,groups.top);
 
   // calc offsets etc. needed for bottom data, saved to config
-  var data = nest(rawdata,themes.bottom);
-  calcOffsets(data,themes.bottom);
+  var data = nest(rawdata,groups.bottom);
+  calcOffsets(data,groups.bottom);
 
 });
 
@@ -140,15 +140,15 @@ dispatch.on("load.menus", function(options) {
 dispatch.on("load.topchart", function(map) {
   // select the element to hold our top charts
   var container = d3.select(".top")
-    .style("width", config[themes.top]["width"] + "px")
-    .style("height", config[themes.top]["height"] + "px")
+    .style("width", config[groups.top]["width"] + "px")
+    .style("height", config[groups.top]["height"] + "px")
     .classed("outergroup",true);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.topchart", function(data) {
-    var data = nest(data,themes.top);
-    calcOffsets(data,themes.top);
-    update(data, container, tfast, themes.top);
+    var data = nest(data,groups.top);
+    calcOffsets(data,groups.top);
+    update(data, container, tfast, groups.top);
   });
 });
 
@@ -156,15 +156,15 @@ dispatch.on("load.topchart", function(map) {
 dispatch.on("load.bottomchart", function(map) {
   // select the element to hold our bottom charts
   var container = d3.select(".bottom")
-    .style("width", config[themes.bottom]["width"] + "px")
-    .style("height", config[themes.bottom]["height"] + "px")
+    .style("width", config[groups.bottom]["width"] + "px")
+    .style("height", config[groups.bottom]["height"] + "px")
     .classed("outergroup",true);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.bottomchart", function(data) {
-    var data = nest(data,themes.bottom);
-    calcOffsets(data, themes.bottom);
-    update(data, container, tfast, themes.bottom);
+    var data = nest(data,groups.bottom);
+    calcOffsets(data, groups.bottom);
+    update(data, container, tfast, groups.bottom);
   });
 });
 
@@ -251,7 +251,9 @@ function update(data, container, tfast, group) {
 
   // update existing ones left over
   rows.attr("class", "row")
+    .style("width", config[group]["colwidth"] + "px")
     .transition(tfast)
+    .attr("class", "row")
     .style("left", function(d) {
       var x = 0; // col offset
       // which column are we in?
@@ -259,7 +261,8 @@ function update(data, container, tfast, group) {
       // define the start x position, column * colwidth, minus one colwidth
       var fullcol = config[group]["colwidth"];
       var x = (col * fullcol) - fullcol;
-      if (x > 0) x += config[group]["colmargin"];
+      // not sure why this works, multiplying by col-1
+      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
       return x + "px";
     })
     .style("top", function(d) {
@@ -280,7 +283,8 @@ function update(data, container, tfast, group) {
       // define the start x position, column * colwidth, minus one colwidth
       var fullcol = config[group]["colwidth"];
       var x = (col * fullcol) - fullcol;
-      if (x > 0) x += config[group]["colmargin"];
+      // not sure why this works, multiplying by col-1
+      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
       return x + "px";
     })
     .style("top", function(d) {
@@ -289,7 +293,8 @@ function update(data, container, tfast, group) {
     })
     .style("height", function(d,i) {
       return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
-    });
+    })
+    .style("width", config[group]["colwidth"] + "px");
 
   //
   // TEXT LABELS
@@ -572,7 +577,7 @@ function sort(data, sortoption, group) {
 // - row offsets (spacing between rows)
 // - col offsets
 // - chart offset, for spacing between plus and minus rows
-function calcOffsets(data,group) {
+function calcOffsets(data, group) {
   // placeholder, for the data iteration, below
   var nextoffset = 0; 
 
@@ -586,7 +591,11 @@ function calcOffsets(data,group) {
   // calculate total width of this groups chart
   // as a function of the main container width
   // this will be applied to div.outergroup
-  var width = $("div.main").width();
+  // if/when there are scroll bars, this will change the total available width!
+  // on an initial pass (e.g. top chart) we have no way to know if there will be scrollbars
+  // so always subtract 20px just in case
+  // TODO: on subsequent updates, could check if there are scrollbars first? 
+  var width = $("div.main").width() - 20;
   config["width"] = width;
 
   // get ncols as configured for this screen width
@@ -595,10 +604,10 @@ function calcOffsets(data,group) {
   // calc col width based on this ncols
   // first, aadjust for margin padding 
   var margin = ncols > 1 ? (ncols - 1) * config[group]["colmargin"] : 0;
-  var colwidth = width / ncols;
+  var colwidth = (width - margin) / ncols;
   config[group]["colwidth"]   = colwidth;
 
-  // loop through the chart data to an initial layout of chart rows,
+  // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
   data.forEach(function(d,i) {
     // Add an empty object for this group, e.g. config.theme.ENV
@@ -635,6 +644,9 @@ function calcOffsets(data,group) {
 
     // keep a count of rows, from which to calculate total height
     config[group]["chartrows"] += totalrows;
+
+    // and a placeholder for col, which will always be "1" on this initial pass
+    config[group][d.key]["col"] = 1;
 
   });
 

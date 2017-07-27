@@ -1,6 +1,6 @@
 // theme groups (identified as a column in each data.csv row)
 // by which to group rows on top and bottom charts
-var themes = {
+var groups = {
   top: "theme",
   bottom: "variable"
 }
@@ -12,7 +12,7 @@ var config = {};
 // configuration general
 config["map_height"] = 250,      // map height in px
 // configuration of the top chart
-config[themes.top] = {
+config[groups.top] = {
   ncols_lg:    1,                // number of chart cols for lg screens > 1200px
   ncols_md:    1,                // number of chart cols for md screens > 992px
   ncols_sm:    1,                // number of chart cols for sm screens > 768px
@@ -24,7 +24,7 @@ config[themes.top] = {
   textpadding: 10,               // right side padding of text label
 };
 // configuration of the bottom chart
-config[themes.bottom] = {
+config[groups.bottom] = {
   ncols_lg:    3, 
   ncols_md:    3, 
   ncols_sm:    2, 

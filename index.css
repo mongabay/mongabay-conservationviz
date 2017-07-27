@@ -4,6 +4,9 @@ body {
   padding: 0; 
   font-size: 12px; 
   font-family: 'Roboto', sans-serif;
+
+  /* seems hacky ... */
+  /*overflow-x: hidden;*/
 }
 
 div.outergroup {
@@ -11,8 +14,6 @@ div.outergroup {
 }
 
 div.main {
-  width: inherit;
-  max-width: 100%;
   margin:10px;
 }
 
@@ -28,6 +29,7 @@ div.bottom {
 div.row {
   position:absolute;
   display:table;
+  /*border: 1px solid orange;*/
 }
 
 div.text {
