@@ -26,9 +26,9 @@ d3.queue()
 
 // set a window resize callback
 $(window).on("resize", _.debounce(function () {
-  updateall();
-  $("div.top.outergroup").height(config[themes.top]["height"]);
-  $("div.bottom.outergroup").height(config[themes.bottom]["height"]);
+  // recalc offets for all groups, then trigger a statechange
+  calcAllGroupOffsets();
+  dispatch.call("statechange",this,rawdata);
 }, 250));
 
 // callback from d3.queue()
@@ -77,20 +77,12 @@ function main(error, lookups, data) {
   // call our dispatch events with `this` context, and corresponding data
   dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
   dispatch.call("statechange", this, data);
-
 }
 
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
-  // calc height and width needed for top data, saved to config
-  var data = nest(rawdata,themes.top);
-  calcOffsets(data,themes.top);
-
-  // calc offsets etc. needed for bottom data, saved to config
-  var data = nest(rawdata,themes.bottom);
-  calcOffsets(data,themes.bottom);
-
+  calcAllGroupOffsets();
 });
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -136,42 +128,36 @@ dispatch.on("load.menus", function(options) {
 }); // load.menu
 
 
-// Top chart setup after data load
-dispatch.on("load.topchart", function(map) {
-  // select the element to hold our top charts
-  var container = d3.select(".top")
-    .style("width", config[themes.top]["width"] + "px")
-    .style("height", config[themes.top]["height"] + "px")
-    .classed("outergroup",true);
-
-  // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.topchart", function(data) {
-    var data = nest(data,themes.top);
-    calcOffsets(data,themes.top);
-    update(data, container, tfast, themes.top);
-  });
+// register a callback to be invoked which updates the chart when "statechange" occurs
+dispatch.on("statechange.topchart", function(data) {
+  // apply any selected options and nest
+  data = apply_options(data);
+  data = nest(data,groups.top);
+  // draw and size the chart
+  var container = d3.select(".top");
+  drawchart(data, container, tfast, groups.top);
+  container.style("height", config[groups.top]["height"] + "px")
 });
 
-// Bottom chart setup after data load
-dispatch.on("load.bottomchart", function(map) {
-  // select the element to hold our bottom charts
-  var container = d3.select(".bottom")
-    .style("width", config[themes.bottom]["width"] + "px")
-    .style("height", config[themes.bottom]["height"] + "px")
-    .classed("outergroup",true);
+// register a callback to be invoked which updates the chart when "statechange" occurs
+dispatch.on("statechange.bottomchart", function(data) {
+  // apply any selected options and nest
+  data = apply_options(data);
+  data = nest(data,groups.bottom);
 
-  // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.bottomchart", function(data) {
-    var data = nest(data,themes.bottom);
-    calcOffsets(data, themes.bottom);
-    update(data, container, tfast, themes.bottom);
-  });
+  // draw and size the chart
+  var container = d3.select(".bottom");
+  drawchart(data, container, tfast, groups.bottom);
+  container.style("height", config[groups.top]["height"] + "px")
 });
 
 // 
 // Map setup after data load
 //
 dispatch.on("load.leaflet", function(data) {
+  // set the map width from config
+  document.getElementById('map').style.height = config["map_height"] + "px";
+
   // init the map with some basic settings
   map = L.map('map',{
     minZoom:min_zoom,
@@ -227,7 +213,7 @@ dispatch.on("load.leaflet", function(data) {
   map.fitBounds(markers.getBounds());
 }); // load.leaflet
 
-function update(data, container, tfast, group) {
+function drawchart(data, container, tfast, group) {
 
   console.log("statechange data: ", data);
 
@@ -247,7 +233,9 @@ function update(data, container, tfast, group) {
 
   // update existing ones left over
   rows.attr("class", "row")
+    .style("width", config[group]["colwidth"] + "px")
     .transition(tfast)
+    .attr("class", "row")
     .style("left", function(d) {
       var x = 0; // col offset
       // which column are we in?
@@ -255,7 +243,8 @@ function update(data, container, tfast, group) {
       // define the start x position, column * colwidth, minus one colwidth
       var fullcol = config[group]["colwidth"];
       var x = (col * fullcol) - fullcol;
-      if (x > 0) x += config[group]["colmargin"];
+      // not sure why this works, multiplying by col-1
+      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
       return x + "px";
     })
     .style("top", function(d) {
@@ -276,7 +265,8 @@ function update(data, container, tfast, group) {
       // define the start x position, column * colwidth, minus one colwidth
       var fullcol = config[group]["colwidth"];
       var x = (col * fullcol) - fullcol;
-      if (x > 0) x += config[group]["colmargin"];
+      // not sure why this works, multiplying by col-1
+      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
       return x + "px";
     })
     .style("top", function(d) {
@@ -285,7 +275,8 @@ function update(data, container, tfast, group) {
     })
     .style("height", function(d,i) {
       return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
-    });
+    })
+    .style("width", config[group]["colwidth"] + "px");
 
   //
   // TEXT LABELS
@@ -298,13 +289,32 @@ function update(data, container, tfast, group) {
   text.exit().remove();
 
   // update
-  text.text(function(d) {return lookup[d.key]["name"]});
+  text.html(function(d) {
+    var name = lookup[d.key]["name"];
+    return name;
+  });
 
   // enter
   text.enter().append("div")
     .attr("class","text")
     .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
-    .text(function(d) {return lookup[d.key]["name"]});
+    .append("div")
+      .text(function(d) {
+        return lookup[d.key]["name"]
+      })
+      .attr("style",function(d) {
+        // TO DO: need a way to look up this items theme
+        // and get a color def from that. config? data? lookup? some combo of the above?
+        // debugger;
+      })
+    .append("div")
+      .attr("class","count")
+      .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
+      .text(function(d) {
+        var count = config[group][d.key]["totalcount"]; 
+        var studies_text = count == 1 ? " study" : " studies";
+        return  count + studies_text;
+      });
 
   //
   // CHART GROUPS
@@ -521,30 +531,11 @@ function filter(data, key, value) {
     return filtered;
 }
 
-function delegate_event(elem) {
+function delegate_event(selected) {
   // use event delegation to dispatch change function from select2 options
-  $("body").on("change", elem, function() {
-    updateall();
+  $("body").on("change", selected, function() {
+    dispatch.call("statechange",this,rawdata);
   });
-}
-
-function updateall() {
-  // start with the raw data
-  var data = rawdata;
-
-  // apply country filter, if there is one
-  var countryoption = d3.select("select#country").node().value;
-  if (countryoption) {
-    data = filter(data, "country", countryoption);
-    selectMarker(countryoption);
-  }
-
-  // apply strength filter, if there is one
-  var strengthoption = d3.select("select#strength").node().value;
-  if (strengthoption) data = filter(data, "strength", strengthoption);
-
-  // All done. Dispatch!
-  dispatch.call("statechange",this,data);
 }
 
 // custom sort data with optional order
@@ -568,7 +559,7 @@ function sort(data, sortoption, group) {
 // - row offsets (spacing between rows)
 // - col offsets
 // - chart offset, for spacing between plus and minus rows
-function calcOffsets(data,group) {
+function calcOffsets(data, group) {
   // placeholder, for the data iteration, below
   var nextoffset = 0; 
 
@@ -582,8 +573,11 @@ function calcOffsets(data,group) {
   // calculate total width of this groups chart
   // as a function of the main container width
   // this will be applied to div.outergroup
-  var width = $("div.main").width();
-  config["width"] = width;
+  // if/when there are scroll bars, this will change the total available width!
+  // on an initial pass (e.g. top chart) we have no way to know if there will be scrollbars
+  // so always subtract 20px just in case
+  // TODO: on subsequent updates, could check if there are scrollbars first? 
+  var width = $("div.main").width() - 20;
 
   // get ncols as configured for this screen width
   var ncols = getCols(width, group);
@@ -594,7 +588,7 @@ function calcOffsets(data,group) {
   var colwidth = (width - margin) / ncols;
   config[group]["colwidth"]   = colwidth;
 
-  // loop through the chart data to an initial layout of chart rows,
+  // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
   data.forEach(function(d,i) {
     // Add an empty object for this group, e.g. config.theme.ENV
@@ -628,21 +622,26 @@ function calcOffsets(data,group) {
     // add plus/minus counts at this level (to facilitate sorting)
     config[group][d.key]["pluscount"] = plus;
     config[group][d.key]["minuscount"] = minus;
+    config[group][d.key]["totalcount"] = plus + minus;
 
     // keep a count of rows, from which to calculate total height
     config[group]["chartrows"] += totalrows;
 
+    // and a placeholder for col, which will always be "1" on this initial pass
+    config[group][d.key]["col"] = 1;
+
   });
 
   // all done inital loop, add some calcs based on the sums we've just done
-  var charts_height          = config[group]["chartrows"] * sqsize;
-  var pad_height             = config[group]["rowpadding"] * config[group]["grouprows"];
-  var single_col_height      = (charts_height + pad_height) / ncols;
-  config[group]["height"]    = single_col_height;
+  var charts_height              = config[group]["chartrows"] * sqsize;
+  var pad_height                 = config[group]["rowpadding"] * config[group]["grouprows"];
+  var single_col_height          = (charts_height + pad_height) / ncols;
+  config[group]["height"]        = single_col_height;
 
   // if we have multiple cols, loop again to update offsets, based on col heights we just calc'd
   if (ncols > 1) {
     var curr_height = 0; 
+    var max_col_height = 0;
     var nextoffset = 0; var nextcol = 1;
     data.forEach(function(d,i) {
       // Set the current "y" offset, will be zero when i = 0, or when a column resets
@@ -653,6 +652,9 @@ function calcOffsets(data,group) {
       // check our chart height against the col height and adjust y_offset accordingly
       curr_height += (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
       if (curr_height > single_col_height) {
+        // keep a note of this col height, in order to find the tallest column
+        max_col_height = curr_height > max_col_height ? curr_height : max_col_height;
+
         // if height > single_col_height, reset nextoffset
         // reset curr_height, and add a column count
         nextoffset = 0;
@@ -663,6 +665,8 @@ function calcOffsets(data,group) {
         nextoffset = nextoffset + (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
       }
     });
+    // set the final height equal to the height of the tallest column, minus the final rows padding
+    config[group]["height"] = max_col_height - config[group]["rowpadding"];
   }
 }
 
@@ -696,9 +700,41 @@ function scale_count_per_range(i, number) {
   return i;
 }
 
+// given a width, get the number of columns defined in config
 function getCols(w, group) {
   return w > 1200 ? config[group]["ncols_lg"] :
          w > 992  ? config[group]["ncols_md"] :
          w > 768  ? config[group]["ncols_sm"] :
                     config[group]["ncols_xs"];
+}
+
+// do we need a scrollbar for this height? 
+function scrollbar(height) {
+  var windowHeight = window.innerHeight;
+  return height > windowHeight ? true : false;
+}
+
+// apply these options to filter the data, in sequence
+function apply_options(data) { 
+  // apply country filter, if there is one
+  var countryoption = d3.select("select#country").node().value;
+  if (countryoption) {
+    data = filter(data, "country", countryoption);
+    selectMarker(countryoption);
+  }
+
+  // apply strength filter, if there is one
+  var strengthoption = d3.select("select#strength").node().value;
+  if (strengthoption) data = filter(data, "strength", strengthoption);
+
+  return data;
+}
+
+function calcAllGroupOffsets() {
+  // calc height and width needed for each groups data, save to config
+  var thegroups = Object.keys(groups);
+  thegroups.forEach(function(group) {
+    var data = nest(rawdata,groups[group]);
+    calcOffsets(data,groups[group]);
+  });
 }

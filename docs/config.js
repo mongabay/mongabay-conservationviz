@@ -1,15 +1,25 @@
 // theme groups (identified as a column in each data.csv row)
 // by which to group rows on top and bottom charts
-var themes = {
+var groups = {
   top: "theme",
   bottom: "variable"
+}
+
+// colors for the theme groups
+var colors = {
+  "ENV": "#1B9E77",
+  "SOC": "#E16802",
+  "ECON": "#757ECF",
 }
 
 // global configuration of colors, sizes, spacing, for top and bottom charts
 // all measures are in pixels
 // Note: additional config variables are calculated at runtime and added to this structure
 var config = {};
-config[themes.top] = {
+// configuration general
+config["map_height"] = 250,      // map height in px
+// configuration of the top chart
+config[groups.top] = {
   ncols_lg:    1,                // number of chart cols for lg screens > 1200px
   ncols_md:    1,                // number of chart cols for md screens > 992px
   ncols_sm:    1,                // number of chart cols for sm screens > 768px
@@ -20,14 +30,15 @@ config[themes.top] = {
   textwidth:   100,              // width of the text label "column"   
   textpadding: 10,               // right side padding of text label
 };
-config[themes.bottom] = {
+// configuration of the bottom chart
+config[groups.bottom] = {
   ncols_lg:    3, 
   ncols_md:    3, 
   ncols_sm:    2, 
   ncols_xs:    1, 
   colmargin:   10,                
   sqsize:      17,                 
-  rowpadding:  20,
+  rowpadding:  30,
   textwidth:   180,                 
   textpadding: 10,               
 };
