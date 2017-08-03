@@ -9,12 +9,12 @@ body {
   /*overflow-x: hidden;*/
 }
 
-div.outergroup {
-  position:relative;
-}
-
 div.main {
   margin:10px;
+}
+
+div.top, div.bottom {
+  position:relative;
 }
 
 div.top {

@@ -26,10 +26,9 @@ d3.queue()
 
 // set a window resize callback
 $(window).on("resize", _.debounce(function () {
+  // recalc offets for all groups, then trigger a statechange
+  calcAllGroupOffsets();
   dispatch.call("statechange",this,rawdata);
-
-  $("div.top.outergroup").height(config[groups.top]["height"]);
-  $("div.bottom.outergroup").height(config[groups.bottom]["height"]);
 }, 250));
 
 // callback from d3.queue()
@@ -78,20 +77,12 @@ function main(error, lookups, data) {
   // call our dispatch events with `this` context, and corresponding data
   dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
   dispatch.call("statechange", this, data);
-
 }
 
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
-  // calc height and width needed for top data, saved to config
-  var data = nest(rawdata,groups.top);
-  calcOffsets(data,groups.top);
-
-  // calc offsets etc. needed for bottom data, saved to config
-  var data = nest(rawdata,groups.bottom);
-  calcOffsets(data,groups.bottom);
-
+  calcAllGroupOffsets();
 });
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -137,51 +128,33 @@ dispatch.on("load.menus", function(options) {
 }); // load.menu
 
 
-// Top chart setup after data load
-dispatch.on("load.topchart", function(map) {
-  // select the element to hold our top charts
-  var container = d3.select(".top")
-    // .style("width", config[groups.top]["width"] + "px")
-    .style("height", config[groups.top]["height"] + "px")
-    .classed("outergroup",true);
-
-  // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.topchart", function(data) {
-
-    // apply any selected options and nest
-    data = apply_options(data);
-    data = nest(data,groups.top);
-
-    calcOffsets(data,groups.top);
-    drawchart(data, container, tfast, groups.top);
-  });
+// register a callback to be invoked which updates the chart when "statechange" occurs
+dispatch.on("statechange.topchart", function(data) {
+  // apply any selected options and nest
+  data = apply_options(data);
+  data = nest(data,groups.top);
+  // draw and size the chart
+  var container = d3.select(".top");
+  drawchart(data, container, tfast, groups.top);
+  container.style("height", config[groups.top]["height"] + "px")
 });
 
-// Bottom chart setup after data load
-dispatch.on("load.bottomchart", function(map) {
-  // select the element to hold our bottom charts
-  var container = d3.select(".bottom")
-    // .style("width", config[groups.bottom]["width"] + "px")
-    .style("height", config[groups.bottom]["height"] + "px")
-    .classed("outergroup",true);
+// register a callback to be invoked which updates the chart when "statechange" occurs
+dispatch.on("statechange.bottomchart", function(data) {
+  // apply any selected options and nest
+  data = apply_options(data);
+  data = nest(data,groups.bottom);
 
-  // register a callback to be invoked which updates the chart when "statechange" occurs
-  dispatch.on("statechange.bottomchart", function(data) {
-
-    // apply any selected options and nest
-    data = apply_options(data);
-    data = nest(data,groups.top);
-
-    calcOffsets(data, groups.bottom);
-    drawchart(data, container, tfast, groups.bottom);
-  });
+  // draw and size the chart
+  var container = d3.select(".bottom");
+  drawchart(data, container, tfast, groups.bottom);
+  container.style("height", config[groups.top]["height"] + "px")
 });
 
 // 
 // Map setup after data load
 //
 dispatch.on("load.leaflet", function(data) {
-
   // set the map width from config
   document.getElementById('map').style.height = config["map_height"] + "px";
 
@@ -672,9 +645,8 @@ function calcOffsets(data, group) {
         nextoffset = nextoffset + (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
       }
     });
-    // set the final height equal to the height of the tallest column
-    console.log(max_col_height);
-    config[group]["height"] = max_col_height;
+    // set the final height equal to the height of the tallest column, minus the final rows padding
+    config[group]["height"] = max_col_height - config[group]["rowpadding"];
   }
 }
 
@@ -736,4 +708,13 @@ function apply_options(data) {
   if (strengthoption) data = filter(data, "strength", strengthoption);
 
   return data;
+}
+
+function calcAllGroupOffsets() {
+  // calc height and width needed for each groups data, save to config
+  var thegroups = Object.keys(groups);
+  thegroups.forEach(function(group) {
+    var data = nest(rawdata,groups[group]);
+    calcOffsets(data,groups[group]);
+  });
 }
