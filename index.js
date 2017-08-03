@@ -289,13 +289,32 @@ function drawchart(data, container, tfast, group) {
   text.exit().remove();
 
   // update
-  text.text(function(d) {return lookup[d.key]["name"]});
+  text.html(function(d) {
+    var name = lookup[d.key]["name"];
+    return name;
+  });
 
   // enter
   text.enter().append("div")
     .attr("class","text")
     .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
-    .text(function(d) {return lookup[d.key]["name"]});
+    .append("div")
+      .text(function(d) {
+        return lookup[d.key]["name"]
+      })
+      .attr("style",function(d) {
+        // TO DO: need a way to look up this items theme
+        // and get a color def from that. config? data? lookup? some combo of the above?
+        // debugger;
+      })
+    .append("div")
+      .attr("class","count")
+      .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
+      .text(function(d) {
+        var count = config[group][d.key]["totalcount"]; 
+        var studies_text = count == 1 ? " study" : " studies";
+        return  count + studies_text;
+      });
 
   //
   // CHART GROUPS
@@ -603,6 +622,7 @@ function calcOffsets(data, group) {
     // add plus/minus counts at this level (to facilitate sorting)
     config[group][d.key]["pluscount"] = plus;
     config[group][d.key]["minuscount"] = minus;
+    config[group][d.key]["totalcount"] = plus + minus;
 
     // keep a count of rows, from which to calculate total height
     config[group]["chartrows"] += totalrows;

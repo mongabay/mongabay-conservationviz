@@ -5,6 +5,13 @@ var groups = {
   bottom: "variable"
 }
 
+// colors for the theme groups
+var colors = {
+  "ENV": "#1B9E77",
+  "SOC": "#E16802",
+  "ECON": "#757ECF",
+}
+
 // global configuration of colors, sizes, spacing, for top and bottom charts
 // all measures are in pixels
 // Note: additional config variables are calculated at runtime and added to this structure
@@ -31,7 +38,7 @@ config[groups.bottom] = {
   ncols_xs:    1, 
   colmargin:   10,                
   sqsize:      17,                 
-  rowpadding:  20,
+  rowpadding:  30,
   textwidth:   180,                 
   textpadding: 10,               
 };
