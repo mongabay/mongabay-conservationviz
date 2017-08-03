@@ -26,7 +26,8 @@ d3.queue()
 
 // set a window resize callback
 $(window).on("resize", _.debounce(function () {
-  updateall();
+  dispatch.call("statechange",this,rawdata);
+
   $("div.top.outergroup").height(config[groups.top]["height"]);
   $("div.bottom.outergroup").height(config[groups.bottom]["height"]);
 }, 250));
@@ -140,15 +141,19 @@ dispatch.on("load.menus", function(options) {
 dispatch.on("load.topchart", function(map) {
   // select the element to hold our top charts
   var container = d3.select(".top")
-    .style("width", config[groups.top]["width"] + "px")
+    // .style("width", config[groups.top]["width"] + "px")
     .style("height", config[groups.top]["height"] + "px")
     .classed("outergroup",true);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.topchart", function(data) {
-    var data = nest(data,groups.top);
+
+    // apply any selected options and nest
+    data = apply_options(data);
+    data = nest(data,groups.top);
+
     calcOffsets(data,groups.top);
-    update(data, container, tfast, groups.top);
+    drawchart(data, container, tfast, groups.top);
   });
 });
 
@@ -156,15 +161,19 @@ dispatch.on("load.topchart", function(map) {
 dispatch.on("load.bottomchart", function(map) {
   // select the element to hold our bottom charts
   var container = d3.select(".bottom")
-    .style("width", config[groups.bottom]["width"] + "px")
+    // .style("width", config[groups.bottom]["width"] + "px")
     .style("height", config[groups.bottom]["height"] + "px")
     .classed("outergroup",true);
 
   // register a callback to be invoked which updates the chart when "statechange" occurs
   dispatch.on("statechange.bottomchart", function(data) {
-    var data = nest(data,groups.bottom);
+
+    // apply any selected options and nest
+    data = apply_options(data);
+    data = nest(data,groups.top);
+
     calcOffsets(data, groups.bottom);
-    update(data, container, tfast, groups.bottom);
+    drawchart(data, container, tfast, groups.bottom);
   });
 });
 
@@ -231,7 +240,7 @@ dispatch.on("load.leaflet", function(data) {
   map.fitBounds(markers.getBounds());
 }); // load.leaflet
 
-function update(data, container, tfast, group) {
+function drawchart(data, container, tfast, group) {
 
   console.log("statechange data: ", data);
 
@@ -530,30 +539,11 @@ function filter(data, key, value) {
     return filtered;
 }
 
-function delegate_event(elem) {
+function delegate_event(selected) {
   // use event delegation to dispatch change function from select2 options
-  $("body").on("change", elem, function() {
-    updateall();
+  $("body").on("change", selected, function() {
+    dispatch.call("statechange",this,rawdata);
   });
-}
-
-function updateall() {
-  // start with the raw data
-  var data = rawdata;
-
-  // apply country filter, if there is one
-  var countryoption = d3.select("select#country").node().value;
-  if (countryoption) {
-    data = filter(data, "country", countryoption);
-    selectMarker(countryoption);
-  }
-
-  // apply strength filter, if there is one
-  var strengthoption = d3.select("select#strength").node().value;
-  if (strengthoption) data = filter(data, "strength", strengthoption);
-
-  // All done. Dispatch!
-  dispatch.call("statechange",this,data);
 }
 
 // custom sort data with optional order
@@ -596,7 +586,6 @@ function calcOffsets(data, group) {
   // so always subtract 20px just in case
   // TODO: on subsequent updates, could check if there are scrollbars first? 
   var width = $("div.main").width() - 20;
-  config["width"] = width;
 
   // get ncols as configured for this screen width
   var ncols = getCols(width, group);
@@ -651,14 +640,15 @@ function calcOffsets(data, group) {
   });
 
   // all done inital loop, add some calcs based on the sums we've just done
-  var charts_height          = config[group]["chartrows"] * sqsize;
-  var pad_height             = config[group]["rowpadding"] * config[group]["grouprows"];
-  var single_col_height      = (charts_height + pad_height) / ncols;
-  config[group]["height"]    = single_col_height;
+  var charts_height              = config[group]["chartrows"] * sqsize;
+  var pad_height                 = config[group]["rowpadding"] * config[group]["grouprows"];
+  var single_col_height          = (charts_height + pad_height) / ncols;
+  config[group]["height"]        = single_col_height;
 
   // if we have multiple cols, loop again to update offsets, based on col heights we just calc'd
   if (ncols > 1) {
     var curr_height = 0; 
+    var max_col_height = 0;
     var nextoffset = 0; var nextcol = 1;
     data.forEach(function(d,i) {
       // Set the current "y" offset, will be zero when i = 0, or when a column resets
@@ -669,6 +659,9 @@ function calcOffsets(data, group) {
       // check our chart height against the col height and adjust y_offset accordingly
       curr_height += (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
       if (curr_height > single_col_height) {
+        // keep a note of this col height, in order to find the tallest column
+        max_col_height = curr_height > max_col_height ? curr_height : max_col_height;
+
         // if height > single_col_height, reset nextoffset
         // reset curr_height, and add a column count
         nextoffset = 0;
@@ -679,6 +672,9 @@ function calcOffsets(data, group) {
         nextoffset = nextoffset + (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
       }
     });
+    // set the final height equal to the height of the tallest column
+    console.log(max_col_height);
+    config[group]["height"] = max_col_height;
   }
 }
 
@@ -712,9 +708,32 @@ function scale_count_per_range(i, number) {
   return i;
 }
 
+// given a width, get the number of columns defined in config
 function getCols(w, group) {
   return w > 1200 ? config[group]["ncols_lg"] :
          w > 992  ? config[group]["ncols_md"] :
          w > 768  ? config[group]["ncols_sm"] :
                     config[group]["ncols_xs"];
+}
+
+// do we need a scrollbar for this height? 
+function scrollbar(height) {
+  var windowHeight = window.innerHeight;
+  return height > windowHeight ? true : false;
+}
+
+// apply these options to filter the data, in sequence
+function apply_options(data) { 
+  // apply country filter, if there is one
+  var countryoption = d3.select("select#country").node().value;
+  if (countryoption) {
+    data = filter(data, "country", countryoption);
+    selectMarker(countryoption);
+  }
+
+  // apply strength filter, if there is one
+  var strengthoption = d3.select("select#strength").node().value;
+  if (strengthoption) data = filter(data, "strength", strengthoption);
+
+  return data;
 }
