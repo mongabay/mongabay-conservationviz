@@ -4,16 +4,17 @@ body {
   padding: 0; 
   font-size: 12px; 
   font-family: 'Roboto', sans-serif;
-}
 
-div.outergroup {
-  position:relative;
+  /* seems hacky ... */
+  /*overflow-x: hidden;*/
 }
 
 div.main {
-  width: inherit;
-  max-width: 100%;
   margin:10px;
+}
+
+div.top, div.bottom {
+  position:relative;
 }
 
 div.top {
@@ -28,6 +29,7 @@ div.bottom {
 div.row {
   position:absolute;
   display:table;
+  /*border: 1px solid orange;*/
 }
 
 div.text {
@@ -87,8 +89,6 @@ button:hover {
 /* the map */
 div#map {
     width: 100%;
-    /* height will be set dynamically with a resize on load*/
-    height: 250px; 
 }
 
 div.country-icon {
