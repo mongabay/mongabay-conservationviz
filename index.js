@@ -27,7 +27,6 @@ d3.queue()
 // set a window resize callback
 $(window).on("resize", _.debounce(function () {
   // recalc offets for all groups, then trigger a statechange
-  calcAllGroupOffsets();
   dispatch.call("statechange",this,rawdata);
 }, 250));
 
@@ -82,7 +81,11 @@ function main(error, lookups, data) {
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
-  calcAllGroupOffsets();
+  var data = nest(rawdata, groups.top);
+  calcOffsets(data, groups.top);
+
+  var data = nest(rawdata,groups.bottom);
+  calcOffsets(data, groups.bottom);
 });
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -133,7 +136,8 @@ dispatch.on("statechange.topchart", function(data) {
   // apply any selected options and nest
   data = apply_options(data);
   data = nest(data,groups.top);
-  // draw and size the chart
+  calcOffsets(data,groups.top);
+  // draw the chart
   var container = d3.select(".top");
   drawchart(data, container, tfast, groups.top);
   container.style("height", config[groups.top]["height"] + "px")
@@ -144,6 +148,7 @@ dispatch.on("statechange.bottomchart", function(data) {
   // apply any selected options and nest
   data = apply_options(data);
   data = nest(data,groups.bottom);
+  calcOffsets(data,groups.bottom);
 
   // draw and size the chart
   var container = d3.select(".bottom");
@@ -728,13 +733,4 @@ function apply_options(data) {
   if (strengthoption) data = filter(data, "strength", strengthoption);
 
   return data;
-}
-
-function calcAllGroupOffsets() {
-  // calc height and width needed for each groups data, save to config
-  var thegroups = Object.keys(groups);
-  thegroups.forEach(function(group) {
-    var data = nest(rawdata,groups[group]);
-    calcOffsets(data,groups[group]);
-  });
 }
