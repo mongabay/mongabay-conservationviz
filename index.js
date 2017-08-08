@@ -292,17 +292,53 @@ function drawchart(data, container, tfast, group) {
     .style("width", config[group]["colwidth"] + "px");
 
   //
-  // TEXT LABELS
+  // TEXT LABEL WRAPPERS
   //
   var rows = container.selectAll("div.row");
-  var text = rows.selectAll("div.text")
+  var textwrappers = rows.selectAll("div.textwrapper")
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // exit
-  text.exit().remove();
+  textwrappers.exit().remove();
 
   // update
-  text.html(function(d) {
+  // nothing at the moment
+  // text.html(function(d) {
+  //   var name = lookup[d.key]["name"];
+  //   return name;
+  // });
+
+  // enter
+  textwrappers.enter().append("div")
+    .attr("class","textwrapper");
+    // .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
+    // .append("div")
+    //   .text(function(d) {
+    //     return lookup[d.key]["name"]
+    //   })
+    //   .attr("style",function(d) {
+    //     // TO DO: need a way to look up this items theme
+    //     // and get a color def from that. config? data? lookup? some combo of the above?
+    //     // debugger;
+    //   })
+    // .append("div")
+    //   .attr("class","count")
+    //   .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
+    //   .text(function(d) {
+    //     var count = config[group][d.key]["totalcount"]; 
+    //     var studies_text = count == 1 ? " study" : " studies";
+    //     return  count + studies_text;
+    //   });
+
+  //
+  // TEXT LABELS THEMSELVES
+  // 
+  var textwrappers = d3.selectAll("div.textwrapper");
+  var text = textwrappers.selectAll("div.text")
+    .data(function(d) {return [d]}, function(d) {return d.key});
+
+  // update
+  text.text(function(d) {
     var name = lookup[d.key]["name"];
     return name;
   });
@@ -310,24 +346,38 @@ function drawchart(data, container, tfast, group) {
   // enter
   text.enter().append("div")
     .attr("class","text")
-    .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
-    .append("div")
-      .text(function(d) {
-        return lookup[d.key]["name"]
-      })
-      .attr("style",function(d) {
-        // TO DO: need a way to look up this items theme
-        // and get a color def from that. config? data? lookup? some combo of the above?
-        // debugger;
-      })
-    .append("div")
-      .attr("class","count")
-      .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
-      .text(function(d) {
-        var count = config[group][d.key]["totalcount"]; 
-        var studies_text = count == 1 ? " study" : " studies";
-        return  count + studies_text;
-      });
+      .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
+      .append("div")
+        .text(function(d) {
+          return lookup[d.key]["name"]
+        });
+
+  // exit
+  text.exit().remove();
+
+  //
+  // TEXT ATTRIBUTE FOR STUDY COUNT
+  //
+  var textwrappers = d3.selectAll("div.textwrapper");
+  var text = textwrappers.selectAll("div.count")
+    .data(function(d) {return [d]}, function(d) {return d.key});
+
+  // update
+  // nothing at the moment, just keep the text as it was
+
+  // enter
+  text.enter().append("div")
+    .attr("class","count")
+    .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
+    .text(function(d) {
+      console.log(d.key)
+      var count = config[group][d.key]["totalcount"]; 
+      var studies_text = count == 1 ? " study" : " studies";
+      return  count + studies_text;
+    });
+
+  // exit
+  text.exit().remove();
 
   //
   // CHART GROUPS
@@ -466,7 +516,7 @@ function drawchart(data, container, tfast, group) {
 function handleMarkerClick(markerdata) {
   // simply trigger change on the counry select, which offers some nice side benefits:
   // other filters are applied, and the dropdown state mirrors map state
-  $("select#country").val(markerdata.name).trigger("change");
+  $("select#country").val(markerdata.fips).trigger("change");
 
   // then simply update the icons
   $("div.country-icon").removeClass("selected");
