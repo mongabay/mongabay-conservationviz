@@ -32,6 +32,10 @@ div.row {
   /*border: 1px solid orange;*/
 }
 
+div.textwrapper {
+  cursor:pointer;
+}
+
 div.text {
   display:table-cell;
   vertical-align: middle;

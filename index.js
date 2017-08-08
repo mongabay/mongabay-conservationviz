@@ -28,6 +28,11 @@ d3.queue()
 $(window).on("resize", _.debounce(function () {
   // recalc offets for all groups, then trigger a statechange
   dispatch.call("statechange",this,rawdata);
+
+  // then, resize the containers
+  // only needed here if not included in "Statechange"
+  resizeContainers();
+
 }, 250));
 
 // callback from d3.queue()
@@ -65,8 +70,6 @@ function main(error, lookups, data) {
     strengthlist.push(d.strength.trim());    
   });
 
-console.log(countries_keyed)
-
   // Post-processing:
   // - sort and remove duplicates, then generate select options
   strengthlist = _.without(_.uniq(strengthlist.sort()), "");
@@ -82,11 +85,17 @@ console.log(countries_keyed)
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
+  // calc offsets for top and bottom
   var data = nest(rawdata, groups.top);
   calcOffsets(data, groups.top);
 
   var data = nest(rawdata,groups.bottom);
   calcOffsets(data, groups.bottom);
+
+  // and then (optionally) resize: we could resize here, or on "statechange"
+  // but if not done on "statechange" then we do have to do it on "resize"
+  resizeContainers(); 
+
 });
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -103,7 +112,7 @@ dispatch.on("load.menus", function(options) {
       .data(countries)
     .enter().append("option")
       .attr("value", function(d) { return d.fips.trim(); })
-      .text(function(d) { console.log(d.name); return d.name.trim(); });
+      .text(function(d) { return d.name.trim(); });
 
   // STRENGTH FILTER
   var strengths = options["stengths"]
@@ -145,7 +154,7 @@ dispatch.on("statechange.topchart", function(data) {
   // draw the chart
   var container = d3.select(".top");
   drawchart(data, container, tfast, groups.top);
-  container.style("height", config[groups.top]["height"] + "px")
+  // resizeContainers(); // an option
 });
 
 // register a callback to be invoked which updates the chart when "statechange" occurs
@@ -158,7 +167,7 @@ dispatch.on("statechange.bottomchart", function(data) {
   // draw and size the chart
   var container = d3.select(".bottom");
   drawchart(data, container, tfast, groups.bottom);
-  container.style("height", config[groups.top]["height"] + "px")
+  // resizeContainers(); // an option, but leads to a lot of things moving on screen
 });
 
 // 
@@ -310,25 +319,9 @@ function drawchart(data, container, tfast, group) {
 
   // enter
   textwrappers.enter().append("div")
-    .attr("class","textwrapper");
-    // .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
-    // .append("div")
-    //   .text(function(d) {
-    //     return lookup[d.key]["name"]
-    //   })
-    //   .attr("style",function(d) {
-    //     // TO DO: need a way to look up this items theme
-    //     // and get a color def from that. config? data? lookup? some combo of the above?
-    //     // debugger;
-    //   })
-    // .append("div")
-    //   .attr("class","count")
-    //   .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
-    //   .text(function(d) {
-    //     var count = config[group][d.key]["totalcount"]; 
-    //     var studies_text = count == 1 ? " study" : " studies";
-    //     return  count + studies_text;
-    //   });
+    .attr("class","textwrapper")
+    .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
+    .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px");
 
   //
   // TEXT LABELS THEMSELVES
@@ -338,19 +331,41 @@ function drawchart(data, container, tfast, group) {
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  text.text(function(d) {
-    var name = lookup[d.key]["name"];
-    return name;
+  text
+    .text(function(d) {
+      return lookup[d.key]["name"]
+    })
+    // .style("font-size", function() { return config[group]["labelsize"] + "px"; })
+    .style("color",function(d) {
+      // color the text by the value defined in the lookup for this key
+      var parent = lookup[d.key]["parent"];
+      return colors[parent];
   });
 
   // enter
   text.enter().append("div")
     .attr("class","text")
-      .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
-      .append("div")
-        .text(function(d) {
-          return lookup[d.key]["name"]
-        });
+    .text(function(d) {
+      return lookup[d.key]["name"]
+    })
+    .style("font-size", function() { return config[group]["labelsize"] + "px"; })
+    .style("color",function(d) {
+      // color the text by the value defined in the lookup for this key
+      var parent = lookup[d.key]["parent"];
+      return colors[parent];
+    })
+    .on("mouseover", function(d) { 
+      d3.select(this).style("color", function() { 
+        return shadeColor(colors[lookup[d.key]["parent"]],-0.3);
+      });  
+    })
+    .on("mouseout", function(d) { d3.select(this).style("color", colors[lookup[d.key]["parent"]]) })
+    .on("click", function(e) {
+      // update a selection, so we can track this, and apply with other filters? 
+      // selectedgroup = "";
+      // also implies a need for a "clear" button
+      dispatch.call("statechange",this,filter(rawdata,"variable",e.key));
+    });
 
   // exit
   text.exit().remove();
@@ -363,18 +378,18 @@ function drawchart(data, container, tfast, group) {
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  // nothing at the moment, just keep the text as it was
+  text
+    .style("font-size", config[group]["countsize"] + "px");
 
   // enter
   text.enter().append("div")
     .attr("class","count")
-    .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
     .text(function(d) {
-      console.log(d.key)
       var count = config[group][d.key]["totalcount"]; 
       var studies_text = count == 1 ? " study" : " studies";
       return  count + studies_text;
-    });
+    })
+    .style("font-size", config[group]["countsize"] + "px");
 
   // exit
   text.exit().remove();
@@ -555,9 +570,17 @@ function mouseoutTooltip(d) {
   tooltip.style("visibility", "hidden");
 }
 
+// define and append the tooltips
 var tooltip = d3.select("body")
     .append("div")
     .attr("class","tooltip");
+
+
+// resize all the containers listed below from config
+function resizeContainers() {
+  d3.select(".top").style("height", config[groups.top]["height"] + "px"); 
+  d3.select(".bottom").style("height", config[groups.bottom]["height"] + "px"); 
+}
 
 
 // UTILITY FUNCTIONS
@@ -579,20 +602,20 @@ function nest(data,group) {
 
 } // nest
 
-// Filter data based on a key and a value
+// Filter flat (not nested) data based on a key and a value
 function filter(data, key, value) {
-    var filtered = data.filter(function(d) {
-      // country FIPS requires more permissive filtering:
-      // FIPS can be a list, or a single country 
-      var match;
-      if (key == "fips") {
-        match = d["fips"].indexOf(value) > -1; 
-      } else {
-        match = (d[key] == value);
-      }
-      return match;
-    });
-    return filtered;
+  var filtered = data.filter(function(d) {
+    // country FIPS requires more permissive filtering:
+    // FIPS can be a list, or a single country 
+    var match;
+    if (key == "fips") {
+      match = d["fips"].indexOf(value) > -1; 
+    } else {
+      match = (d[key] == value);
+    }
+    return match;
+  });
+  return filtered;
 }
 
 function delegate_event(selected) {
@@ -778,7 +801,7 @@ function scrollbar(height) {
   return height > windowHeight ? true : false;
 }
 
-// apply these options to filter the data, in sequence
+// apply these options to filter the flat (not filtered) data, in sequence
 function apply_options(data) { 
   // apply country filter, if there is one
   var countryoption = d3.select("select#country").node().value;
@@ -792,4 +815,9 @@ function apply_options(data) {
   if (strengthoption) data = filter(data, "strength", strengthoption);
 
   return data;
+}
+
+function shadeColor(color, percent) {   
+    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
