@@ -31,7 +31,6 @@ $(window).on("resize", _.debounce(function () {
 }, 250));
 
 // callback from d3.queue()
-// countries TO DO: save this with the lookup, to have a single source
 function main(error, lookups, data) {
   if (error) throw error;
   
@@ -40,11 +39,11 @@ function main(error, lookups, data) {
     lookup[d.key] = d;    
   });
   
-  // Pre-processing of data
+  // Pre-processing of data, several tasks at once
   // 1) get a count of countries in the data, and save to countries_keyed
   // 2) coerce string valence into intenger
   // 3) generate list of strengths present in the data
-  countries_keyed = {};
+  var countries_keyed = {};
   strengthlist = [];
   data.forEach(function(d) {
     // d.country can be a list of countries, so check for that, and split if so
@@ -56,15 +55,17 @@ function main(error, lookups, data) {
       if (typeof countries_keyed[fips] === "undefined") countries_keyed[fips] = {"count": 0};
       countries_keyed[fips]["count"] += 1;
       countries_keyed[fips]["name"] = lookup[fips]["name"];
+      countries_keyed[fips]["fips"] = fips;
       countries_keyed[fips]["latitude"] = lookup[fips]["latitude"];
       countries_keyed[fips]["longitude"] = lookup[fips]["longitude"];
     });  
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim());
-    
+    strengthlist.push(d.strength.trim());    
   });
+
+console.log(countries_keyed)
 
   // Post-processing:
   // - sort and remove duplicates, then generate select options
@@ -91,25 +92,29 @@ dispatch.on("load.setup", function(options) {
 // register a listener for "load" and create dropdowns for various fiters
 dispatch.on("load.menus", function(options) {
   // get countries names from countries_keyed
-  var countries = _.map(options["countries_keyed"], function(c) {return c.name});
+  var countries = _.map(options["countries_keyed"], function(c) {return c});
 
   // COUNTRY FILTER
+  // hack in a placeholder 
+  countries.unshift({name:'', fips:''});
   var select = d3.select("select#country");
   // append options to select dropdown
   select.selectAll("option")
       .data(countries)
     .enter().append("option")
-      .attr("value", function(d) { return d.trim(); })
-      .text(function(d) { return d.trim(); });
+      .attr("value", function(d) { return d.fips.trim(); })
+      .text(function(d) { console.log(d.name); return d.name.trim(); });
 
   // STRENGTH FILTER
+  var strengths = options["stengths"]
+  strengths.unshift("");
   var select = d3.select("select#strength");
   // append strengthoptions to select dropdown
   select.selectAll("option")
-      .data(options["stengths"])
+      .data(strengths)
     .enter().append("option")
       .attr("value", function(d) { return d; })
-      .text(function(d) { return lookup[d]["name"].trim(); });
+      .text(function(d) { return d != "" ? lookup[d]["name"].trim() : ""; });
 
   // SORT OPTIONS
   // Defined directly in html as <options>, vals and text
@@ -218,6 +223,9 @@ dispatch.on("load.leaflet", function(data) {
   map.fitBounds(markers.getBounds());
 }); // load.leaflet
 
+//
+// Main chart redraw function
+//
 function drawchart(data, container, tfast, group) {
 
   console.log("statechange data: ", data);
@@ -456,10 +464,11 @@ function drawchart(data, container, tfast, group) {
 
 // NAMED FUNCTIONS
 function handleMarkerClick(markerdata) {
-  // several benefits: other filters are applied, and the dropdown state mirrors map state
+  // simply trigger change on the counry select, which offers some nice side benefits:
+  // other filters are applied, and the dropdown state mirrors map state
   $("select#country").val(markerdata.name).trigger("change");
 
-  // update the icons
+  // then simply update the icons
   $("div.country-icon").removeClass("selected");
   $(event.target).parent().addClass("selected");
 }
@@ -523,11 +532,11 @@ function nest(data,group) {
 // Filter data based on a key and a value
 function filter(data, key, value) {
     var filtered = data.filter(function(d) {
-      // country requires more permissive filtering:
-      // country can be a list, or a single country 
+      // country FIPS requires more permissive filtering:
+      // FIPS can be a list, or a single country 
       var match;
-      if (key == "country") {
-        match = d["country"].indexOf(value) > -1; 
+      if (key == "fips") {
+        match = d["fips"].indexOf(value) > -1; 
       } else {
         match = (d[key] == value);
       }
@@ -724,7 +733,7 @@ function apply_options(data) {
   // apply country filter, if there is one
   var countryoption = d3.select("select#country").node().value;
   if (countryoption) {
-    data = filter(data, "country", countryoption);
+    data = filter(data, "fips", countryoption);
     selectMarker(countryoption);
   }
 
