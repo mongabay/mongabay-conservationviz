@@ -490,9 +490,9 @@ function drawchart(data, container, tfast, group) {
     .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
-    .on("mouseover", mouseoverTooltip)
-    .on("mousemove", mousemoveTooltip)
-    .on("mouseout", mouseoutTooltip)
+    .on("mouseover", mouseoverSquare)
+    .on("mousemove", mousemoveSquare)
+    .on("mouseout", mouseoutSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
         var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -512,9 +512,9 @@ function drawchart(data, container, tfast, group) {
       .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      .on("mouseover", mouseoverTooltip)
-      .on("mousemove", mousemoveTooltip)
-      .on("mouseout", mouseoutTooltip)
+      .on("mouseover", mouseoverSquare)
+      .on("mousemove", mousemoveSquare)
+      .on("mouseout", mouseoutSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -538,34 +538,38 @@ function handleMarkerClick(markerdata) {
   $(event.target).parent().addClass("selected");
 }
 
-function selectMarker(country) {
+function selectMarker(fips) {
   markers.eachLayer(function(layer){
-    if (layer.data.name == country) {
+    if (layer.data.fips == fips) {
       $("div.country-icon").removeClass("selected");
       L.DomUtil.addClass(layer._icon, "selected");
     }
   });
 }
 
-// define tooltip behavior on mouseover
-function mouseoverTooltip(d) {
+// define behavior on mouseover square
+function mouseoverSquare(d) {
+  // add tooltips
   d3.select(this).classed("hover", true);
   var split = d.zb_id.split(".");
   var id = (split[0] + "." + split[1]) * 1;
   tooltip.text(lookup[id].name);
   tooltip.style("visibility","visible");
+
+  // update the map
+  selectMarker(d.fips);
 }
 
-// define tooltip behavior on mousemove
-function mousemoveTooltip(d) {
+// define behavior on mousemove sqaure
+function mousemoveSquare(d) {
   tooltip
     .style("top",(d3.event.pageY-10)+"px")
     .style("left",(d3.event.pageX+10)+"px")
     .style("top",(d3.event.pageY-30)+"px");
 }
 
-// define tooltip behavior on mouseout
-function mouseoutTooltip(d) {
+// define behavior on mouseout square
+function mouseoutSquare(d) {
   d3.select(this).classed("hover", false);
   tooltip.style("visibility", "hidden");
 }
