@@ -7,14 +7,13 @@ var groups = {
 
 // colors for the theme groups
 var colors = {
-  "ENV": "#1B9E77",
-  "SOC": "#E16802",
-  "ECON": "#757ECF",
+  env: "#1B9E77",
+  soc: "#E16802",
+  econ: "#757ECF",
 }
 
-// global configuration of colors, sizes, spacing, for top and bottom charts
+// global configuration of sizes, spacing, for top and bottom charts
 // all measures are in pixels
-// Note: additional config variables are calculated at runtime and added to this structure
 var config = {};
 // configuration general
 config["map_height"] = 250,      // map height in px
@@ -27,7 +26,9 @@ config[groups.top] = {
   colmargin:   10,               // margin applied to right side of cols when ncols > 1
   sqsize:      15,               // width and hight of chart squares
   rowpadding:  10,               // padding between rows
-  textwidth:   100,              // width of the text label "column"   
+  labelsize:   19,               // size of text label size in pixels
+  countsize:   10,               // size of study count text in pixels
+  textwidth:   150,              // width of the text label "column"   
   textpadding: 10,               // right side padding of text label
 };
 // configuration of the bottom chart
@@ -39,6 +40,8 @@ config[groups.bottom] = {
   colmargin:   10,                
   sqsize:      17,                 
   rowpadding:  30,
+  labelsize:   13,
+  countsize:   11,
   textwidth:   180,                 
   textpadding: 10,               
 };

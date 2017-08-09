@@ -28,10 +28,14 @@ d3.queue()
 $(window).on("resize", _.debounce(function () {
   // recalc offets for all groups, then trigger a statechange
   dispatch.call("statechange",this,rawdata);
+
+  // then, resize the containers
+  // only needed here if not included in "Statechange"
+  resizeContainers();
+
 }, 250));
 
 // callback from d3.queue()
-// countries TO DO: save this with the lookup, to have a single source
 function main(error, lookups, data) {
   if (error) throw error;
   
@@ -40,11 +44,11 @@ function main(error, lookups, data) {
     lookup[d.key] = d;    
   });
   
-  // Pre-processing of data
+  // Pre-processing of data, several tasks at once
   // 1) get a count of countries in the data, and save to countries_keyed
   // 2) coerce string valence into intenger
   // 3) generate list of strengths present in the data
-  countries_keyed = {};
+  var countries_keyed = {};
   strengthlist = [];
   data.forEach(function(d) {
     // d.country can be a list of countries, so check for that, and split if so
@@ -56,14 +60,14 @@ function main(error, lookups, data) {
       if (typeof countries_keyed[fips] === "undefined") countries_keyed[fips] = {"count": 0};
       countries_keyed[fips]["count"] += 1;
       countries_keyed[fips]["name"] = lookup[fips]["name"];
+      countries_keyed[fips]["fips"] = fips;
       countries_keyed[fips]["latitude"] = lookup[fips]["latitude"];
       countries_keyed[fips]["longitude"] = lookup[fips]["longitude"];
     });  
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim());
-    
+    strengthlist.push(d.strength.trim());    
   });
 
   // Post-processing:
@@ -81,35 +85,45 @@ function main(error, lookups, data) {
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
+  // calc offsets for top and bottom
   var data = nest(rawdata, groups.top);
   calcOffsets(data, groups.top);
 
   var data = nest(rawdata,groups.bottom);
   calcOffsets(data, groups.bottom);
+
+  // and then (optionally) resize: we could resize here, or on "statechange"
+  // but if not done on "statechange" then we do have to do it on "resize"
+  resizeContainers(); 
+
 });
 
 // register a listener for "load" and create dropdowns for various fiters
 dispatch.on("load.menus", function(options) {
   // get countries names from countries_keyed
-  var countries = _.map(options["countries_keyed"], function(c) {return c.name});
+  var countries = _.map(options["countries_keyed"], function(c) {return c});
 
   // COUNTRY FILTER
+  // hack in a placeholder 
+  countries.unshift({name:'', fips:''});
   var select = d3.select("select#country");
   // append options to select dropdown
   select.selectAll("option")
       .data(countries)
     .enter().append("option")
-      .attr("value", function(d) { return d.trim(); })
-      .text(function(d) { return d.trim(); });
+      .attr("value", function(d) { return d.fips.trim(); })
+      .text(function(d) { return d.name.trim(); });
 
   // STRENGTH FILTER
+  var strengths = options["stengths"]
+  strengths.unshift("");
   var select = d3.select("select#strength");
   // append strengthoptions to select dropdown
   select.selectAll("option")
-      .data(options["stengths"])
+      .data(strengths)
     .enter().append("option")
       .attr("value", function(d) { return d; })
-      .text(function(d) { return lookup[d]["name"].trim(); });
+      .text(function(d) { return d != "" ? lookup[d]["name"].trim() : ""; });
 
   // SORT OPTIONS
   // Defined directly in html as <options>, vals and text
@@ -140,7 +154,7 @@ dispatch.on("statechange.topchart", function(data) {
   // draw the chart
   var container = d3.select(".top");
   drawchart(data, container, tfast, groups.top);
-  container.style("height", config[groups.top]["height"] + "px")
+  // resizeContainers(); // an option
 });
 
 // register a callback to be invoked which updates the chart when "statechange" occurs
@@ -153,7 +167,7 @@ dispatch.on("statechange.bottomchart", function(data) {
   // draw and size the chart
   var container = d3.select(".bottom");
   drawchart(data, container, tfast, groups.bottom);
-  container.style("height", config[groups.top]["height"] + "px")
+  // resizeContainers(); // an option, but leads to a lot of things moving on screen
 });
 
 // 
@@ -218,6 +232,9 @@ dispatch.on("load.leaflet", function(data) {
   map.fitBounds(markers.getBounds());
 }); // load.leaflet
 
+//
+// Main chart redraw function
+//
 function drawchart(data, container, tfast, group) {
 
   console.log("statechange data: ", data);
@@ -284,42 +301,98 @@ function drawchart(data, container, tfast, group) {
     .style("width", config[group]["colwidth"] + "px");
 
   //
-  // TEXT LABELS
+  // TEXT LABEL WRAPPERS
   //
   var rows = container.selectAll("div.row");
-  var text = rows.selectAll("div.text")
+  var textwrappers = rows.selectAll("div.textwrapper")
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // exit
-  text.exit().remove();
+  textwrappers.exit().remove();
 
   // update
-  text.html(function(d) {
-    var name = lookup[d.key]["name"];
-    return name;
+  // nothing at the moment
+  // text.html(function(d) {
+  //   var name = lookup[d.key]["name"];
+  //   return name;
+  // });
+
+  // enter
+  textwrappers.enter().append("div")
+    .attr("class","textwrapper")
+    .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
+    .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px");
+
+  //
+  // TEXT LABELS THEMSELVES
+  // 
+  var textwrappers = d3.selectAll("div.textwrapper");
+  var text = textwrappers.selectAll("div.text")
+    .data(function(d) {return [d]}, function(d) {return d.key});
+
+  // update
+  text
+    .text(function(d) {
+      return lookup[d.key]["name"]
+    })
+    // .style("font-size", function() { return config[group]["labelsize"] + "px"; })
+    .style("color",function(d) {
+      // color the text by the value defined in the lookup for this key
+      var parent = lookup[d.key]["parent"];
+      return colors[parent];
   });
 
   // enter
   text.enter().append("div")
     .attr("class","text")
-    .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px")
-    .append("div")
-      .text(function(d) {
-        return lookup[d.key]["name"]
-      })
-      .attr("style",function(d) {
-        // TO DO: need a way to look up this items theme
-        // and get a color def from that. config? data? lookup? some combo of the above?
-        // debugger;
-      })
-    .append("div")
-      .attr("class","count")
-      .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
-      .text(function(d) {
-        var count = config[group][d.key]["totalcount"]; 
-        var studies_text = count == 1 ? " study" : " studies";
-        return  count + studies_text;
-      });
+    .text(function(d) {
+      return lookup[d.key]["name"]
+    })
+    .style("font-size", function() { return config[group]["labelsize"] + "px"; })
+    .style("color",function(d) {
+      // color the text by the value defined in the lookup for this key
+      var parent = lookup[d.key]["parent"];
+      return colors[parent];
+    })
+    .on("mouseover", function(d) { 
+      d3.select(this).style("color", function() { 
+        return shadeColor(colors[lookup[d.key]["parent"]],-0.3);
+      });  
+    })
+    .on("mouseout", function(d) { d3.select(this).style("color", colors[lookup[d.key]["parent"]]) })
+    .on("click", function(e) {
+      // update a selection, so we can track this, and apply with other filters? 
+      // selectedgroup = "";
+      // also implies a need for a "clear" button
+      dispatch.call("statechange",this,filter(rawdata,"variable",e.key));
+    });
+
+  // exit
+  text.exit().remove();
+
+  //
+  // TEXT ATTRIBUTE FOR STUDY COUNT
+  //
+  var textwrappers = d3.selectAll("div.textwrapper");
+  var text = textwrappers.selectAll("div.count")
+    .data(function(d) {return [d]}, function(d) {return d.key});
+
+  // update
+  text
+    .style("font-size", config[group]["countsize"] + "px");
+
+  // enter
+  text.enter().append("div")
+    .attr("class","count")
+    .text(function(d) {
+      var count = config[group][d.key]["totalcount"]; 
+      var studies_text = count == 1 ? " study" : " studies";
+      return  count + studies_text;
+    })
+    .style("font-size", config[group]["countsize"] + "px");
+
+  // exit
+  text.exit().remove();
 
   //
   // CHART GROUPS
@@ -417,9 +490,9 @@ function drawchart(data, container, tfast, group) {
     .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
-    .on("mouseover", mouseoverTooltip)
-    .on("mousemove", mousemoveTooltip)
-    .on("mouseout", mouseoutTooltip)
+    .on("mouseover", mouseoverSquare)
+    .on("mousemove", mousemoveSquare)
+    .on("mouseout", mouseoutSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
         var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -439,9 +512,9 @@ function drawchart(data, container, tfast, group) {
       .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      .on("mouseover", mouseoverTooltip)
-      .on("mousemove", mousemoveTooltip)
-      .on("mouseout", mouseoutTooltip)
+      .on("mouseover", mouseoverSquare)
+      .on("mousemove", mousemoveSquare)
+      .on("mouseout", mouseoutSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -456,49 +529,62 @@ function drawchart(data, container, tfast, group) {
 
 // NAMED FUNCTIONS
 function handleMarkerClick(markerdata) {
-  // several benefits: other filters are applied, and the dropdown state mirrors map state
-  $("select#country").val(markerdata.name).trigger("change");
+  // simply trigger change on the counry select, which offers some nice side benefits:
+  // other filters are applied, and the dropdown state mirrors map state
+  $("select#country").val(markerdata.fips).trigger("change");
 
-  // update the icons
+  // then simply update the icons
   $("div.country-icon").removeClass("selected");
   $(event.target).parent().addClass("selected");
 }
 
-function selectMarker(country) {
+function selectMarker(fips) {
   markers.eachLayer(function(layer){
-    if (layer.data.name == country) {
+    if (layer.data.fips == fips) {
       $("div.country-icon").removeClass("selected");
       L.DomUtil.addClass(layer._icon, "selected");
     }
   });
 }
 
-// define tooltip behavior on mouseover
-function mouseoverTooltip(d) {
+// define behavior on mouseover square
+function mouseoverSquare(d) {
+  // add tooltips
   d3.select(this).classed("hover", true);
   var split = d.zb_id.split(".");
   var id = (split[0] + "." + split[1]) * 1;
   tooltip.text(lookup[id].name);
   tooltip.style("visibility","visible");
+
+  // update the map
+  selectMarker(d.fips);
 }
 
-// define tooltip behavior on mousemove
-function mousemoveTooltip(d) {
+// define behavior on mousemove sqaure
+function mousemoveSquare(d) {
   tooltip
     .style("top",(d3.event.pageY-10)+"px")
     .style("left",(d3.event.pageX+10)+"px")
     .style("top",(d3.event.pageY-30)+"px");
 }
 
-// define tooltip behavior on mouseout
-function mouseoutTooltip(d) {
+// define behavior on mouseout square
+function mouseoutSquare(d) {
   d3.select(this).classed("hover", false);
   tooltip.style("visibility", "hidden");
 }
 
+// define and append the tooltips
 var tooltip = d3.select("body")
     .append("div")
     .attr("class","tooltip");
+
+
+// resize all the containers listed below from config
+function resizeContainers() {
+  d3.select(".top").style("height", config[groups.top]["height"] + "px"); 
+  d3.select(".bottom").style("height", config[groups.bottom]["height"] + "px"); 
+}
 
 
 // UTILITY FUNCTIONS
@@ -520,20 +606,20 @@ function nest(data,group) {
 
 } // nest
 
-// Filter data based on a key and a value
+// Filter flat (not nested) data based on a key and a value
 function filter(data, key, value) {
-    var filtered = data.filter(function(d) {
-      // country requires more permissive filtering:
-      // country can be a list, or a single country 
-      var match;
-      if (key == "country") {
-        match = d["country"].indexOf(value) > -1; 
-      } else {
-        match = (d[key] == value);
-      }
-      return match;
-    });
-    return filtered;
+  var filtered = data.filter(function(d) {
+    // country FIPS requires more permissive filtering:
+    // FIPS can be a list, or a single country 
+    var match;
+    if (key == "fips") {
+      match = d["fips"].indexOf(value) > -1; 
+    } else {
+      match = (d[key] == value);
+    }
+    return match;
+  });
+  return filtered;
 }
 
 function delegate_event(selected) {
@@ -719,12 +805,12 @@ function scrollbar(height) {
   return height > windowHeight ? true : false;
 }
 
-// apply these options to filter the data, in sequence
+// apply these options to filter the flat (not filtered) data, in sequence
 function apply_options(data) { 
   // apply country filter, if there is one
   var countryoption = d3.select("select#country").node().value;
   if (countryoption) {
-    data = filter(data, "country", countryoption);
+    data = filter(data, "fips", countryoption);
     selectMarker(countryoption);
   }
 
@@ -733,4 +819,9 @@ function apply_options(data) {
   if (strengthoption) data = filter(data, "strength", strengthoption);
 
   return data;
+}
+
+function shadeColor(color, percent) {   
+    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
