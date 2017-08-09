@@ -556,7 +556,7 @@ function mouseoverSquare(d) {
   tooltip.text(lookup[id].name);
   tooltip.style("visibility","visible");
 
-  // update the map
+  // update the map marker that contains this study
   selectMarker(d.fips);
 }
 
@@ -570,8 +570,12 @@ function mousemoveSquare(d) {
 
 // define behavior on mouseout square
 function mouseoutSquare(d) {
+  // hide the tooltip
   d3.select(this).classed("hover", false);
   tooltip.style("visibility", "hidden");
+
+  // clear the map
+  $("div.country-icon").removeClass("selected");
 }
 
 // define and append the tooltips
