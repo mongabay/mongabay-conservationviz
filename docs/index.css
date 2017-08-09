@@ -118,10 +118,34 @@ span.icon-text {
   color:#fff;
 }
 
-/* SORT SELECTS */
+/* BUTTONS */
+
+div#select-container a#clear {
+  text-decoration: none;
+  display:inline-block;
+  padding: 6px 8px;
+  background: #fff;
+  border:1px solid #aaa;
+  color: #999;
+  position:relative;
+  top: 1px;
+  cursor:pointer;
+}
+
+div#select-container a#clear:hover {
+  border: 1px solid #888;
+  color: #444;
+  top:2px;
+}
+
+/* SELECTS */
 
 div#select-container {
   width: 100%;
+}
+
+div#select-container {
+  margin-right: 1em;
 }
 
 select#sort {
@@ -146,9 +170,11 @@ select#sort {
   display:none;
 }
 
-
-
 /* SELECT2 STYLES AND OVERRIDES */
+
+span.select2-container {
+  margin-right: 5px !important;
+}
 
 span.select2-container:hover span.select2-selection__placeholder {
   color:#333 !important;

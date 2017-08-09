@@ -4,6 +4,7 @@
 // data variables
 var rawdata; 
 var lookup = {};
+var selectedgroup = {};
 
 // map constants
 var map;
@@ -360,11 +361,21 @@ function drawchart(data, container, tfast, group) {
       });  
     })
     .on("mouseout", function(d) { d3.select(this).style("color", colors[lookup[d.key]["parent"]]) })
-    .on("click", function(e) {
-      // update a selection, so we can track this, and apply with other filters? 
-      // selectedgroup = "";
-      // also implies a need for a "clear" button
-      dispatch.call("statechange",this,filter(rawdata,"variable",e.key));
+    .on("click", function(d) {
+      // update the selected group details, so we can track this, and apply with other filters 
+      // value is simply the data key of the clicked upon label
+      selectedgroup["value"] = d.key;
+      // key is dependent on hierarchy, first get the first datum; every one of these should have at least one datum or it wouldn't be on the screen
+      var datum = d.values[0].values[0]; 
+      if (typeof datum == "undefined") return; 
+      // if the theme (e.g. "ENV") is equal to the data label of the clicked item (e.g. ENV for "environmental"), then we are filtering by "theme"
+      // if not, then we are filtering by "variable" 
+      // a bit more hardcoding of these category names than I would like, but I am told that the use of theme and variable will be consistent across datasets
+      selectedgroup["key"] = datum["theme"] == selectedgroup["value"] ? "theme" : "variable"; 
+      
+      // all done, dispatch!
+      dispatch.call("statechange",this,rawdata);
+
     });
 
   // exit
@@ -583,15 +594,11 @@ var tooltip = d3.select("body")
     .append("div")
     .attr("class","tooltip");
 
-
 // resize all the containers listed below from config
 function resizeContainers() {
   d3.select(".top").style("height", config[groups.top]["height"] + "px"); 
   d3.select(".bottom").style("height", config[groups.bottom]["height"] + "px"); 
 }
-
-
-// UTILITY FUNCTIONS
 
 // nest our data on selected group, then either "plus" or "minus",
 //   depending on value of "valence"
@@ -822,10 +829,26 @@ function apply_options(data) {
   var strengthoption = d3.select("select#strength").node().value;
   if (strengthoption) data = filter(data, "strength", strengthoption);
 
+  // apply group selection, if there is one
+  if (typeof selectedgroup.key !== "undefined") data = filter(data,selectedgroup.key,selectedgroup.value) 
+
   return data;
 }
 
-function shadeColor(color, percent) {   
-    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+// shades a hex color darker or lighter, by a percentage param, for example in the form of 0.5 or -0.5
+function shadeColor(hex, percent) {   
+  var f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+  return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+}
+
+// clear all selections and filters, essentially reset the app state without a refresh
+function clear_all() {
+  // first, clear any group selection
+  selectedgroup = {};
+
+  // then reset the selects
+  $('select#country').val('').trigger('change');  
+  $('select#strength').val('').trigger('change');  
+  $('select#sort').val('').trigger('change');  
+
 }
