@@ -12,6 +12,19 @@ var colors = {
   econ: "#757ECF",
 }
 
+// map circle areas, in km2
+var circleareas = {
+  min: 15000, 
+  max: 1300000,
+}
+
+// circle colors on map, for selected and unselected
+var circlecolors = {
+  // "default": "#6aa6cc",
+  "default": "#64b0e0",
+  "selected": "#FACB57",
+}
+
 // global configuration of sizes, spacing, for top and bottom charts
 // all measures are in pixels
 var config = {};
@@ -26,9 +39,9 @@ config[groups.top] = {
   colmargin:   10,               // margin applied to right side of cols when ncols > 1
   sqsize:      15,               // width and hight of chart squares
   rowpadding:  10,               // padding between rows
-  labelsize:   19,               // size of text label size in pixels
+  labelsize:   15,               // size of text label size in pixels
   countsize:   10,               // size of study count text in pixels
-  textwidth:   150,              // width of the text label "column"   
+  textwidth:   130,              // width of the text label "column"   
   textpadding: 10,               // right side padding of text label
 };
 // configuration of the bottom chart

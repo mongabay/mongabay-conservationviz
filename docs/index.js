@@ -6,14 +6,19 @@ var rawdata;
 var lookup = {};
 var selectedgroup = {};
 
-// map constants
+// constants for the map
 var map;
-var markers;
+var points;
+var circles;
+var circleScale;
 var min_zoom= 2;
 var max_zoom= 18;
 
-// define a transition, will occur over 750 milliseconds
-// TO DO: Best place to put this? 
+// define circle styles from config
+defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
+selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
+
+// define a transition in milliseconds
 var tfast = d3.transition().duration(750);
 
 // register events to emit & listen for via d3 dispatch
@@ -33,7 +38,6 @@ $(window).on("resize", _.debounce(function () {
   // then, resize the containers
   // only needed here if not included in "Statechange"
   resizeContainers();
-
 }, 250));
 
 // callback from d3.queue()
@@ -51,11 +55,12 @@ function main(error, lookups, data) {
   // 3) generate list of strengths present in the data
   var countries_keyed = calcCountryKeys(data);
   strengthlist = [];
+  var max_count = 0;
   data.forEach(function(d){
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim());  
+    strengthlist.push(d.strength.trim()); 
   })
 
   // Post-processing:
@@ -64,10 +69,24 @@ function main(error, lookups, data) {
   // - keep global reference to raw data
   rawdata = data;
 
-  // Data prep all done: 
+  // set up a scale for the map circles
+  // first get max count by country
+  var max = 0;
+  Object.keys(countries_keyed).forEach(function(c) {
+    if (countries_keyed[c].count > max) max = countries_keyed[c].count;
+  });
+  var cmin = circleareas["min"] * 1000000;
+  var cmax = circleareas["max"] * 1000000;
+  circleScale = d3.scaleSqrt().domain([1, max]).range([cmin,cmax]);
+
+  // Data prep all done!
   // call our dispatch events with `this` context, and corresponding data
   dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
   dispatch.call("statechange", this, data);
+  // finally, fit the map to bounds one time, this will always be the extent, despite state changes
+  // cannot fit bounds to circles for some reason, so we fit to points instead
+  map.fitBounds(points.getBounds());
+
 }
 
 // listen for "load" and calculate global container dimensions based on incoming data
@@ -153,10 +172,9 @@ dispatch.on("statechange.charts", function(data) {
   // resize
   // resizeContainers(); // an option, but this means containers resize to fit charts, and everything bounces around
 
-  // draw the map
+  // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
   drawmap(countries_keyed);
-
 });
 
 // 
@@ -187,12 +205,10 @@ dispatch.on("load.map", function(data) {
     pane: 'labels'
   });
 
-  // create a feature group and add it to the map
-  markers = L.featureGroup().addTo(map);
+  // create feature groups for circles and points and add them to the map
+  circles = L.featureGroup().addTo(map);
+  points = L.featureGroup().addTo(map);
 
-  // draw the map, and fit the bounds to the result
-  drawmap(data.countries_keyed);
-  map.fitBounds(markers.getBounds());
 }); // load.map
 
 
@@ -201,11 +217,16 @@ dispatch.on("load.map", function(data) {
 //
 function drawmap(countries_keyed) {
   // first clear any existing layers
-  markers.clearLayers();
+  circles.clearLayers();
 
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
   var countries = Object.keys(countries_keyed);
+  // sort countries by count, to ensure smaller ones are stacked on top of larger ones
+  console.log(countries);
+  countries.sort(function(a,b) {
+    return countries_keyed[b].count - countries_keyed[a].count
+  });
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -214,21 +235,27 @@ function drawmap(countries_keyed) {
     if (countries_keyed[name].latitude === "" || countries_keyed[name].longitude === "") return;
     if (countries_keyed[name].count > 0) {
       var country = countries_keyed[name];
-      var icon = L.divIcon({
-        className: 'country-icon',
-        html: '<span class="icon-text">'+ country.count +'</span>'
-      });
-      var marker = L.marker([country.latitude, country.longitude], {icon: icon}).addTo(markers);
-      marker.data = country;
-      marker.on('click',function(e) { 
+      // can't fit bound to L.cicles for some reason, so we make null marker icons instead
+      var nullicon = L.divIcon({ className: 'null-icon'});
+      var point = L.marker([country.latitude, country.longitude], {icon: nullicon, interactive: false});
+      point.addTo(points);
+      // get an area from scale function, calc the radius, and then add the circles      
+      var area = circleScale(country.count);
+      var radius = Math.sqrt(area/Math.PI);
+      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(defaultStyle).addTo(circles);
+      // add interactivity
+      circle.data = country;
+      circle.on('click',function(e) { 
         handleMarkerClick(e.target.data); 
       });
-      marker.bindPopup(country.name);
-      marker.on('mouseover', function (e) {
+      circle.bindPopup(country.name + ": " + country.count);
+      circle.on('mouseover', function (e) {
         this.openPopup();
+        this.setStyle(selectedStyle);
       });
-      marker.on('mouseout', function (e) {
+      circle.on('mouseout', function (e) {
         setTimeout(function() {map.closePopup()}, 800); 
+        this.setStyle(defaultStyle);
       });
     }
   });
@@ -551,12 +578,17 @@ function handleMarkerClick(markerdata) {
 }
 
 function selectMarker(fips) {
-  markers.eachLayer(function(layer){
+  circles.eachLayer(function(layer){
     if (layer.data.fips == fips) {
-      $("div.country-icon").removeClass("selected");
-      L.DomUtil.addClass(layer._icon, "selected");
+      layer.setStyle(selectedStyle);
     }
   });
+}
+
+function unselectMarker() {
+  circles.eachLayer(function(layer) {
+    layer.setStyle(defaultStyle);
+  })
 }
 
 // define behavior on mouseover square
@@ -586,8 +618,8 @@ function mouseoutSquare(d) {
   d3.select(this).classed("hover", false);
   tooltip.style("visibility", "hidden");
 
-  // clear the map
-  $("div.country-icon").removeClass("selected");
+  // clear the selected circle from the map
+  unselectMarker();
 }
 
 // define and append the tooltips
