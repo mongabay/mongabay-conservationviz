@@ -60,7 +60,7 @@ function main(error, lookups, data) {
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim()); 
+    strengthlist.push(d.type.trim()); 
   })
 
   // Post-processing:
@@ -533,7 +533,8 @@ function drawchart(data, container, tfast, group) {
     .classed("neutral",function(d) { return d.valence == 0 })
     .classed("plus",function(d) { return d.valence > 0 })
     .classed("minus",function(d) { return d.valence < 0 })
-    .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
+    // TO DO UPDATE
+    .classed("weak", function(d) {return d.type != "type3" ? true : false})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
     .on("mouseover", mouseoverSquare)
@@ -555,7 +556,8 @@ function drawchart(data, container, tfast, group) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
+      // TO DO UPDATE
+      .classed("weak", function(d) {return d.type != "type3" ? true : false})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
       .on("mouseover", mouseoverSquare)
@@ -585,11 +587,15 @@ function handleMarkerClick(markerdata) {
 }
 
 function selectCircle(fips) {
-  circles.eachLayer(function(layer){
-    if (layer.data.fips == fips) {
-      layer.setStyle(selectedStyle);
-    }
-  });
+  // fips could be a list of countries, or could be a single country
+  var fipslist = fips.indexOf(",") > -1 ? fips.split(",") : [fips]; 
+  fipslist.forEach(function(fipscode) {
+    circles.eachLayer(function(layer){
+      if (layer.data.fips == fipscode) {
+        layer.setStyle(selectedStyle);
+      }
+    });
+  })
 }
 
 function unselectCircle() {
@@ -599,12 +605,13 @@ function unselectCircle() {
 }
 
 // define behavior on mouseover square
-function mouseoverSquare(d) {
+function mouseoverSquare(d) { 
   // add tooltips
   d3.select(this).classed("hover", true);
-  var split = d.zb_id.split(".");
-  var id = (split[0] + "." + split[1]) * 1;
-  tooltip.text(lookup[id].name);
+  var split = d.zb_id.toString().split(".");
+  var id = (split[0] + "." + split[1]);
+  var text = lookup[id].name;
+  tooltip.text(d.zb_id + ": " + lookup[id].name);
   tooltip.style("visibility","visible");
 
   // update the map marker that contains this study

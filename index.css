@@ -139,7 +139,7 @@ div#select-container a#clearall {
   cursor:pointer;
 }
 
-div#select-container a#clear:hover {
+div#select-container a#clearall:hover {
   border: 1px solid #888;
   color: #444;
   top:2px;
