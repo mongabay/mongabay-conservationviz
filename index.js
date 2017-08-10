@@ -256,7 +256,8 @@ function drawmap(countries_keyed) {
       });
       circle.on('mouseout', function (e) {
         setTimeout(function() {map.closePopup()}, 800); 
-        this.setStyle(defaultStyle);
+        // clear style, but only if something is NOT selected
+         if ($("select#country").val() == "") this.setStyle(defaultStyle);
       });
     }
   });
@@ -356,7 +357,7 @@ function drawchart(data, container, tfast, group) {
   //
   // TEXT LABELS THEMSELVES
   // 
-  var textwrappers = d3.selectAll("div.textwrapper");
+  var textwrappers = container.selectAll("div.textwrapper");
   var text = textwrappers.selectAll("div.text")
     .data(function(d) {return [d]}, function(d) {return d.key});
 
@@ -413,16 +414,21 @@ function drawchart(data, container, tfast, group) {
   //
   // TEXT ATTRIBUTE FOR STUDY COUNT
   //
-  var textwrappers = d3.selectAll("div.textwrapper");
-  var text = textwrappers.selectAll("div.count")
+  var textwrappers = container.selectAll("div.textwrapper");
+  var textcount = textwrappers.selectAll("div.count")
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  text
+  textcount
+    .text(function(d) {
+      var count = config[group][d.key]["totalcount"]; 
+      var studies_text = count == 1 ? " study" : " studies";
+      return  count + studies_text;
+    })
     .style("font-size", config[group]["countsize"] + "px");
 
   // enter
-  text.enter().append("div")
+  textcount.enter().append("div")
     .attr("class","count")
     .text(function(d) {
       var count = config[group][d.key]["totalcount"]; 
@@ -432,7 +438,7 @@ function drawchart(data, container, tfast, group) {
     .style("font-size", config[group]["countsize"] + "px");
 
   // exit
-  text.exit().remove();
+  textcount.exit().remove();
 
   //
   // CHART GROUPS
