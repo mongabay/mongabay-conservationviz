@@ -45,31 +45,18 @@ function main(error, lookups, data) {
     lookup[d.key] = d;    
   });
   
-  // Pre-processing of data, several tasks at once
+  // Pre-processing of data, several tasks
   // 1) get a count of countries in the data, and save to countries_keyed
   // 2) coerce string valence into intenger
   // 3) generate list of strengths present in the data
-  var countries_keyed = {};
+  var countries_keyed = calcCountryKeys(data);
   strengthlist = [];
-  data.forEach(function(d) {
-    // d.country can be a list of countries, so check for that, and split if so
-    var names = d.fips.indexOf(",") ? d.fips.split(",") : [d.fips];
-    names.forEach(function(fips){
-      // trim whitespace
-      if (fips == "") return;
-      fips = fips.trim();
-      if (typeof countries_keyed[fips] === "undefined") countries_keyed[fips] = {"count": 0};
-      countries_keyed[fips]["count"] += 1;
-      countries_keyed[fips]["name"] = lookup[fips]["name"];
-      countries_keyed[fips]["fips"] = fips;
-      countries_keyed[fips]["latitude"] = lookup[fips]["latitude"];
-      countries_keyed[fips]["longitude"] = lookup[fips]["longitude"];
-    });  
+  data.forEach(function(d){
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim());    
-  });
+    strengthlist.push(d.strength.trim());  
+  })
 
   // Post-processing:
   // - sort and remove duplicates, then generate select options
@@ -100,7 +87,7 @@ dispatch.on("load.setup", function(options) {
 });
 
 // register a listener for "load" and create dropdowns for various fiters
-dispatch.on("load.menus", function(options) {
+dispatch.on("load.dropdowns", function(options) {
   // get countries names from countries_keyed
   var countries = _.map(options["countries_keyed"], function(c) {return c});
 
@@ -147,34 +134,35 @@ dispatch.on("load.menus", function(options) {
 
 
 // register a callback to be invoked which updates the chart when "statechange" occurs
-dispatch.on("statechange.topchart", function(data) {
-  // apply any selected options and nest
-  data = apply_options(data);
-  data = nest(data,groups.top);
+dispatch.on("statechange.charts", function(data) {
+  // filter the data given current selections
+  filtered = apply_options(data);
+  
+  // Top chart: nest, and draw
+  data = nest(filtered,groups.top);
   calcOffsets(data,groups.top);
-  // draw the chart
   var container = d3.select(".top");
   drawchart(data, container, tfast, groups.top);
-  // resizeContainers(); // an option
-});
 
-// register a callback to be invoked which updates the chart when "statechange" occurs
-dispatch.on("statechange.bottomchart", function(data) {
-  // apply any selected options and nest
-  data = apply_options(data);
-  data = nest(data,groups.bottom);
+  // Bottom chart: nest, and draw
+  data = nest(filtered,groups.bottom);
   calcOffsets(data,groups.bottom);
-
-  // draw and size the chart
   var container = d3.select(".bottom");
   drawchart(data, container, tfast, groups.bottom);
-  // resizeContainers(); // an option, but leads to a lot of things moving on screen
+
+  // resize
+  // resizeContainers(); // an option, but this means containers resize to fit charts, and everything bounces around
+
+  // draw the map
+  var countries_keyed = calcCountryKeys(filtered);
+  drawmap(countries_keyed);
+
 });
 
 // 
-// Map setup after data load
+// Initial map setup after data load
 //
-dispatch.on("load.leaflet", function(data) {
+dispatch.on("load.map", function(data) {
   // set the map width from config
   document.getElementById('map').style.height = config["map_height"] + "px";
 
@@ -199,11 +187,25 @@ dispatch.on("load.leaflet", function(data) {
     pane: 'labels'
   });
 
+  // create a feature group and add it to the map
+  markers = L.featureGroup().addTo(map);
+
+  // draw the map, and fit the bounds to the result
+  drawmap(data.countries_keyed);
+  map.fitBounds(markers.getBounds());
+}); // load.map
+
+
+//
+// Main map redraw function
+//
+function drawmap(countries_keyed) {
+  // first clear any existing layers
+  markers.clearLayers();
+
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
-  var countries_keyed = data.countries_keyed;
   var countries = Object.keys(countries_keyed);
-  markers = L.featureGroup().addTo(map);
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -230,8 +232,7 @@ dispatch.on("load.leaflet", function(data) {
       });
     }
   });
-  map.fitBounds(markers.getBounds());
-}); // load.leaflet
+}
 
 //
 // Main chart redraw function
@@ -654,6 +655,38 @@ function sort(data, sortoption, group) {
   if (typeof reverse != "undefined") sorted = sorted.reverse(); 
   return sorted;
 
+}
+
+// given flattened data, key an object by country, with counts and other salient details
+// used by the map and for constructing select#country <options>
+function calcCountryKeys(data) {
+  // more work to do if we want to filter this by a single country
+  // becuase country can be a list, count will be incremented for other countries in that list 
+  // unless we trap that here
+  var countryoption = d3.select("select#country").node().value;
+
+  var result = {};
+  data.forEach(function(d) {
+    // d.country can be a list of countries, so check for that, and split if so
+    var names = d.fips.indexOf(",") ? d.fips.split(",") : [d.fips];
+    names.forEach(function(fips){
+      // trim whitespace
+      if (fips == "") return;
+      fips = fips.trim();
+      
+      // when country option is set, return if the fips doesn't match 
+      if (countryoption && fips != countryoption) return;
+
+      // first time here, we need to set count to 0
+      if (typeof result[fips] === "undefined") result[fips] = {"count": 0};
+      result[fips]["count"] += 1;
+      result[fips]["name"] = lookup[fips]["name"];
+      result[fips]["fips"] = fips;
+      result[fips]["latitude"] = lookup[fips]["latitude"];
+      result[fips]["longitude"] = lookup[fips]["longitude"];
+    });    
+  });
+  return result;
 }
 
 // Iterate through data in order to calc:
