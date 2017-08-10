@@ -223,10 +223,11 @@ function drawmap(countries_keyed) {
   // count is the number of studies in that country in the raw data 
   var countries = Object.keys(countries_keyed);
   // sort countries by count, to ensure smaller ones are stacked on top of larger ones
-  console.log(countries);
   countries.sort(function(a,b) {
     return countries_keyed[b].count - countries_keyed[a].count
   });
+  // go over countries, and make circles, but before we start figure out what style to use
+  var style = somethingSelected() ? selectedStyle : defaultStyle;
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -242,7 +243,7 @@ function drawmap(countries_keyed) {
       // get an area from scale function, calc the radius, and then add the circles      
       var area = circleScale(country.count);
       var radius = Math.sqrt(area/Math.PI);
-      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(defaultStyle).addTo(circles);
+      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(style).addTo(circles);
       // add interactivity
       circle.data = country;
       circle.on('click',function(e) { 
@@ -577,7 +578,7 @@ function handleMarkerClick(markerdata) {
   $(event.target).parent().addClass("selected");
 }
 
-function selectMarker(fips) {
+function selectCircle(fips) {
   circles.eachLayer(function(layer){
     if (layer.data.fips == fips) {
       layer.setStyle(selectedStyle);
@@ -585,7 +586,7 @@ function selectMarker(fips) {
   });
 }
 
-function unselectMarker() {
+function unselectCircle() {
   circles.eachLayer(function(layer) {
     layer.setStyle(defaultStyle);
   })
@@ -601,7 +602,7 @@ function mouseoverSquare(d) {
   tooltip.style("visibility","visible");
 
   // update the map marker that contains this study
-  selectMarker(d.fips);
+  selectCircle(d.fips);
 }
 
 // define behavior on mousemove sqaure
@@ -619,7 +620,8 @@ function mouseoutSquare(d) {
   tooltip.style("visibility", "hidden");
 
   // clear the selected circle from the map
-  unselectMarker();
+  // but only if the country isn't selected in a dropdown
+  if ($("select#country").val() == "") unselectCircle();
 }
 
 // define and append the tooltips
@@ -887,7 +889,6 @@ function apply_options(data) {
   var countryoption = d3.select("select#country").node().value;
   if (countryoption) {
     data = filter(data, "fips", countryoption);
-    selectMarker(countryoption);
   }
 
   // apply strength filter, if there is one
@@ -916,4 +917,13 @@ function clear_all() {
   $('select#strength').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
 
+}
+
+// is something selected among our filters?
+function somethingSelected() {
+  var value = false; 
+  if ($('select#country').val()) value = true;
+  if ($('select#strength').val()) value = true;
+  if (typeof selectedgroup.key !== 'undefined') value = true;
+  return value;
 }
