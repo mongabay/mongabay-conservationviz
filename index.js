@@ -11,12 +11,14 @@ var map;
 var points;
 var circles;
 var circleScale;
-var selected_circles;
 var min_zoom= 2;
 var max_zoom= 18;
 
-// define a transition, will occur over 750 milliseconds
-// TO DO: Best place to put this? 
+// define circle styles from config
+defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
+selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
+
+// define a transition in milliseconds
 var tfast = d3.transition().duration(750);
 
 // register events to emit & listen for via d3 dispatch
@@ -36,7 +38,6 @@ $(window).on("resize", _.debounce(function () {
   // then, resize the containers
   // only needed here if not included in "Statechange"
   resizeContainers();
-
 }, 250));
 
 // callback from d3.queue()
@@ -78,10 +79,14 @@ function main(error, lookups, data) {
   var cmax = circleareas["max"] * 1000000;
   circleScale = d3.scaleSqrt().domain([1, max]).range([cmin,cmax]);
 
-  // Data prep all done: 
+  // Data prep all done!
   // call our dispatch events with `this` context, and corresponding data
   dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
   dispatch.call("statechange", this, data);
+  // finally, fit the map to bounds one time, this will always be the extent, despite state changes
+  // cannot fit bounds to circles for some reason, so we fit to points instead
+  map.fitBounds(points.getBounds());
+
 }
 
 // listen for "load" and calculate global container dimensions based on incoming data
@@ -167,10 +172,9 @@ dispatch.on("statechange.charts", function(data) {
   // resize
   // resizeContainers(); // an option, but this means containers resize to fit charts, and everything bounces around
 
-  // draw the map
+  // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
   drawmap(countries_keyed);
-
 });
 
 // 
@@ -201,15 +205,10 @@ dispatch.on("load.map", function(data) {
     pane: 'labels'
   });
 
-  // create a feature group and add it to the map
+  // create feature groups for circles and points and add them to the map
   circles = L.featureGroup().addTo(map);
   points = L.featureGroup().addTo(map);
 
-  // draw the map, and fit the bounds to the result
-  // TO DO: second time hitting this
-  drawmap(data.countries_keyed);
-  // cannot fit bounds to circles for some reason, so we fit to points instead
-  map.fitBounds(points.getBounds());
 }); // load.map
 
 
@@ -220,14 +219,14 @@ function drawmap(countries_keyed) {
   // first clear any existing layers
   circles.clearLayers();
 
-  // define circle styles
-  defaultStyle = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
-  selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
-// debugger;
-// console.log('here')
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
   var countries = Object.keys(countries_keyed);
+  // sort countries by count, to ensure smaller ones are stacked on top of larger ones
+  console.log(countries);
+  countries.sort(function(a,b) {
+    return countries_keyed[b].count - countries_keyed[a].count
+  });
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -581,10 +580,15 @@ function handleMarkerClick(markerdata) {
 function selectMarker(fips) {
   circles.eachLayer(function(layer){
     if (layer.data.fips == fips) {
-      $("div.country-icon").removeClass("selected");
-      L.DomUtil.addClass(layer._icon, "selected");
+      layer.setStyle(selectedStyle);
     }
   });
+}
+
+function unselectMarker() {
+  circles.eachLayer(function(layer) {
+    layer.setStyle(defaultStyle);
+  })
 }
 
 // define behavior on mouseover square
@@ -614,8 +618,8 @@ function mouseoutSquare(d) {
   d3.select(this).classed("hover", false);
   tooltip.style("visibility", "hidden");
 
-  // clear the map
-  $("div.country-icon").removeClass("selected");
+  // clear the selected circle from the map
+  unselectMarker();
 }
 
 // define and append the tooltips
