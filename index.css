@@ -95,6 +95,13 @@ div#map {
     width: 100%;
 }
 
+div.null-icon {
+  width:1px; height:1px;
+  background:transparent;
+  border:none;
+  opacity:0;
+}
+
 div.country-icon {
   width: 19px !important; height: 19px !important;
   background: #0b1ff0;
@@ -120,7 +127,7 @@ span.icon-text {
 
 /* BUTTONS */
 
-div#select-container a#clear {
+div#select-container a#clearall {
   text-decoration: none;
   display:inline-block;
   padding: 6px 8px;

@@ -6,9 +6,12 @@ var rawdata;
 var lookup = {};
 var selectedgroup = {};
 
-// map constants
+// constants for the map
 var map;
-var markers;
+var points;
+var circles;
+var circleScale;
+var selected_circles;
 var min_zoom= 2;
 var max_zoom= 18;
 
@@ -51,11 +54,12 @@ function main(error, lookups, data) {
   // 3) generate list of strengths present in the data
   var countries_keyed = calcCountryKeys(data);
   strengthlist = [];
+  var max_count = 0;
   data.forEach(function(d){
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim());  
+    strengthlist.push(d.strength.trim()); 
   })
 
   // Post-processing:
@@ -63,6 +67,16 @@ function main(error, lookups, data) {
   strengthlist = _.without(_.uniq(strengthlist.sort()), "");
   // - keep global reference to raw data
   rawdata = data;
+
+  // set up a scale for the map circles
+  // first get max count by country
+  var max = 0;
+  Object.keys(countries_keyed).forEach(function(c) {
+    if (countries_keyed[c].count > max) max = countries_keyed[c].count;
+  });
+  var cmin = circleareas["min"] * 1000000;
+  var cmax = circleareas["max"] * 1000000;
+  circleScale = d3.scaleSqrt().domain([1, max]).range([cmin,cmax]);
 
   // Data prep all done: 
   // call our dispatch events with `this` context, and corresponding data
@@ -188,11 +202,14 @@ dispatch.on("load.map", function(data) {
   });
 
   // create a feature group and add it to the map
-  markers = L.featureGroup().addTo(map);
+  circles = L.featureGroup().addTo(map);
+  points = L.featureGroup().addTo(map);
 
   // draw the map, and fit the bounds to the result
+  // TO DO: second time hitting this
   drawmap(data.countries_keyed);
-  map.fitBounds(markers.getBounds());
+  // cannot fit bounds to circles for some reason, so we fit to points instead
+  map.fitBounds(points.getBounds());
 }); // load.map
 
 
@@ -201,8 +218,13 @@ dispatch.on("load.map", function(data) {
 //
 function drawmap(countries_keyed) {
   // first clear any existing layers
-  markers.clearLayers();
+  circles.clearLayers();
 
+  // define circle styles
+  defaultStyle = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
+  selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
+// debugger;
+// console.log('here')
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
   var countries = Object.keys(countries_keyed);
@@ -214,21 +236,27 @@ function drawmap(countries_keyed) {
     if (countries_keyed[name].latitude === "" || countries_keyed[name].longitude === "") return;
     if (countries_keyed[name].count > 0) {
       var country = countries_keyed[name];
-      var icon = L.divIcon({
-        className: 'country-icon',
-        html: '<span class="icon-text">'+ country.count +'</span>'
-      });
-      var marker = L.marker([country.latitude, country.longitude], {icon: icon}).addTo(markers);
-      marker.data = country;
-      marker.on('click',function(e) { 
+      // can't fit bound to L.cicles for some reason, so we make null marker icons instead
+      var nullicon = L.divIcon({ className: 'null-icon'});
+      var point = L.marker([country.latitude, country.longitude], {icon: nullicon, interactive: false});
+      point.addTo(points);
+      // get an area from scale function, calc the radius, and then add the circles      
+      var area = circleScale(country.count);
+      var radius = Math.sqrt(area/Math.PI);
+      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(defaultStyle).addTo(circles);
+      // add interactivity
+      circle.data = country;
+      circle.on('click',function(e) { 
         handleMarkerClick(e.target.data); 
       });
-      marker.bindPopup(country.name);
-      marker.on('mouseover', function (e) {
+      circle.bindPopup(country.name + ": " + country.count);
+      circle.on('mouseover', function (e) {
         this.openPopup();
+        this.setStyle(selectedStyle);
       });
-      marker.on('mouseout', function (e) {
+      circle.on('mouseout', function (e) {
         setTimeout(function() {map.closePopup()}, 800); 
+        this.setStyle(defaultStyle);
       });
     }
   });
@@ -551,7 +579,7 @@ function handleMarkerClick(markerdata) {
 }
 
 function selectMarker(fips) {
-  markers.eachLayer(function(layer){
+  circles.eachLayer(function(layer){
     if (layer.data.fips == fips) {
       $("div.country-icon").removeClass("selected");
       L.DomUtil.addClass(layer._icon, "selected");

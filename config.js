@@ -12,6 +12,18 @@ var colors = {
   econ: "#757ECF",
 }
 
+// map circle areas, in km2
+var circleareas = {
+  min: 15000, 
+  max: 1300000,
+}
+
+// circle colors on map, for selected and unselected
+var circlecolors = {
+  "default": "#6aa6cc",
+  "selected": "#FACB57",
+}
+
 // global configuration of sizes, spacing, for top and bottom charts
 // all measures are in pixels
 var config = {};
