@@ -18,6 +18,11 @@ var max_zoom= 18;
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
 
+// define the tooltips
+var tooltip = d3.select("div.tooltip");
+tooltip.select("span.tooltip-close")
+  .on("click", function() { d3.select(this.parentNode).style("visibility","hidden") });
+
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
 
@@ -534,12 +539,13 @@ function drawchart(data, container, tfast, group) {
     .classed("plus",function(d) { return d.valence > 0 })
     .classed("minus",function(d) { return d.valence < 0 })
     // TO DO UPDATE
-    .classed("weak", function(d) {return d.type != "type3" ? true : false})
+    .classed("weak", function(d) {return d.type != config["strong_type"] ? true : false})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
-    .on("mouseover", mouseoverSquare)
-    .on("mousemove", mousemoveSquare)
-    .on("mouseout", mouseoutSquare)
+    .on("mouseover", mouseenterSquare)
+    // .on("mousemove", mousemoveSquare)
+    .on("mouseexit", mouseexitSquare)
+    // .on("click", clickSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
         var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -560,9 +566,10 @@ function drawchart(data, container, tfast, group) {
       .classed("weak", function(d) {return d.type != "type3" ? true : false})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      .on("mouseover", mouseoverSquare)
-      .on("mousemove", mousemoveSquare)
-      .on("mouseout", mouseoutSquare)
+      .on("mouseover", mouseenterSquare)
+      // .on("mousemove", mousemoveSquare)
+      .on("mouseexit", mouseexitSquare)
+      // .on("click", clickSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -587,7 +594,7 @@ function handleMarkerClick(markerdata) {
 }
 
 function selectCircle(fips) {
-  // fips could be a list of countries, or could be a single country
+  // fips could be a list of countries, or could be a single country, so first devolve
   var fipslist = fips.indexOf(",") > -1 ? fips.split(",") : [fips]; 
   fipslist.forEach(function(fipscode) {
     circles.eachLayer(function(layer){
@@ -604,15 +611,38 @@ function unselectCircle() {
   })
 }
 
+// // defin square click behavior
+// function clickSquare(d) {
+//   console.log('fwe')
+//   // add tooltips
+//   d3.select(this).classed("hover", true);
+//   var split = d.zb_id.toString().split(".");
+//   var id = (split[0] + "." + split[1]);
+//   var text = lookup[id].name;
+//   tooltip.text(d.zb_id + ": " + lookup[id].name);
+//   tooltip.style("visibility","visible");
+
+//   // update the map marker that contains this study
+//   selectCircle(d.fips); 
+// }
+
+
 // define behavior on mouseover square
-function mouseoverSquare(d) { 
+function mouseenterSquare(d) { 
   // add tooltips
   d3.select(this).classed("hover", true);
   var split = d.zb_id.toString().split(".");
   var id = (split[0] + "." + split[1]);
   var text = lookup[id].name;
-  tooltip.text(d.zb_id + ": " + lookup[id].name);
+  tooltip.select("div.tooltip-name").text(lookup[id].name);
+  tooltip.select("div.tooltip-author-year").text(lookup[id].author + ", " + lookup[id].pubyear);
+  tooltip.select("div.tooltip-conclusion").text(lookup[id].conclusion);
+  tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
   tooltip.style("visibility","visible");
+
+  tooltip
+    .style("left",(d3.event.pageX-1)+"px")
+    .style("top",(d3.event.pageY-30)+"px");
 
   // update the map marker that contains this study
   selectCircle(d.fips);
@@ -620,27 +650,22 @@ function mouseoverSquare(d) {
 
 // define behavior on mousemove sqaure
 function mousemoveSquare(d) {
-  tooltip
-    .style("top",(d3.event.pageY-10)+"px")
-    .style("left",(d3.event.pageX+10)+"px")
-    .style("top",(d3.event.pageY-30)+"px");
+  // tooltip
+  //   .style("top",(d3.event.pageY-10)+"px")
+  //   .style("left",(d3.event.pageX+10)+"px")
+  //   .style("top",(d3.event.pageY-30)+"px");
 }
 
 // define behavior on mouseout square
-function mouseoutSquare(d) {
+function mouseexitSquare(d) {
   // hide the tooltip
   d3.select(this).classed("hover", false);
-  tooltip.style("visibility", "hidden");
+  // tooltip.style("visibility", "hidden");
 
   // clear the selected circle from the map
   // but only if the country isn't selected in a dropdown
   if ($("select#country").val() == "") unselectCircle();
 }
-
-// define and append the tooltips
-var tooltip = d3.select("body")
-    .append("div")
-    .attr("class","tooltip");
 
 // resize all the containers listed below from config
 function resizeContainers() {

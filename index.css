@@ -56,6 +56,23 @@ div.tooltip {
   max-width:150px;
 }
 
+div.tooltip span.tooltip-close {
+  display:block;
+  position:absolute;
+  top:0px; right: 5px;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  cursor:pointer;
+  opacity:0.3;
+}
+
+div.tooltip div.tooltip-content {
+  padding: 5px 12px 5px 5px;
+}
+
 rect.hover {
   opacity:0.3;
   cursor:pointer;

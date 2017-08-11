@@ -28,8 +28,11 @@ var circlecolors = {
 // global configuration of sizes, spacing, for top and bottom charts
 // all measures are in pixels
 var config = {};
+
 // configuration general
 config["map_height"] = 250,      // map height in px
+config["strong_type"] = "type1"  // enter the evidence "type" that gets solid colored boxes, all others will have opacity applied
+
 // configuration of the top chart
 config[groups.top] = {
   ncols_lg:    1,                // number of chart cols for lg screens > 1200px
@@ -44,6 +47,7 @@ config[groups.top] = {
   textwidth:   130,              // width of the text label "column"   
   textpadding: 10,               // right side padding of text label
 };
+
 // configuration of the bottom chart
 config[groups.bottom] = {
   ncols_lg:    3, 
