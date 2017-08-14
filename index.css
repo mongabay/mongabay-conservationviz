@@ -54,6 +54,7 @@ div.tooltip {
   position: absolute;
   z-index: 1000;
   max-width:150px;
+  visibility: hidden;
 }
 
 div.tooltip span.tooltip-close {
@@ -87,8 +88,15 @@ rect.neutral {
 rect.minus {
   fill: #D7067C;
 }
-rect.weak {
-  opacity: 0.5;
+/*types of evidence*/
+rect.type3 {
+  opacity: 0.6;
+}
+rect.type2 {
+  opacity: 0.8;
+}
+rect.type1 {
+  opacity: 1;
 }
 
 button {

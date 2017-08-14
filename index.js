@@ -126,7 +126,7 @@ dispatch.on("load.dropdowns", function(options) {
       .attr("value", function(d) { return d.fips.trim(); })
       .text(function(d) { return d.name.trim(); });
 
-  // STRENGTH FILTER
+  // EVIDENCE FILTER
   var strengths = options["stengths"]
   strengths.unshift("");
   var select = d3.select("select#strength");
@@ -524,7 +524,8 @@ function drawchart(data, container, tfast, group) {
   // our previous selection would not contain them
   charts = rows.selectAll("svg");
   var squares = charts.selectAll("rect")
-    .data(function(d) { return _.sortBy(d.values,"valence","strength") }, function(d) {return d.zb_id});
+    // sort data by valence and type
+    .data(function(d) { return _.sortBy(d.values,"valence","type") }, function(d) {return d.zb_id});
 
   // get rid of ones we don't need anymore, fade them out
   squares.exit()
@@ -538,8 +539,10 @@ function drawchart(data, container, tfast, group) {
     .classed("neutral",function(d) { return d.valence == 0 })
     .classed("plus",function(d) { return d.valence > 0 })
     .classed("minus",function(d) { return d.valence < 0 })
-    // TO DO UPDATE
-    .classed("weak", function(d) {return d.type != config["strong_type"] ? true : false})
+    .classed("type1", function(d) {return d.type == "type1"})
+    .classed("type2", function(d) {return d.type == "type2"})
+    .classed("type3", function(d) {return d.type == "type3"})
+    .classed("type4", function(d) {return d.type == "type4"})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
     .on("mouseover", mouseenterSquare)
@@ -562,8 +565,10 @@ function drawchart(data, container, tfast, group) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      // TO DO UPDATE
-      .classed("weak", function(d) {return d.type != "type3" ? true : false})
+      .classed("type1", function(d) {return d.type == "type1"})
+      .classed("type2", function(d) {return d.type == "type2"})
+      .classed("type3", function(d) {return d.type == "type3"})
+      .classed("type4", function(d) {return d.type == "type4"})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
       .on("mouseover", mouseenterSquare)
@@ -681,8 +686,7 @@ function nest(data,group) {
     .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
     .entries(data);
 
-  // far from ideal spot to do this:
-  // apply a sort field, if there is one
+  // go ahead and apply a sort field, if there is one
   var sortoption = d3.select("select#sort").node().value;
   if (sortoption) nested = sort(nested, sortoption, group);
 
@@ -954,7 +958,6 @@ function clear_all() {
   $('select#country').val('').trigger('change');  
   $('select#strength').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
-
 }
 
 // is something selected among our filters?

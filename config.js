@@ -31,7 +31,6 @@ var config = {};
 
 // configuration general
 config["map_height"] = 250,      // map height in px
-config["strong_type"] = "type1"  // enter the evidence "type" that gets solid colored boxes, all others will have opacity applied
 
 // configuration of the top chart
 config[groups.top] = {
