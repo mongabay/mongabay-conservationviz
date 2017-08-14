@@ -53,7 +53,43 @@ div.tooltip {
   padding: 4px;
   position: absolute;
   z-index: 1000;
-  max-width:150px;
+  max-width:183px;
+  visibility: hidden;
+}
+
+div.tooltip span.tooltip-close {
+  display:block;
+  position:absolute;
+  top:0px; right: 5px;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  cursor:pointer;
+  opacity:0.3;
+}
+
+div.tooltip div.tooltip-content {
+  padding: 5px 15px 5px 5px;
+}
+
+div.tooltip div.tooltip-name {
+  font-weight:500;
+  margin-bottom:4px;
+}
+
+div.tooltip div.tooltip-author-year {
+  font-style: italic;
+  margin-bottom:4px;
+}
+div.tooltip div.tooltip-conclusion {
+  margin-bottom:4px;
+}
+
+div.tooltip div.tooltip-conclusion span {
+  font-weight:500;
+  margin-bottom:4px;
 }
 
 rect.hover {
@@ -70,8 +106,15 @@ rect.neutral {
 rect.minus {
   fill: #D7067C;
 }
-rect.weak {
-  opacity: 0.5;
+/*types of evidence*/
+rect.type3 {
+  opacity: 0.6;
+}
+rect.type2 {
+  opacity: 0.8;
+}
+rect.type1 {
+  opacity: 1;
 }
 
 button {
@@ -139,7 +182,7 @@ div#select-container a#clearall {
   cursor:pointer;
 }
 
-div#select-container a#clear:hover {
+div#select-container a#clearall:hover {
   border: 1px solid #888;
   color: #444;
   top:2px;

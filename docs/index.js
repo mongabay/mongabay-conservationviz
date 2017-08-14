@@ -11,12 +11,17 @@ var map;
 var points;
 var circles;
 var circleScale;
-var min_zoom= 2;
-var max_zoom= 18;
+var minzoom= 2;
+var maxzoom= 18;
 
 // define circle styles from config
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
+
+// define the tooltips
+var tooltip = d3.select("div.tooltip");
+tooltip.select("span.tooltip-close")
+  .on("click", function() { d3.select(this.parentNode).style("visibility","hidden") });
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
@@ -60,7 +65,7 @@ function main(error, lookups, data) {
     // transform string valence into intenger
     d.valence = +d.valence;
     // generate list of strengths present in the data
-    strengthlist.push(d.strength.trim()); 
+    strengthlist.push(d.type.trim()); 
   })
 
   // Post-processing:
@@ -121,7 +126,7 @@ dispatch.on("load.dropdowns", function(options) {
       .attr("value", function(d) { return d.fips.trim(); })
       .text(function(d) { return d.name.trim(); });
 
-  // STRENGTH FILTER
+  // EVIDENCE FILTER
   var strengths = options["stengths"]
   strengths.unshift("");
   var select = d3.select("select#strength");
@@ -186,8 +191,8 @@ dispatch.on("load.map", function(data) {
 
   // init the map with some basic settings
   map = L.map('map',{
-    minZoom:min_zoom,
-    maxZoom:max_zoom,
+    minZoom:minzoom,
+    maxZoom:maxzoom,
     keyboard: false,
     scrollWheelZoom: false,
   });
@@ -218,6 +223,7 @@ dispatch.on("load.map", function(data) {
 function drawmap(countries_keyed) {
   // first clear any existing layers
   circles.clearLayers();
+  points.clearLayers();
 
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
@@ -226,7 +232,8 @@ function drawmap(countries_keyed) {
   countries.sort(function(a,b) {
     return countries_keyed[b].count - countries_keyed[a].count
   });
-  // go over countries, and make circles, but before we start figure out what style to use
+  // go over countries, and make circles. 
+  // Before we start figure out what style to use
   var style = somethingSelected() ? selectedStyle : defaultStyle;
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
@@ -260,6 +267,13 @@ function drawmap(countries_keyed) {
          if ($("select#country").val() == "") this.setStyle(defaultStyle);
       });
     }
+
+    // on mobile only, pan the map to the selected place(s)
+    if (isMobile() ) {
+      map.panTo(points.getBounds().getCenter());
+    } 
+
+
   });
 }
 
@@ -519,7 +533,8 @@ function drawchart(data, container, tfast, group) {
   // our previous selection would not contain them
   charts = rows.selectAll("svg");
   var squares = charts.selectAll("rect")
-    .data(function(d) { return _.sortBy(d.values,"valence","strength") }, function(d) {return d.zb_id});
+    // sort data by valence and type
+    .data(function(d) { return _.sortBy(d.values,"valence","type") }, function(d) {return d.zb_id});
 
   // get rid of ones we don't need anymore, fade them out
   squares.exit()
@@ -533,12 +548,16 @@ function drawchart(data, container, tfast, group) {
     .classed("neutral",function(d) { return d.valence == 0 })
     .classed("plus",function(d) { return d.valence > 0 })
     .classed("minus",function(d) { return d.valence < 0 })
-    .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
+    .classed("type1", function(d) {return d.type == "type1"})
+    .classed("type2", function(d) {return d.type == "type2"})
+    .classed("type3", function(d) {return d.type == "type3"})
+    .classed("type4", function(d) {return d.type == "type4"})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
-    .on("mouseover", mouseoverSquare)
-    .on("mousemove", mousemoveSquare)
-    .on("mouseout", mouseoutSquare)
+    .on("mouseenter", mouseenterSquare)
+    // .on("mousemove", mousemoveSquare)
+    .on("mouseleave", mouseleaveSquare)
+    // .on("click", clickSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
         var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -555,12 +574,16 @@ function drawchart(data, container, tfast, group) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("weak", function(d) {return d.strength != "strength3" ? true : false})
+      .classed("type1", function(d) {return d.type == "type1"})
+      .classed("type2", function(d) {return d.type == "type2"})
+      .classed("type3", function(d) {return d.type == "type3"})
+      .classed("type4", function(d) {return d.type == "type4"})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      .on("mouseover", mouseoverSquare)
-      .on("mousemove", mousemoveSquare)
-      .on("mouseout", mouseoutSquare)
+      .on("mouseenter", mouseenterSquare)
+      // .on("mousemove", mousemoveSquare)
+      .on("mouseleave", mouseleaveSquare)
+      // .on("click", clickSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -585,11 +608,15 @@ function handleMarkerClick(markerdata) {
 }
 
 function selectCircle(fips) {
-  circles.eachLayer(function(layer){
-    if (layer.data.fips == fips) {
-      layer.setStyle(selectedStyle);
-    }
-  });
+  // fips could be a list of countries, or could be a single country, so first devolve
+  var fipslist = fips.indexOf(",") > -1 ? fips.split(",") : [fips]; 
+  fipslist.forEach(function(fipscode) {
+    circles.eachLayer(function(layer){
+      if (layer.data.fips == fipscode) {
+        layer.setStyle(selectedStyle);
+      }
+    });
+  })
 }
 
 function unselectCircle() {
@@ -598,42 +625,38 @@ function unselectCircle() {
   })
 }
 
-// define behavior on mouseover square
-function mouseoverSquare(d) {
+// define behavior on mouseenter square
+function mouseenterSquare(d) { 
   // add tooltips
   d3.select(this).classed("hover", true);
-  var split = d.zb_id.split(".");
-  var id = (split[0] + "." + split[1]) * 1;
-  tooltip.text(lookup[id].name);
+  var split = d.zb_id.toString().split(".");
+  var id = (split[0] + "." + split[1]);
+  var text = lookup[id].name;
+  tooltip.select("div.tooltip-name").text(lookup[id].name);
+  tooltip.select("div.tooltip-author-year").text(lookup[id].author + ", " + lookup[id].pubyear);
+  var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + lookup[id].conclusion;
+  tooltip.select("div.tooltip-conclusion").html(conclusion);
+  tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
   tooltip.style("visibility","visible");
+
+  // position the tooltip
+  var xpos = isMobile() ? 10 : d3.event.pageX + 18;
+  var ypos = isMobile() ? 20 : -30;
+  tooltip
+    .style("left",xpos + "px")
+    .style("top", d3.event.pageY+ypos + "px");
 
   // update the map marker that contains this study
   selectCircle(d.fips);
 }
 
-// define behavior on mousemove sqaure
-function mousemoveSquare(d) {
-  tooltip
-    .style("top",(d3.event.pageY-10)+"px")
-    .style("left",(d3.event.pageX+10)+"px")
-    .style("top",(d3.event.pageY-30)+"px");
-}
-
 // define behavior on mouseout square
-function mouseoutSquare(d) {
-  // hide the tooltip
-  d3.select(this).classed("hover", false);
-  tooltip.style("visibility", "hidden");
-
-  // clear the selected circle from the map
+function mouseleaveSquare(d) {
+  // do not hide the tooltip itself, otherwise we can't click on the link inside
+  // do clear the selected circle from the map
   // but only if the country isn't selected in a dropdown
   if ($("select#country").val() == "") unselectCircle();
 }
-
-// define and append the tooltips
-var tooltip = d3.select("body")
-    .append("div")
-    .attr("class","tooltip");
 
 // resize all the containers listed below from config
 function resizeContainers() {
@@ -649,8 +672,7 @@ function nest(data,group) {
     .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
     .entries(data);
 
-  // far from ideal spot to do this:
-  // apply a sort field, if there is one
+  // go ahead and apply a sort field, if there is one
   var sortoption = d3.select("select#sort").node().value;
   if (sortoption) nested = sort(nested, sortoption, group);
 
@@ -922,7 +944,6 @@ function clear_all() {
   $('select#country').val('').trigger('change');  
   $('select#strength').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
-
 }
 
 // is something selected among our filters?
@@ -932,4 +953,9 @@ function somethingSelected() {
   if ($('select#strength').val()) value = true;
   if (typeof selectedgroup.key !== 'undefined') value = true;
   return value;
+}
+
+// simple "mobile" detector
+function isMobile() {
+  return window.innerHeight < 768;
 }
