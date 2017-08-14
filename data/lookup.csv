@@ -3,10 +3,9 @@ ENV,Environmental,,,,,,,,env
 ECON,Social,,,,,,,,econ
 SOC,Economic,,,,,,,,soc
 strength0,Unknown,,,,,,,,
-type1,Case Report,,,,,,,,
-type2,Study I & II,,,,,,,,
-type3,Study III & RCT,,,,,,,,
-type4,Meta-analysis & systematic review,,,,,,,,
+type1,"Case Report, Study I & II",,,,,,,,
+type2,Study III & RCT,,,,,,,,
+type3,Meta-analysis & systematic review,,,,,,,,
 1.1,"Certified and uncertified logging concessions compared in Gabon: Changes in stand structure, tree species, and biomass.",,Medjibe et al. 2013,2013,,Difference in felling gap size per tree harvested not significant,,,
 1.10,"Unsustainable timber harvesting, deforestation and the role of certification.",,Damette and Delacote 2011,2011,,Significantly less biomass converted to necromass,,,
 1.11,Canopy Damage and Recovery After Selective Logging in Amazonia: Field and Satellite Studies,,Asner et al. 2004,2004,,Significantly fewer trees destroyed per tree extracted,,,

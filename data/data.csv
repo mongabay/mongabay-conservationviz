@@ -52,12 +52,12 @@ id,zb_id,valence,continent,fips,strategy,theme,variable,type,conclusion
 51,1.23.4,-1,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Direct operation costs were higher in the case of RIL
 52,1.23.5,-1,asia,MY,FSC,ECON,workerproductivity,type3,"Time efficiency in skidding and felling was higher in CL, because RIL requires more careful harvest"
 53,1.26.1,-1,pantropical,PAN,FSC,ECON,profit,type3,Sustainable forest management systematically less profitable than CL; potentially profitable at a discount rate of 5-10%
-54,1.27.1,-1,southandcentralamerica,BR,FSC,SOC,accesstoland,type4,"Perceived decline in animal abundance for hunting (tapir, jaguar, deer)"
-55,1.27.2,1,southandcentralamerica,BR,FSC,SOC,awarenessempowermentparticipation,type4,All workers reported better and new skills
-56,1.27.3,1,southandcentralamerica,BR,FSC,SOC,compliancewithlawsandregulations,type4,"Labor law, harvest regulations were followed"
-57,1.27.4,0,southandcentralamerica,BR,FSC,SOC,directeconomicbenefits,type4,Local level of investment in community did not change with RIL
-58,1.27.5,1,southandcentralamerica,BR,FSC,SOC,infrastructureandinstitutions,type4,Roads improved with project implementation
-59,1.27.6,1,southandcentralamerica,BR,FSC,SOC,livingandworkingconditionsofemployees,type4,Perceived welfare and purchasing power of workers employed by the project increased with project implementation
+54,1.27.1,-1,southandcentralamerica,BR,FSC,SOC,accesstoland,type3,"Perceived decline in animal abundance for hunting (tapir, jaguar, deer)"
+55,1.27.2,1,southandcentralamerica,BR,FSC,SOC,awarenessempowermentparticipation,type3,All workers reported better and new skills
+56,1.27.3,1,southandcentralamerica,BR,FSC,SOC,compliancewithlawsandregulations,type3,"Labor law, harvest regulations were followed"
+57,1.27.4,0,southandcentralamerica,BR,FSC,SOC,directeconomicbenefits,type3,Local level of investment in community did not change with RIL
+58,1.27.5,1,southandcentralamerica,BR,FSC,SOC,infrastructureandinstitutions,type3,Roads improved with project implementation
+59,1.27.6,1,southandcentralamerica,BR,FSC,SOC,livingandworkingconditionsofemployees,type3,Perceived welfare and purchasing power of workers employed by the project increased with project implementation
 60,1.28.1,1,pantropical,"BL,BR,FG,GY,MY,CF,UG,VE",FSC,ENV,animaldiversity,type1,Changes (both positive and negative) in bird abundance lower in forests that are logged with RIL
 61,1.29.1,1,pantropical,PAN,FSC,ENV,animaldiversity,type1,Smaller shifts in animal abundance under RIL
 62,1.3.1,0,africa,"CM,GB,CF",FSC,SOC,accesstoland,type3,"The conventional concessions are perceived as less of a constraint to hunting, NTFP gathering, and shifting agriculture, but the difference is not significant."
@@ -77,12 +77,12 @@ id,zb_id,valence,continent,fips,strategy,theme,variable,type,conclusion
 76,1.30.3,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Soil carbon was higher 2 years post logging in RIL concession
 77,1.30.4,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Necromass was lower 2 years post-logging in RIL concession
 78,1.32.1,1,asia,MY,FSC,ECON,pricepremium,type3,"17% to 24% price difference on average, but highest for expensive species groups"
-79,1.33.1,1,southandcentralamerica,BR,FSC,SOC,conflict,type4,"Public confidence, communication with landowners was perceived to be better after certification was implemented"
-80,1.33.2,1,southandcentralamerica,BR,FSC,ECON,managementandadministration,type4,"Management systems and performance, and forest management practices were perceived to be better after certification was implemented"
-81,1.33.3,0,southandcentralamerica,BR,FSC,ECON,managementandadministration,type4,Expectation of simplified regulation was not perceived as fulfilled after certification was implemented
-82,1.33.4,1,southandcentralamerica,BR,FSC,ECON,marketaccess,type4,"After certification, companies either gained or retained access to markets that demand certified wood"
-83,1.33.5,0,southandcentralamerica,BR,FSC,ECON,pricepremium,type4,No price premium was achieved after certification was implemented
-84,1.33.6,0,southandcentralamerica,BR,FSC,ECON,profit,type4,Profitability was overall perceived to not have changed
+79,1.33.1,1,southandcentralamerica,BR,FSC,SOC,conflict,type3,"Public confidence, communication with landowners was perceived to be better after certification was implemented"
+80,1.33.2,1,southandcentralamerica,BR,FSC,ECON,managementandadministration,type3,"Management systems and performance, and forest management practices were perceived to be better after certification was implemented"
+81,1.33.3,0,southandcentralamerica,BR,FSC,ECON,managementandadministration,type3,Expectation of simplified regulation was not perceived as fulfilled after certification was implemented
+82,1.33.4,1,southandcentralamerica,BR,FSC,ECON,marketaccess,type3,"After certification, companies either gained or retained access to markets that demand certified wood"
+83,1.33.5,0,southandcentralamerica,BR,FSC,ECON,pricepremium,type3,No price premium was achieved after certification was implemented
+84,1.33.6,0,southandcentralamerica,BR,FSC,ECON,profit,type3,Profitability was overall perceived to not have changed
 85,1.35.1,-1,southandcentralamerica,GY,FSC,ENV,canopylossgapsize,type3,"Guyana-H, canopy loss higher under RIL"
 86,1.35.10,-1,southandcentralamerica,GY,FSC,ECON,workerproductivity,type3,"Guyana-H, RIL more time consuming"
 87,1.35.2,-1,southandcentralamerica,GY,FSC,ENV,canopylossgapsize,type3,"Guyana-H, gap size larger under RIL"
