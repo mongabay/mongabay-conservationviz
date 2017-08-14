@@ -11,8 +11,8 @@ var map;
 var points;
 var circles;
 var circleScale;
-var min_zoom= 2;
-var max_zoom= 18;
+var minzoom= 2;
+var maxzoom= 18;
 
 // define circle styles from config
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
@@ -191,8 +191,8 @@ dispatch.on("load.map", function(data) {
 
   // init the map with some basic settings
   map = L.map('map',{
-    minZoom:min_zoom,
-    maxZoom:max_zoom,
+    minZoom:minzoom,
+    maxZoom:maxzoom,
     keyboard: false,
     scrollWheelZoom: false,
   });
@@ -223,6 +223,7 @@ dispatch.on("load.map", function(data) {
 function drawmap(countries_keyed) {
   // first clear any existing layers
   circles.clearLayers();
+  points.clearLayers();
 
   // add div icons to the map for each distinct country where count > 1
   // count is the number of studies in that country in the raw data 
@@ -231,7 +232,8 @@ function drawmap(countries_keyed) {
   countries.sort(function(a,b) {
     return countries_keyed[b].count - countries_keyed[a].count
   });
-  // go over countries, and make circles, but before we start figure out what style to use
+  // go over countries, and make circles. 
+  // Before we start figure out what style to use
   var style = somethingSelected() ? selectedStyle : defaultStyle;
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
@@ -265,6 +267,13 @@ function drawmap(countries_keyed) {
          if ($("select#country").val() == "") this.setStyle(defaultStyle);
       });
     }
+
+    // on mobile only, pan the map to the selected place(s)
+    if (isMobile() ) {
+      map.panTo(points.getBounds().getCenter());
+    } 
+
+
   });
 }
 
@@ -545,9 +554,9 @@ function drawchart(data, container, tfast, group) {
     .classed("type4", function(d) {return d.type == "type4"})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
-    .on("mouseover", mouseenterSquare)
+    .on("mouseenter", mouseenterSquare)
     // .on("mousemove", mousemoveSquare)
-    .on("mouseexit", mouseexitSquare)
+    .on("mouseleave", mouseleaveSquare)
     // .on("click", clickSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
@@ -571,9 +580,9 @@ function drawchart(data, container, tfast, group) {
       .classed("type4", function(d) {return d.type == "type4"})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      .on("mouseover", mouseenterSquare)
+      .on("mouseenter", mouseenterSquare)
       // .on("mousemove", mousemoveSquare)
-      .on("mouseexit", mouseexitSquare)
+      .on("mouseleave", mouseleaveSquare)
       // .on("click", clickSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
@@ -616,23 +625,7 @@ function unselectCircle() {
   })
 }
 
-// // defin square click behavior
-// function clickSquare(d) {
-//   console.log('fwe')
-//   // add tooltips
-//   d3.select(this).classed("hover", true);
-//   var split = d.zb_id.toString().split(".");
-//   var id = (split[0] + "." + split[1]);
-//   var text = lookup[id].name;
-//   tooltip.text(d.zb_id + ": " + lookup[id].name);
-//   tooltip.style("visibility","visible");
-
-//   // update the map marker that contains this study
-//   selectCircle(d.fips); 
-// }
-
-
-// define behavior on mouseover square
+// define behavior on mouseenter square
 function mouseenterSquare(d) { 
   // add tooltips
   d3.select(this).classed("hover", true);
@@ -641,33 +634,26 @@ function mouseenterSquare(d) {
   var text = lookup[id].name;
   tooltip.select("div.tooltip-name").text(lookup[id].name);
   tooltip.select("div.tooltip-author-year").text(lookup[id].author + ", " + lookup[id].pubyear);
-  tooltip.select("div.tooltip-conclusion").text(lookup[id].conclusion);
+  var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + lookup[id].conclusion;
+  tooltip.select("div.tooltip-conclusion").html(conclusion);
   tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
   tooltip.style("visibility","visible");
 
+  // position the tooltip
+  var xpos = isMobile() ? 10 : d3.event.pageX + 18;
+  var ypos = isMobile() ? 20 : -30;
   tooltip
-    .style("left",(d3.event.pageX-1)+"px")
-    .style("top",(d3.event.pageY-30)+"px");
+    .style("left",xpos + "px")
+    .style("top", d3.event.pageY+ypos + "px");
 
   // update the map marker that contains this study
   selectCircle(d.fips);
 }
 
-// define behavior on mousemove sqaure
-function mousemoveSquare(d) {
-  // tooltip
-  //   .style("top",(d3.event.pageY-10)+"px")
-  //   .style("left",(d3.event.pageX+10)+"px")
-  //   .style("top",(d3.event.pageY-30)+"px");
-}
-
 // define behavior on mouseout square
-function mouseexitSquare(d) {
-  // hide the tooltip
-  d3.select(this).classed("hover", false);
-  // tooltip.style("visibility", "hidden");
-
-  // clear the selected circle from the map
+function mouseleaveSquare(d) {
+  // do not hide the tooltip itself, otherwise we can't click on the link inside
+  // do clear the selected circle from the map
   // but only if the country isn't selected in a dropdown
   if ($("select#country").val() == "") unselectCircle();
 }
@@ -967,4 +953,9 @@ function somethingSelected() {
   if ($('select#strength').val()) value = true;
   if (typeof selectedgroup.key !== 'undefined') value = true;
   return value;
+}
+
+// simple "mobile" detector
+function isMobile() {
+  return window.innerHeight < 768;
 }
