@@ -25,11 +25,11 @@ selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["s
 // define the tooltips
 var tooltip = d3.select("div.tooltip");
 tooltip.select("span.tooltip-close")
-  .on("click", function() { d3.select(this.parentNode).style("visibility","hidden") });
+  .on("click", function() { d3.select(this.parentNode).style("display","none") });
 
 // close tooltips when hovering outside the chart
 // otherwise they get in the way of the selects and other controls at the top
-d3.select("div#select-container").on("mouseover", function() { d3.select("div.tooltip").style("visibility","hidden")});
+$("div#select-container").on("mouseover", function() { d3.select("div.tooltip").style("display","none") });
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
@@ -137,7 +137,7 @@ dispatch.on("load.dropdowns", function(options) {
   // EVIDENCE FILTER
   var strengths = options["stengths"]
   strengths.unshift("");
-  var select = d3.select("select#strength");
+  var select = d3.select("select#evidence");
   // append strengthoptions to select dropdown
   select.selectAll("option")
       .data(strengths)
@@ -160,7 +160,7 @@ dispatch.on("load.dropdowns", function(options) {
   // because we're using select2, and these options are added dynamically, 
   // we have to use event delegation to listen for changes
   delegate_event("select#country");
-  delegate_event("select#strength");
+  delegate_event("select#evidence");
   delegate_event("select#sort");
 }); // load.menu
 
@@ -647,7 +647,7 @@ function mouseenterSquare(d) {
   var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + lookup[id].conclusion;
   tooltip.select("div.tooltip-conclusion").html(conclusion);
   tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
-  tooltip.style("visibility","visible");
+  tooltip.style("display","block");
 
   // position the tooltip
   // debugger;
@@ -788,7 +788,7 @@ function calcOffsets(data, group) {
   // on an initial pass (e.g. top chart) we have no way to know if there will be scrollbars
   // so always subtract 20px just in case
   // TODO: on subsequent updates, could check if there are scrollbars first? 
-  var width = $("div.main").width() - 20;
+  var width = $(config[group]["container"]).width() - 20;
 
   // get ncols as configured for this screen width
   var ncols = getCols(width, group);
@@ -933,9 +933,9 @@ function apply_options(data) {
     data = filter(data, "fips", countryoption);
   }
 
-  // apply strength filter, if there is one
-  var strengthoption = d3.select("select#strength").node().value;
-  if (strengthoption) data = filter(data, "strength", strengthoption);
+  // apply evidence filter, if there is one
+  var evidenceoption = d3.select("select#evidence").node().value;
+  if (evidenceoption) data = filter(data, "type", evidenceoption);
 
   // apply group selection, if there is one
   if (typeof selectedgroup.key !== "undefined") data = filter(data,selectedgroup.key,selectedgroup.value) 
@@ -959,7 +959,7 @@ function clear_all() {
 
   // then reset the selects
   $('select#country').val('').trigger('change');  
-  $('select#strength').val('').trigger('change');  
+  $('select#evidence').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
 }
 
@@ -967,7 +967,7 @@ function clear_all() {
 function somethingSelected() {
   var value = false; 
   if ($('select#country').val()) value = true;
-  if ($('select#strength').val()) value = true;
+  if ($('select#evidence').val()) value = true;
   if (typeof selectedgroup.key !== 'undefined') value = true;
   return value;
 }

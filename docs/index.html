@@ -5,9 +5,9 @@
 
 <head>
 
-  <!-- Leaflet CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+  <!-- Leaflet local as unpkg is giving 503 -->
+  <link rel="stylesheet" href="./libs/leaflet.css" />
+  <script src="./libs/leaflet.js"></script>
 
   <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
   <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
@@ -30,32 +30,25 @@
 
   <!-- fonts/ -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
-
-
 </head>
 
 <body>
-
   <div class="main">
-    <!-- <button onClick="draw(nest(rawdata,'variable'))">Switch to data by variable</button> -->
-    <!-- <button onClick="draw(nest(rawdata,'theme'))">Switch to data by theme</button> -->
-    <!-- <button style="margin-right:4px;" onClick="update(rawdata,'theme','strength','Direct correlation')">Filter by strength</button> -->
-
     <!-- filters -->
-    <div id="select-container container">
+    <div id="select-container" class="container">
       <div class="row">
         <!-- country filter -->
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-4">
           <select id="country" placeholder="Select a country" style="width:100%;"></select>
         </div>
 
         <!-- strength filter -->
-        <div class="col-md-3">
-          <select id="strength" placeholder="Select type of evidence" style="width:100%;"></select>
+        <div class="col-md-3 col-sm-4">
+          <select id="evidence" placeholder="Select type of evidence" style="width:100%;"></select>
         </div>
 
         <!-- sort options -->
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-4">
           <select id="sort" placeholder="Sort by evidence" style="width:100%;">
             <option></option>
             <option value="pluscount#reverse">Most positive evidence</option>
@@ -71,12 +64,45 @@
       </div><!-- row -->
     </div><!-- select-container -->
 
-    <div class="viscontainer">
-      <div class="top"></div>
-      <div id="map"></div>
-      <div class="bottom"></div>
-    </div>
+    <div class="top-container container">
+      <div class="row">
+        <div class="col-md-8 top-col">
+          <div class="top"></div>
+        </div>
 
+        <div class="col-md-4">
+          <div class="legendcontainer">
+            <div class="legend">
+              <span class="angled">Better</span>
+              <span class="angled" style="left:-6px;">Same</span>
+              <span class="angled" style="left:-12px;">Worse</span>
+            </div>
+
+            <div class="legend">
+              <span class="rect type1 plus"></span>
+              <span class="rect type1 neutral"></span>
+              <span class="rect type1 minus"></span>
+              <span class="legend-text">Case report, Study I &amp; II</span>
+            </div>
+            <div class="legend">
+              <span class="rect type2 plus"></span>
+              <span class="rect type2 neutral"></span>
+              <span class="rect type2 minus"></span>
+              <span class="legend-text">Study III &amp; RCT</span>
+            </div>
+            <div class="legend">
+              <span class="rect type3 plus"></span>
+              <span class="rect type3 neutral"></span>
+              <span class="rect type3 minus"></span>
+              <span class="legend-text">Meta-analysis and Systematic Review</span>
+            </div>
+          </div><!-- legendcontainer -->
+        </div><!-- col -->
+      </div><!-- row -->
+    </div><!-- container -->
+
+    <div id="map"></div>
+    <div class="bottom bottom-col"></div>
   </div>
 
   <div class="tooltip">

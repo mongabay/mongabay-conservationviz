@@ -31,6 +31,7 @@ config[groups.top] = {
   ncols_md:    1,                // number of chart cols for md screens > 992px
   ncols_sm:    1,                // number of chart cols for sm screens > 768px
   ncols_xs:    1,                // number of chart cols for xs screens < 768px
+  container:   ".top-col",       // selector for this chart's container
   colmargin:   10,               // margin applied to right side of cols when ncols > 1
   sqsize:      15,               // width and hight of chart squares
   rowpadding:  10,               // padding between rows
@@ -46,6 +47,7 @@ config[groups.bottom] = {
   ncols_md:    3, 
   ncols_sm:    2, 
   ncols_xs:    1, 
+  container:   ".bottom-col",
   colmargin:   10,                
   sqsize:      17,                 
   rowpadding:  30,
