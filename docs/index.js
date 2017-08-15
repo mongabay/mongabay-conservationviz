@@ -268,20 +268,18 @@ function drawmap(countries_keyed) {
       circle.on('mouseover', function (e) {
         this.openPopup();
         this.setStyle(selectedStyle);
+        selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
         setTimeout(function() {map.closePopup()}, 800); 
         // clear style, but only if something is NOT selected
          if ($("select#country").val() == "") this.setStyle(defaultStyle);
+          clearSquares();
       });
     }
 
     // on mobile only, pan the map to the selected place(s)
-    if (isMobile() ) {
-      console.log('here')
-      map.panTo(points.getBounds().getCenter());
-    } 
-
+    if (isMobile() ) { map.panTo(points.getBounds().getCenter());} 
 
   });
 }
@@ -327,7 +325,7 @@ function drawchart(data, container, tfast, group) {
       return y + "px";
     })
     .style("height", function(d,i) {
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
+      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px";
     });
 
   // create new rows if our updated dataset has more than the previous
@@ -349,7 +347,7 @@ function drawchart(data, container, tfast, group) {
       return y + "px";
     })
     .style("height", function(d,i) {
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px"
+      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px";
     })
     .style("width", config[group]["colwidth"] + "px");
 
@@ -964,4 +962,35 @@ function somethingSelected() {
 // simple "mobile" detector
 function isMobile() {
   return window.innerHeight < 768;
+}
+
+// select squares on the map given a matching data attribute key and value
+function selectSquares(match) {
+  var key = match.key; 
+  var value = match.value;
+          // console.log(key);
+          // console.log(value);
+  Object.keys(groups).forEach(function(group) {
+    d3.select("div." + group).selectAll("rect")
+      .each(function(d) {
+        var self = d3.select(this);
+        // because d[key] can be an "array", test for that and treat 
+        var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
+        values.forEach(function(v) {
+          if (v == value) {
+        console.log(value);
+            self.classed("hover",true);
+          }
+        }); 
+      });
+  });
+}
+
+function clearSquares() {
+  Object.keys(groups).forEach(function(group) {
+    d3.select("div." + group).selectAll("rect")
+      .each(function(d) {
+        d3.select(this).classed("hover",false);
+      });
+  });
 }
