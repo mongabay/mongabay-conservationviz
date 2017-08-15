@@ -91,7 +91,7 @@ div.tooltip div.tooltip-conclusion span {
   margin-bottom:4px;
 }
 
-rect.hover {
+rect.selected {
   cursor:pointer;
   fill: #7E3177 !important;
   opacity:1 !important;
