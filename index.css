@@ -5,8 +5,8 @@ body {
   font-size: 12px; 
   font-family: 'Roboto', sans-serif;
 
-  /* seems hacky ... */
-  /*overflow-x: hidden;*/
+  /* seems hacky but top div.row is causing overflow */
+  overflow-x: hidden;
 }
 
 div.main {
@@ -198,6 +198,10 @@ div#select-container {
   width: 100%;
 }
 
+div#select-container div.row {
+  width:90%;
+}
+
 /* LEAFLET OVERRIDES */
 
 .leaflet-popup-content-wrapper {
@@ -265,6 +269,10 @@ input.select2-search__field:disabled {
 @media (max-width: 768px) {
   div.clearall-container {
     text-align: center;
+  }
+
+  div#select-container div.row {
+    width:100%;
   }
 }
 
