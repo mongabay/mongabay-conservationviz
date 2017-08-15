@@ -29,7 +29,7 @@ tooltip.select("span.tooltip-close")
 
 // close tooltips when hovering outside the chart
 // otherwise they get in the way of the selects and other controls at the top
-d3.select("div.viscontainer").on("mouseleave", function() { d3.select("div.tooltip").style("visibility","hidden")});
+d3.select("div#select-container").on("mouseover", function() { d3.select("div.tooltip").style("visibility","hidden")});
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
@@ -626,8 +626,17 @@ function unselectCircle() {
 
 // define behavior on mouseenter square
 function mouseenterSquare(d) {
-  // add hover style
-  d3.select(this).classed("hover", true);  
+  // first, clear any selected squares and circles
+  unselectCircle();
+  Object.keys(groups).forEach(function(group) {
+    d3.select("div." + group).selectAll("rect")
+      .each(function(d) {
+        d3.select(this).classed("selected",false);
+      });
+  });
+
+  // add hover style to this square
+  d3.select(this).classed("selected", true);  
 
   // add tooltips
   var split = d.zb_id.toString().split(".");
@@ -641,7 +650,8 @@ function mouseenterSquare(d) {
   tooltip.style("visibility","visible");
 
   // position the tooltip
-  var xpos = isMobile() ? 10 : d3.event.pageX + 18;
+  // debugger;
+  var xpos = isMobile() ? 10 : d3.select(this).node().getBoundingClientRect().right + 10;
   var ypos = isMobile() ? 20 : -30;
   tooltip
     .style("left",xpos + "px")
@@ -654,12 +664,12 @@ function mouseenterSquare(d) {
 // define behavior on mouseout square
 function mouseleaveSquare(d) {
   // update styles
-  d3.select(this).classed("hover", false);  
+  // second thought, do not clear - so we can see what we selected (until we select another square)
+  // d3.select(this).classed("selected", false);  
 
   // do not hide the tooltip itself, otherwise we can't click on the link inside
-  // do clear the selected circle from the map
-  // but only if the country isn't selected in a dropdown
-  if ($("select#country").val() == "") unselectCircle();
+  // but do clear the selected circle from the map - only if the country isn't selected in a dropdown
+  // if ($("select#country").val() == "") unselectCircle();
 }
 
 // resize all the containers listed below from config
@@ -976,18 +986,18 @@ function selectSquares(match) {
         var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
         values.forEach(function(v) {
           if (v == value) {
-            self.classed("hover",true);
+            self.classed("selected",true);
           }
         }); 
       });
   });
 }
-
+// and the correlary: clear squares completely
 function clearSquares() {
   Object.keys(groups).forEach(function(group) {
     d3.select("div." + group).selectAll("rect")
       .each(function(d) {
-        d3.select(this).classed("hover",false);
+        d3.select(this).classed("selected",false);
       });
   });
 }
