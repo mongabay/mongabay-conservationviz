@@ -9,6 +9,8 @@ body {
   overflow-x: hidden;
 }
 
+/* chart containers and related elements */
+
 div.main {
   margin:10px;
 }
@@ -45,7 +47,7 @@ div.chart {
   height: 100%;
 }
 
-/*d3 tooltips on the chart*/
+/* D3 tooltips on the chart */
 div.tooltip {
   background: rgba(255,255,255,0.85);
   box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
@@ -53,7 +55,7 @@ div.tooltip {
   position: absolute;
   z-index: 1000;
   max-width:183px;
-  visibility: hidden;
+  display:none;
 }
 
 div.tooltip span.tooltip-close {
@@ -91,51 +93,44 @@ div.tooltip div.tooltip-conclusion span {
   margin-bottom:4px;
 }
 
+/* chart rectangles */
+
 rect.selected {
   cursor:pointer;
   fill: #7E3177 !important;
   opacity:1 !important;
 }
 
-rect.plus {
-  fill: #309223;
-}
-rect.neutral {
-  fill: #FACB57;
-}
-rect.minus {
-  fill: #d7063d;
-}
-/*types of evidence*/
-rect.type3 {
-  opacity: 0.6;
-}
-rect.type2 {
-  opacity: 0.8;
-}
-rect.type1 {
-  opacity: 1;
-}
+rect.plus    { fill: #309223; }
+rect.neutral { fill: #FACB57; }
+rect.minus   { fill: #d7063d; }
+rect.type3 { opacity: 0.6; }
+rect.type2 { opacity: 0.8; }
+rect.type1 { opacity: 1; }
 
-button {
-  color: #999;
-  height:28px; 
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-  border: 1px solid #aaa;
-  /*position:relative; top:1px;*/
-}
+/* the legend */
 
-button:hover {
-  color: #333;
-  background: #edeaea;
-  cursor:pointer;
+div.legendcontainer {height: 100px; margin-top:2em;}
+div.legend {clear:both; width: auto; height:20px; margin-bottom:2px;}
+div.legend span {float:left;}
+span.rect {width: 20px; height: 20px; margin-right:2px;}
+span.legend-text {width: auto; height: 20px; line-height:20px;margin-left:4px;}
+span.plus    { background: #309223;}
+span.neutral { background: #FACB57; }
+span.minus   { background: #d7063d; }
+span.type1   { opacity: 1.0; }
+span.type2   { opacity: 0.8; }
+span.type3   { opacity: 0.6; }
+span.angled  { 
+  position:relative;
+  bottom:-4px;
+  transform: rotate(320deg);
+  transform-origin: left top 0;  
 }
 
 /* the map */
 div#map {
-    width: 100%;
+  width: 100%;
 }
 
 div.null-icon {
@@ -196,6 +191,7 @@ a#clearall:hover {
 
 div#select-container {
   width: 100%;
+  max-width: 1020px;
 }
 
 div#select-container div.row {
@@ -234,7 +230,6 @@ span.select2-container:hover span.select2-selection__placeholder {
   z-index: 19001;
 }
 
-
 .select2-selection--multiple, .select2-selection--single {
     border-radius: 0 !important;
 }
@@ -263,6 +258,19 @@ input.select2-search__field:disabled {
     height: 31px;
 }
 
+/* BOOTSTRAP OVERRIDES */
+div.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+div#select-container.container {
+  padding-left:0;
+  padding-right:0;
+}
+
+div.col-md-3 { padding-left: 5px; padding-right:5px;}
+div.col-md-3:first-child {padding-left:0;}
 
 /*@media queries*/
 
@@ -272,8 +280,31 @@ input.select2-search__field:disabled {
   }
 
   div#select-container div.row {
-    width:100%;
+    width:auto;
   }
+
+  div.col-md-3 {
+    padding: 0;
+  }
+
+  div.top-container.container {
+    padding:0;
+  }
+
+  div.top-container div.col-md-4, 
+  div.top-container div.col-md-8 {
+    padding-left:0;
+    padding-right:0;
+  } 
+
+  span.legend-text, span.angled {
+    font-size:92%;
+  }
+
+  span.angled {
+    top:8px;
+  }
+
 }
 
 
