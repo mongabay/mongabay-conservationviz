@@ -951,7 +951,10 @@ function shadeColor(hex, percent) {
 
 // clear all selections and filters, essentially reset the app state without a refresh
 function clear_all() {
-  // first, clear any group selection
+  // clear the vis (map will clear with change, below)
+  clearSquares();
+
+  // clear any group selection
   selectedgroup = {};
 
   // then reset the selects
@@ -971,7 +974,7 @@ function somethingSelected() {
 
 // simple "mobile" detector
 function isMobile() {
-  return window.innerHeight < 768;
+  return window.innerWidth < 768;
 }
 
 // select squares on the map given a matching data attribute key and value
