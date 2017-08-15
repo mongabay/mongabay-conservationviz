@@ -968,8 +968,6 @@ function isMobile() {
 function selectSquares(match) {
   var key = match.key; 
   var value = match.value;
-          // console.log(key);
-          // console.log(value);
   Object.keys(groups).forEach(function(group) {
     d3.select("div." + group).selectAll("rect")
       .each(function(d) {
@@ -978,7 +976,6 @@ function selectSquares(match) {
         var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
         values.forEach(function(v) {
           if (v == value) {
-        console.log(value);
             self.classed("hover",true);
           }
         }); 
