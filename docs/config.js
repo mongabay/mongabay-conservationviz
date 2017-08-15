@@ -18,13 +18,6 @@ var circleareas = {
   max: 1300000,
 }
 
-// circle colors on map, for selected and unselected
-var circlecolors = {
-  // "default": "#6aa6cc",
-  "default": "#64b0e0",
-  "selected": "#FACB57",
-}
-
 // global configuration of sizes, spacing, for top and bottom charts
 // all measures are in pixels
 var config = {};
