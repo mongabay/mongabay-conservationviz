@@ -26,10 +26,9 @@ div.bottom {
   margin-top:10px;
 }
 
-div.row {
+div.chartrow {
   position:absolute;
   display:table;
-  /*border: 1px solid orange;*/
 }
 
 div.textwrapper {
@@ -93,8 +92,9 @@ div.tooltip div.tooltip-conclusion span {
 }
 
 rect.hover {
-  opacity:0.3;
   cursor:pointer;
+  fill: #7E3177 !important;
+  opacity:1 !important;
 }
 
 rect.plus {
@@ -104,7 +104,7 @@ rect.neutral {
   fill: #FACB57;
 }
 rect.minus {
-  fill: #D7067C;
+  fill: #d7063d;
 }
 /*types of evidence*/
 rect.type3 {
@@ -170,7 +170,11 @@ span.icon-text {
 
 /* BUTTONS */
 
-div#select-container a#clearall {
+div.clearall-container {
+  text-align: left;
+}
+
+a#clearall {
   text-decoration: none;
   display:inline-block;
   padding: 6px 8px;
@@ -178,28 +182,20 @@ div#select-container a#clearall {
   border:1px solid #aaa;
   color: #999;
   position:relative;
-  top: 1px;
+  /*top: 1px;*/
   cursor:pointer;
 }
 
-div#select-container a#clearall:hover {
+a#clearall:hover {
   border: 1px solid #888;
   color: #444;
-  top:2px;
+  top:1px;
 }
 
 /* SELECTS */
 
 div#select-container {
   width: 100%;
-}
-
-div#select-container {
-  margin-right: 1em;
-}
-
-select#sort {
-  width: 185px;
 }
 
 /* LEAFLET OVERRIDES */
@@ -223,7 +219,7 @@ select#sort {
 /* SELECT2 STYLES AND OVERRIDES */
 
 span.select2-container {
-  margin-right: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 span.select2-container:hover span.select2-selection__placeholder {
@@ -262,3 +258,14 @@ input.select2-search__field:disabled {
 .select2-container .select2-selection--single {
     height: 31px;
 }
+
+
+/*@media queries*/
+
+@media (max-width: 768px) {
+  div.clearall-container {
+    text-align: center;
+  }
+}
+
+

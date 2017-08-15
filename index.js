@@ -14,7 +14,11 @@ var circleScale;
 var minzoom= 2;
 var maxzoom= 18;
 
-// define circle styles from config
+// circle colors on map, for selected and unselected
+var circlecolors = {
+  "default": "#64b0e0",
+  "selected": "#7E3177",
+}
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
 
@@ -22,6 +26,10 @@ selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["s
 var tooltip = d3.select("div.tooltip");
 tooltip.select("span.tooltip-close")
   .on("click", function() { d3.select(this.parentNode).style("visibility","hidden") });
+
+// close tooltips when hovering outside the chart
+// otherwise they get in the way of the selects and other controls at the top
+d3.select("div.viscontainer").on("mouseleave", function() { d3.select("div.tooltip").style("visibility","hidden")});
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
@@ -146,7 +154,7 @@ dispatch.on("load.dropdowns", function(options) {
     select.select2({
       placeholder: select.attr("placeholder"),
       minimumResultsForSearch: Infinity,
-      allowClear: true
+      allowClear: false
     }).show();
   });
   // because we're using select2, and these options are added dynamically, 
@@ -270,6 +278,7 @@ function drawmap(countries_keyed) {
 
     // on mobile only, pan the map to the selected place(s)
     if (isMobile() ) {
+      console.log('here')
       map.panTo(points.getBounds().getCenter());
     } 
 
@@ -292,17 +301,16 @@ function drawchart(data, container, tfast, group) {
   // ROWS
   //
   // create row groups for each data grouping (the top level of nest())
-  var rows = container.selectAll("div.row")
+  var rows = container.selectAll("div.chartrow")
     .data(function(d,i) { return d; }, function(d) {return d.key});
 
   // remove old rows
   rows.exit().remove();
 
   // update existing ones left over
-  rows.attr("class", "row")
+  rows.attr("class", "chartrow")
     .style("width", config[group]["colwidth"] + "px")
     .transition(tfast)
-    .attr("class", "row")
     .style("left", function(d) {
       var x = 0; // col offset
       // which column are we in?
@@ -324,7 +332,7 @@ function drawchart(data, container, tfast, group) {
 
   // create new rows if our updated dataset has more than the previous
   var rowenter = rows.enter().append("div")
-    .attr("class", "row")
+    .attr("class", "chartrow")
     .style("left", function(d) {
       var x = 0; // col offset
       // which column are we in?
@@ -348,19 +356,12 @@ function drawchart(data, container, tfast, group) {
   //
   // TEXT LABEL WRAPPERS
   //
-  var rows = container.selectAll("div.row");
+  var rows = container.selectAll("div.chartrow");
   var textwrappers = rows.selectAll("div.textwrapper")
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // exit
   textwrappers.exit().remove();
-
-  // update
-  // nothing at the moment
-  // text.html(function(d) {
-  //   var name = lookup[d.key]["name"];
-  //   return name;
-  // });
 
   // enter
   textwrappers.enter().append("div")
@@ -459,7 +460,7 @@ function drawchart(data, container, tfast, group) {
   //
   // create chart groups for each of our chart categories
   // there are currently only two: plus and minus
-  var rows = container.selectAll("div.row");
+  var rows = container.selectAll("div.chartrow");
   var charts = rows.selectAll("div.chart")
     .data(function(d) { return d.values; }, function(d) {return d.key});
 
@@ -626,9 +627,11 @@ function unselectCircle() {
 }
 
 // define behavior on mouseenter square
-function mouseenterSquare(d) { 
+function mouseenterSquare(d) {
+  // add hover style
+  d3.select(this).classed("hover", true);  
+
   // add tooltips
-  d3.select(this).classed("hover", true);
   var split = d.zb_id.toString().split(".");
   var id = (split[0] + "." + split[1]);
   var text = lookup[id].name;
@@ -652,6 +655,9 @@ function mouseenterSquare(d) {
 
 // define behavior on mouseout square
 function mouseleaveSquare(d) {
+  // update styles
+  d3.select(this).classed("hover", false);  
+
   // do not hide the tooltip itself, otherwise we can't click on the link inside
   // do clear the selected circle from the map
   // but only if the country isn't selected in a dropdown
