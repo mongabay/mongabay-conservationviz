@@ -274,9 +274,17 @@ div.col-md-3:first-child {padding-left:0;}
 
 /*@media queries*/
 
+@media (max-width: 992px) {
+  div.clearall-container {
+    position:absolute;
+    top:11px; right:10px;
+  }
+}
+
 @media (max-width: 768px) {
   div.clearall-container {
     text-align: center;
+    position:static;
   }
 
   div#select-container div.row {
