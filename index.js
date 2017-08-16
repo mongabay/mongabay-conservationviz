@@ -203,6 +203,7 @@ dispatch.on("load.map", function(data) {
     maxZoom:maxzoom,
     keyboard: false,
     scrollWheelZoom: false,
+    attributionControl: false,
   });
   // add a positron basemap, without labels
   var positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
@@ -214,9 +215,18 @@ dispatch.on("load.map", function(data) {
   map.getPane('labels').style.zIndex = 650;
   map.getPane('labels').style.pointerEvents = 'none';
   L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png', {
-    attribution: '©OpenStreetMap, ©CartoDB',
     pane: 'labels'
   });
+
+  new L.controlCredits({
+      image: './libs/images/greeninfo.png',
+      link: 'https://www.greeninfo.org/',
+      text: 'Interactive mapping<br/>by GreenInfo Network'
+  }).addTo(this.map);
+
+  var attribution = L.control.attribution({
+      position: 'bottomright',
+  }).addTo(this.map);
 
   // create feature groups for circles and points and add them to the map
   circles = L.featureGroup().addTo(map);
