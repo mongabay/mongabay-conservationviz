@@ -266,15 +266,17 @@ function drawmap(countries_keyed) {
       });
       circle.bindPopup(country.name + ": " + country.count);
       circle.on('mouseover', function (e) {
+        // first clear any selected circles selected by other means
+        clearCircles();
         this.openPopup();
         this.setStyle(selectedStyle);
         selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
-        setTimeout(function() {map.closePopup()}, 800); 
-        // clear style, but only if something is NOT selected
-         if ($("select#country").val() == "") this.setStyle(defaultStyle);
-          clearSquares();
+        map.closePopup();
+        // clear style, but only if a country is NOT selected in the country dropdown
+        if ($("select#country").val() == "") this.setStyle(defaultStyle);
+        clearSquares();
       });
     }
 
@@ -606,28 +608,10 @@ function handleMarkerClick(markerdata) {
   $(event.target).parent().addClass("selected");
 }
 
-function selectCircle(fips) {
-  // fips could be a list of countries, or could be a single country, so first devolve
-  var fipslist = fips.indexOf(",") > -1 ? fips.split(",") : [fips]; 
-  fipslist.forEach(function(fipscode) {
-    circles.eachLayer(function(layer){
-      if (layer.data.fips == fipscode) {
-        layer.setStyle(selectedStyle);
-      }
-    });
-  })
-}
-
-function unselectCircle() {
-  circles.eachLayer(function(layer) {
-    layer.setStyle(defaultStyle);
-  })
-}
-
 // define behavior on mouseenter square
 function mouseenterSquare(d) {
   // first, clear any selected squares and circles
-  unselectCircle();
+  clearCircles();
   Object.keys(groups).forEach(function(group) {
     d3.select("div." + group).selectAll("rect")
       .each(function(d) {
@@ -669,7 +653,7 @@ function mouseleaveSquare(d) {
 
   // do not hide the tooltip itself, otherwise we can't click on the link inside
   // but do clear the selected circle from the map - only if the country isn't selected in a dropdown
-  // if ($("select#country").val() == "") unselectCircle();
+  // if ($("select#country").val() == "") clearCircles();
 }
 
 // resize all the containers listed below from config
@@ -975,6 +959,26 @@ function somethingSelected() {
 // simple "mobile" detector
 function isMobile() {
   return window.innerWidth < 768;
+}
+
+// select a country circle or circles, given a fips code or comma-separated list of fips
+function selectCircle(fips) {
+  // fips could be a list of countries, or could be a single country, so first devolve
+  var fipslist = fips.indexOf(",") > -1 ? fips.split(",") : [fips]; 
+  fipslist.forEach(function(fipscode) {
+    circles.eachLayer(function(layer){
+      if (layer.data.fips == fipscode) {
+        layer.setStyle(selectedStyle);
+      }
+    });
+  })
+}
+
+// unselect all currently selected circles
+function clearCircles() {
+  circles.eachLayer(function(layer) {
+    layer.setStyle(defaultStyle);
+  })
 }
 
 // select squares on the map given a matching data attribute key and value
