@@ -4,6 +4,8 @@
 <title>Mongabay Conservation Evidence</title>
 
 <head>
+  <!-- iframe resize helper, see https://github.com/davidjbradshaw/iframe-resizer -->
+  <script src="./libs/iframeResizer.contentWindow.min.js"></script>
 
   <!-- Leaflet local as unpkg is giving 503 -->
   <link rel="stylesheet" href="./libs/leaflet.css" />
@@ -37,7 +39,7 @@
 </head>
 
 <body>
-  <div class="main" id="main-container">
+  <div class="main" id="main-container" data-iframe-height>
     <!-- filters -->
     <div id="select-container" class="container">
       <div class="row">
