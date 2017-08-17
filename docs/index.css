@@ -110,7 +110,7 @@ rect.type1 { opacity: 1; }
 
 /* the legend */
 
-div.legendcontainer {height: 100px; margin-top:2em;}
+div.legend-container {height: 100px; margin-top:2em;}
 div.legend {clear:both; width: auto; height:20px; margin-bottom:2px;}
 div.legend span {float:left;}
 span.rect {width: 20px; height: 20px; margin-right:2px;}
@@ -259,43 +259,53 @@ input.select2-search__field:disabled {
 }
 
 /* BOOTSTRAP OVERRIDES */
-div.row {
-  margin-left: 0;
-  margin-right: 0;
+div.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
 }
 
-div#select-container.container {
-  padding-left:0;
-  padding-right:0;
-}
+/* Map control overrides */
+div.leaflet-credits-control.leaflet-control {clear:none;}
+div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
-div.col-md-3 { padding-left: 5px; padding-right:5px;}
-div.col-md-3:first-child {padding-left:0;}
+/*
+ * MAP CONTROLS ON SMALL SCREENS
+ * a whole lot of features and controls, and having a resize-event handler to add/remove controls is just goofy
+ * a stylesheetmedia query tends to work nicely though
+ */
+
+@media only screen and (max-height: 500px) { /* Small Devices, Tablets in landscape mode, thus vertically short */
+    div.leaflet-credits-control, div.leaflet-control-attribution {
+        display:none;
+    }
+    div.leaflet-control-scale {
+        display:none;
+    }
+}
 
 /*@media queries*/
+
+@media (max-width: 992px) {
+  div.clearall-container {
+    position:absolute;
+    top:11px; right:10px;
+  }
+
+  div.legend-container {
+    float: right;
+  }
+
+}
 
 @media (max-width: 768px) {
   div.clearall-container {
     text-align: center;
+    position:static;
   }
 
   div#select-container div.row {
     width:auto;
   }
-
-  div.col-md-3 {
-    padding: 0;
-  }
-
-  div.top-container.container {
-    padding:0;
-  }
-
-  div.top-container div.col-md-4, 
-  div.top-container div.col-md-8 {
-    padding-left:0;
-    padding-right:0;
-  } 
 
   span.legend-text, span.angled {
     font-size:92%;

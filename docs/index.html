@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="./libs/leaflet.css" />
   <script src="./libs/leaflet.js"></script>
 
+  <!-- leaflet extensions -->
+  <link rel="stylesheet" href="./libs/leaflet-control-credits.css" />
+  <script src="./libs/leaflet-control-credits.js"></script>  
+
   <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
   <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
 
@@ -33,7 +37,7 @@
 </head>
 
 <body>
-  <div class="main">
+  <div class="main" id="main-container">
     <!-- filters -->
     <div id="select-container" class="container">
       <div class="row">
@@ -64,14 +68,14 @@
       </div><!-- row -->
     </div><!-- select-container -->
 
-    <div class="top-container container">
+    <div class="top-container container-fluid">
       <div class="row">
-        <div class="col-md-8 top-col">
+        <div class="col-md-6 top-col">
           <div class="top"></div>
         </div>
 
-        <div class="col-md-4">
-          <div class="legendcontainer">
+        <div class="col-md-6">
+          <div class="legend-container">
             <div class="legend">
               <span class="angled">Better</span>
               <span class="angled" style="left:-6px;">Same</span>
@@ -96,8 +100,9 @@
               <span class="rect type3 minus"></span>
               <span class="legend-text">Meta-analysis and Systematic Review</span>
             </div>
-          </div><!-- legendcontainer -->
+          </div><!-- legend-container -->
         </div><!-- col -->
+        <div class="col-md-3 empty"></div>
       </div><!-- row -->
     </div><!-- container -->
 
