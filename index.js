@@ -633,8 +633,9 @@ function mouseenterSquare(d) {
       });
   });
 
-  // add hover style to this square
-  d3.select(this).classed("selected", true);  
+  // add selected style to this square, and the ones in adjacent charts
+  // d3.select(this).classed("selected", true);  
+  selectSquares({key: "id",value: d.id});
 
   // add tooltips
   var split = d.zb_id.toString().split(".");
@@ -1002,7 +1003,7 @@ function clearCircles() {
   })
 }
 
-// select squares on the map given a matching data attribute key and value
+// select squares given a matching data attribute key and value
 function selectSquares(match) {
   var key = match.key; 
   var value = match.value;
