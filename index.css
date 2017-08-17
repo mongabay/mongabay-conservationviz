@@ -301,6 +301,7 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div.clearall-container {
     text-align: center;
     position:static;
+    margin-bottom:2em;
   }
 
   div#select-container div.row {
