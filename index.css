@@ -259,19 +259,10 @@ input.select2-search__field:disabled {
 }
 
 /* BOOTSTRAP OVERRIDES */
-div.row {
-  margin-left: 0;
-  margin-right: 0;
+div.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
 }
-
-div#select-container.container {
-  padding-left:0;
-  padding-right:0;
-}
-
-div.col-md-3 { padding-left: 5px; padding-right:5px;}
-div.col-md-3:first-child {padding-left:0;}
-
 
 /* Map control overrides */
 div.leaflet-credits-control.leaflet-control {clear:none;}
@@ -310,20 +301,6 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div#select-container div.row {
     width:auto;
   }
-
-  div.col-md-3 {
-    padding: 0;
-  }
-
-  div.top-container.container {
-    padding:0;
-  }
-
-  div.top-container div.col-md-4, 
-  div.top-container div.col-md-8 {
-    padding-left:0;
-    padding-right:0;
-  } 
 
   span.legend-text, span.angled {
     font-size:92%;
