@@ -171,6 +171,9 @@ dispatch.on("statechange.charts", function(data) {
   // filter the data given current selections
   filtered = apply_options(data);
   
+  // turn off any open tooltips, as the position will no longer correspond to a square
+  d3.select("div.tooltip").style("display", "none");
+
   // Top chart: nest, and draw
   data = nest(filtered,groups.top);
   calcOffsets(data,groups.top);
@@ -568,10 +571,9 @@ function drawchart(data, container, tfast, group) {
     .classed("type4", function(d) {return d.type == "type4"})
     .attr("height", config[group]["sqsize"] - 1)
     .attr("width", config[group]["sqsize"] - 1)
-    .on("mouseenter", mouseenterSquare)
-    // .on("mousemove", mousemoveSquare)
-    .on("mouseleave", mouseleaveSquare)
-    // .on("click", clickSquare)
+    // .on("mouseenter", mouseenterSquare)
+    // .on("mouseleave", mouseleaveSquare)
+    .on("click", mouseenterSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
         var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
@@ -594,10 +596,9 @@ function drawchart(data, container, tfast, group) {
       .classed("type4", function(d) {return d.type == "type4"})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      .on("mouseenter", mouseenterSquare)
-      // .on("mousemove", mousemoveSquare)
-      .on("mouseleave", mouseleaveSquare)
-      // .on("click", clickSquare)
+      // .on("mouseenter", mouseenterSquare)
+      // .on("mouseleave", mouseleaveSquare)
+      .on("click", mouseenterSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
           var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
