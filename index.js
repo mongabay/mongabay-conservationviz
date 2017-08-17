@@ -818,7 +818,10 @@ function calcOffsets(data, group) {
     var number_that_fit = Math.floor( (colwidth - config[group]["textwidth"]) / sqsize);
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
-    var totalrows = plusrows + minusrows;
+    // but, now that we include text with "study count", we always need additional height, and
+    // depending on font size, this is generally at least two rows, so always add a count of at least two here
+    var totalrows = plusrows + minusrows == 1 ? 2 : plusrows + minusrows;
+
     config[group][d.key]["totalrows"] = totalrows; // save this for use when rendering
     // calc chart offsets for the minus chart, for this one row
     // this is based on the total count of plus rows, considering overflow
@@ -833,7 +836,11 @@ function calcOffsets(data, group) {
     config[group][d.key]["totalcount"] = plus + minus;
 
     // keep a count of rows, from which to calculate total height
-    config[group]["chartrows"] += totalrows;
+    // this was the old way; some rows have plus, some minus, some both
+    // config[group]["chartrows"] += totalrows; 
+    // but, now that we include text with "study count", we always need additional height, and
+    // depending on font size, this is generally at least two rows, so always add a count of at least two here
+    config[group]["chartrows"] += totalrows == 1 ? 2 : totalrows; 
 
     // and a placeholder for col, which will always be "1" on this initial pass
     config[group][d.key]["col"] = 1;
