@@ -50,6 +50,7 @@ $(window).on("resize", _.debounce(function () {
 
   // then, resize the containers
   // only needed here if not included in "Statechange"
+  // latest approach: also include in Statechange, but only for mobile
   resizeContainers();
 }, 250));
 
@@ -183,7 +184,9 @@ dispatch.on("statechange.charts", function(data) {
   drawchart(data, container, tfast, groups.bottom);
 
   // resize
-  // resizeContainers(); // an option, but this means containers resize to fit charts, and everything bounces around
+  // an option, but this means containers resize to fit charts, and everything bounces around
+  // for now, only apply on mobile
+  if (isMobile()) resizeContainers(); 
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
