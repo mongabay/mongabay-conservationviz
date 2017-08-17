@@ -160,7 +160,7 @@
 <!-- ========================================== VIZ START ================================================ -->
 
 
-	<iframe id="consevidence" src="../index.html" width="100%" frameborder="0" style="margin-bottom:1em;" onload="resizeIframe(this)"></iframe>
+	<iframe id="consevidence" src="../index.html" frameborder="0" style="width: 100%; margin-bottom:1em;" scrolling="no"></iframe>
 
 
 <!-- ============================================ VIZ END ============================================ -->
@@ -448,20 +448,11 @@ var bloomSettings = {"ajaxurl":"https:\/\/news.mongabay.com\/wp-admin\/admin-aja
 
 
 
-<!-- ==================================================================================================== -->
+<!-- ================================ iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) =================================== -->
  
+<script type="text/javascript" src="./iframeResizer.min.js"></script>
 <script>
-  function resizeIframe(obj) {
-  	var height = window.frames['consevidence'].contentDocument.getElementById('main-container').scrollHeight + 20;
-    obj.style.height = height + "px"; 
-  }
-
-  window.addEventListener('resize', function(){
-  	setTimeout(function() {
-  		resizeIframe(document.getElementById("consevidence"));
-  	}, 1300);
-  }, true);
-
+	iFrameResize({log:true, heightCalculationMethod:"taggedElement"}, '#consevidence')
 </script>
 
 <!-- ==================================================================================================== -->
