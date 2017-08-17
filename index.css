@@ -110,7 +110,7 @@ rect.type1 { opacity: 1; }
 
 /* the legend */
 
-div.legendcontainer {height: 100px; margin-top:2em;}
+div.legend-container {height: 100px; margin-top:2em;}
 div.legend {clear:both; width: auto; height:20px; margin-bottom:2px;}
 div.legend span {float:left;}
 span.rect {width: 20px; height: 20px; margin-right:2px;}
@@ -290,6 +290,11 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
     position:absolute;
     top:11px; right:10px;
   }
+
+  div.legend-container {
+    float: right;
+  }
+
 }
 
 @media (max-width: 768px) {
