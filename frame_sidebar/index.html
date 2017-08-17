@@ -153,7 +153,7 @@
                     <!--====================== VIZ START ========================-->
 
 
-                    	<iframe src="../index.html" width="100%" height="900px" frameborder="0" style="margin-bottom:1em;"></iframe>
+                    	<iframe id="consevidence" src="../index.html" width="100%" height="900px" frameborder="0" style="margin-bottom:1em;" onload="resizeIframe(this)"></iframe>
 
 
 
@@ -577,4 +577,28 @@ var bloomSettings = {"ajaxurl":"https:\/\/news.mongabay.com\/wp-admin\/admin-aja
 <script type="text/javascript" src="./files/idle-timer.min.js"></script>
 
 	
-<script type="text/javascript" src="./files/bundle(1).js" async="" data-spotim-script="//www.spot.im/launcher/bundle.js"></script></body></html>
+<script type="text/javascript" src="./files/bundle(1).js" async="" data-spotim-script="//www.spot.im/launcher/bundle.js"></script>
+
+<!-- ==================================================================================================== -->
+ 
+<script>
+  function resizeIframe(obj) {
+  	var height = window.frames['consevidence'].contentDocument.getElementById('main-container').scrollHeight + 20;
+    obj.style.height = height + "px"; 
+  }
+
+  window.addEventListener('resize', function(){
+  	setTimeout(function() {
+  		resizeIframe(document.getElementById("consevidence"));
+  	}, 1300);
+  }, true);
+
+</script>
+
+<!-- ==================================================================================================== -->
+
+
+
+
+
+</body></html>
