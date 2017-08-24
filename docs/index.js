@@ -40,6 +40,7 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 // get data and a callback when download is complete
 d3.queue()
     .defer(d3.csv, 'data/lookup.csv')
+    .defer(d3.csv, 'data/lookup_study.csv')
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
@@ -55,12 +56,15 @@ $(window).on("resize", _.debounce(function () {
 }, 250));
 
 // callback from d3.queue()
-function main(error, lookups, data) {
+function main(error, lookups, lookups_study, data) {
   if (error) throw error;
   
-  // Pre-processing of lookup table: parse lookup list into a global lookup object
+  // Pre-processing of lookup table: parse lookup lists into a global lookup object
   lookups.forEach(function(d) {
     lookup[d.key] = d;    
+  });
+  lookups_study.forEach(function(d) {
+    lookup[d.key] = d;
   });
   
   // Pre-processing of data, several tasks
@@ -643,7 +647,7 @@ function mouseenterSquare(d) {
   var text = lookup[id].name;
   tooltip.select("div.tooltip-name").text(lookup[id].name);
   tooltip.select("div.tooltip-author-year").text(lookup[id].author + ", " + lookup[id].pubyear);
-  var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + lookup[id].conclusion;
+  var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + d.conclusion;
   tooltip.select("div.tooltip-conclusion").html(conclusion);
   tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
   tooltip.style("display","block");
