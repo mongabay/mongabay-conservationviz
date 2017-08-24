@@ -44,6 +44,9 @@ jobs,Jobs,,,soc
 waterregulationerosionprevention,"Water regulation, erosion prevention",,,env
 compliancewithharvestregulations,Compliance with harvest regulations,,,soc
 setasidesandbufferzones,Set asides and buffer zones,,,env
+reforestation,Reforestation,,,env
+opportunitycost,Opportunity Cost,,,econ
+landgrabbingbetterlandtenure,"Land grabbing, better land tenure",,,soc
 AF,Afghanistan,33.93911,67.709953,
 AX,Akrotiri,33.93911,67.709953,
 AL,Albania,41.153332,20.168331,
