@@ -9,6 +9,25 @@ body {
   overflow-x: hidden;
 }
 
+/* button/headers at the top of the page */
+div#button-container {margin-bottom: 1em;}
+div.btn-header {height:60px; width: 100%; color: #fff; padding:1em;}
+div.btn-green {background: #307538;}
+div.btn-blue {background: #F28123}
+div.btn-orange {background: #42858C}
+div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:65%;}
+
+div.table-div {
+  display:table;
+  table-layout: fixed;
+}
+
+div.table-cell {
+  display:table-cell;
+  vertical-align: middle;
+  text-align:center;
+}
+
 /* chart containers and related elements */
 
 div.main {
@@ -104,23 +123,21 @@ rect.selected {
 rect.plus    { fill: #309223; }
 rect.neutral { fill: #FACB57; }
 rect.minus   { fill: #d7063d; }
-rect.type3 { opacity: 0.6; }
-rect.type2 { opacity: 0.8; }
-rect.type1 { opacity: 1; }
+.type2 { opacity: 0.5; }
+.type1 { opacity: 1; }
 
 /* the legend */
 
-div.legend-container {height: 100px; margin-top:2em;}
+div.legend-container {height: 100px; margin: 2em auto;}
 div.legend {clear:both; width: auto; height:20px; margin-bottom:2px;}
 div.legend span {float:left;}
-span.rect {width: 20px; height: 20px; margin-right:2px;}
-span.legend-text {width: auto; height: 20px; line-height:20px;margin-left:4px;}
+span.rect, span.legend-text {margin:0 30px 10px;}
+span.legend-title {display:inline-block; max-width:84px; text-align: center;}
+span.rect {width: 20px; height: 20px;}
+span.legend-text {width: auto; min-width:50px; height: 20px; line-height:20px;}
 span.plus    { background: #309223;}
 span.neutral { background: #FACB57; }
 span.minus   { background: #d7063d; }
-span.type1   { opacity: 1.0; }
-span.type2   { opacity: 0.8; }
-span.type3   { opacity: 0.6; }
 span.angled  { 
   position:relative;
   bottom:-4px;
@@ -191,13 +208,12 @@ a#clearall:hover {
 
 div#select-container {
   width: 100%;
-  max-width: 1020px;
+  margin-bottom:0.6em;
 }
 
-div#select-container div.row {
-  width:90%;
+div#select-container select, div#select-container .select2-container{
+  max-width: 300px;
 }
-
 /* LEAFLET OVERRIDES */
 
 .leaflet-popup-content-wrapper {
@@ -285,18 +301,37 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 /*@media queries*/
 
-@media (max-width: 992px) {
-  div.clearall-container {
-    position:absolute;
-    top:11px; right:10px;
+@media (max-width: 1400px) {
+  div.btn-header {
+    min-height: 80px;
   }
+}
 
-  div.legend-container {
-    float: right;
+@media (max-width: 1200px) {
+  div.title-cell {
+    font-size:20px;
+    width:62%;
   }
 
 }
 
+@media (max-width: 992px) {
+  div.legend-container {
+    float: right;
+  }
+  div#select-container select, div#select-container .select2-container {
+    max-width: 100%;
+  }
+
+  div.title-cell {
+    font-size:24px;
+    width:40%;
+  }
+
+
+}
+
+/* iPad portrait */
 @media (max-width: 768px) {
   div.clearall-container {
     text-align: center;
@@ -318,4 +353,15 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 }
 
+@media (max-width: 600px) {
+
+  div.title-cell {
+    font-size:16px;
+    width:45%;
+  }
+
+}
+
+@media (max-width: 360px) {
+}
 

@@ -99,7 +99,7 @@ function main(error, lookups, lookups_study, data) {
 
   // Data prep all done!
   // call our dispatch events with `this` context, and corresponding data
-  dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
+  dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed, data: data}); 
   dispatch.call("statechange", this, data);
   // finally, fit the map to bounds one time, this will always be the extent, despite state changes
   // cannot fit bounds to circles for some reason, so we fit to points instead
@@ -122,6 +122,22 @@ dispatch.on("load.setup", function(options) {
   resizeContainers(); 
 
 });
+
+// add a load listener to populate some of the markup for headers, descriptive text, etc. 
+dispatch.on("load.descriptions", function(){
+  
+  // adds the descriptive words for each theme
+  var keys = Object.keys(words);
+  keys.forEach(function(key) {
+    var text = words[key];
+    var elem = "div.text-cell." + key;
+    $(elem).text(text);
+  });
+
+  // adds the description/explanatory text next to the legend
+  $('div.description-container').html(description);
+
+})
 
 // register a listener for "load" and create dropdowns for various fiters
 dispatch.on("load.dropdowns", function(options) {
@@ -178,17 +194,21 @@ dispatch.on("statechange.charts", function(data) {
   // turn off any open tooltips, as the position will no longer correspond to a square
   d3.select("div.tooltip").style("display", "none");
 
-  // Top chart: nest, and draw
-  data = nest(filtered,groups.top);
-  calcOffsets(data,groups.top);
-  var container = d3.select(".top");
-  drawchart(data, container, tfast, groups.top);
+  // // Top chart: nest, and draw
+  // data = nest(filtered,groups.top);
+  // calcOffsets(data,groups.top);
+  // var container = d3.select(".top");
+  // drawchart(data, container, tfast, groups.top);
 
-  // Bottom chart: nest, and draw
-  data = nest(filtered,groups.bottom);
-  calcOffsets(data,groups.bottom);
-  var container = d3.select(".bottom");
-  drawchart(data, container, tfast, groups.bottom);
+  // // Bottom chart: nest, and draw
+  // data = nest(filtered,groups.bottom);
+  // calcOffsets(data,groups.bottom);
+  // var container = d3.select(".bottom");
+  // drawchart(data, container, tfast, groups.bottom);
+
+  // TO DO: This will just be 3 cols now, that stack thanks to the magic of bootstrap
+  // no more y-offsets! Hooray! 
+
 
   // resize
   // an option, but this means containers resize to fit charts, and everything bounces around

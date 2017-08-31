@@ -12,6 +12,23 @@ var colors = {
   econ: "#757ECF",
 }
 
+// descriptive summaries for the theme groups
+var words = {
+  env: "some words about soc",
+  soc: "some words about soc",
+  econ: "some words about econ",
+}
+
+var description = "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut\
+wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure\
+dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto.</p>\
+<p>Better definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
+ut laoreet dolore magna aliquam erat volutpat.</p>\
+<p>Same definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
+ut laoreet dolore magna aliquam erat volutpat.</p>\
+<p>Worse definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
+ut laoreet dolore magna aliquam erat volutpat. dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper</p>";
+
 // map circle areas, in km2
 var circleareas = {
   min: 15000, 
