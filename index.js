@@ -496,35 +496,6 @@ function drawchart(data, container, tfast, group) {
   text.exit().remove();
 
   //
-  // TEXT ATTRIBUTE FOR STUDY COUNT
-  //
-  var textwrappers = container.selectAll("div.textwrapper");
-  var textcount = textwrappers.selectAll("div.count")
-    .data(function(d) {return [d]}, function(d) {return d.key});
-
-  // update
-  textcount
-    .text(function(d) {
-      var count = config[group][d.key]["totalcount"]; 
-      var studies_text = count == 1 ? " study" : " studies";
-      return  count + studies_text;
-    })
-    .style("font-size", config[group]["countsize"] + "px");
-
-  // enter
-  textcount.enter().append("div")
-    .attr("class","count")
-    .text(function(d) {
-      var count = config[group][d.key]["totalcount"]; 
-      var studies_text = count == 1 ? " study" : " studies";
-      return  count + studies_text;
-    })
-    .style("font-size", config[group]["countsize"] + "px");
-
-  // exit
-  textcount.exit().remove();
-
-  //
   // CHART GROUPS
   //
   // create chart groups for each of our chart categories
