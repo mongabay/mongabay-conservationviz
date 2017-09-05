@@ -208,7 +208,8 @@ a#clearall:hover {
 
 div#select-container {
   width: 100%;
-  margin-bottom:0.6em;
+  max-width: 1300px;
+  margin: 0 auto 0.6em;
 }
 
 div#select-container select, div#select-container .select2-container{
@@ -275,7 +276,7 @@ input.select2-search__field:disabled {
 }
 
 /* BOOTSTRAP OVERRIDES */
-div.container-fluid {
+div.container-fluid:not(.chart-container) {
   padding-left: 0;
   padding-right: 0;
 }

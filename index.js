@@ -3,6 +3,7 @@
 //
 // data variables
 var rawdata; 
+var coldata = [];
 var lookup = {};
 var selectedgroup = {};
 
@@ -110,16 +111,39 @@ function main(error, lookups, lookups_study, data) {
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
-  // calc offsets for top and bottom
-  var data = nest(rawdata, groups.top);
-  calcOffsets(data, groups.top);
+  // nest data by the main groups (theme, variable)
+  var data1 = nest(rawdata, groups.top);
+  var data2 = nest(rawdata,groups.bottom);
 
-  var data = nest(rawdata,groups.bottom);
-  calcOffsets(data, groups.bottom);
+  // then structure data into cols, by colgroup, keeping the top row for the overview data
+  colgroups.forEach(function(col) {
+    // add a first row from old "top" data
+    data1.forEach(function(row){
+      if (row.key.toLowerCase() == col) {
+        coldata.push({key: col.toLowerCase(), values: [row]})
+      }
+    })
+    // add the remainder of the column from the old "bottom" data
+    data2.forEach(function(row) {
+      if (row.values[0].values[0].theme.toLowerCase() == col) {
+        coldata.forEach(function(c) {
+          if (c.key == col) {
+            c.values.push({key: row.key, values: row.values});
+          }
+        })          
+      }
+    })
+
+    // calc offsets per column? 
+    // calcOffsets(data2, groups.bottom);
+
+  })
+
+
 
   // and then (optionally) resize: we could resize here, or on "statechange"
   // but if not done on "statechange" then we do have to do it on "resize"
-  resizeContainers(); 
+  // resizeContainers(); 
 
 });
 
@@ -209,11 +233,16 @@ dispatch.on("statechange.charts", function(data) {
   // TO DO: This will just be 3 cols now, that stack thanks to the magic of bootstrap
   // no more y-offsets! Hooray! 
 
+  // send off data to the chart renderer, one col at a time
+  coldata.forEach(function(col){
+    calcOffsets(col.values,groups.bottom);
+    var container= d3.select("." + col.key + "-chart");
+    drawchart(col.values, container, tfast, groups.bottom);
+  });
 
   // resize
   // an option, but this means containers resize to fit charts, and everything bounces around
-  // for now, only apply on mobile
-  if (isMobile()) resizeContainers(); 
+  resizeContainers(); 
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
@@ -811,7 +840,7 @@ function calcOffsets(data, group) {
   // on an initial pass (e.g. top chart) we have no way to know if there will be scrollbars
   // so always subtract 20px just in case
   // TODO: on subsequent updates, could check if there are scrollbars first? 
-  var width = $(config[group]["container"]).width() - 20;
+  var width = $(".chartcol").width() - 20;
 
   // get ncols as configured for this screen width
   var ncols = getCols(width, group);

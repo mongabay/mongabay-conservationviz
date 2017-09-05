@@ -5,19 +5,21 @@ var groups = {
   bottom: "variable"
 }
 
+// keys to the column groups. These will be used below, and throughout to 
+// identify and organize groups from the data
+var colgroups = ["env", "soc", "econ"];
+
 // colors for the theme groups
-var colors = {
-  env: "#1B9E77",
-  soc: "#E16802",
-  econ: "#757ECF",
-}
+var colors = {};
+colors[colgroups[0]] = "#1B9E77";
+colors[colgroups[1]] = "#E16802";
+colors[colgroups[2]] = "#757ECF";
 
 // descriptive summaries for the theme groups
-var words = {
-  env: "some words about soc",
-  soc: "some words about soc",
-  econ: "some words about econ",
-}
+var words = {};
+words[colgroups[0]] = "some words about env";
+words[colgroups[1]] = "some words about soc";
+words[colgroups[2]] = "some words about econ";
 
 var description = "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut\
 wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure\
@@ -60,9 +62,9 @@ config[groups.top] = {
 
 // configuration of the bottom chart
 config[groups.bottom] = {
-  ncols_lg:    3, 
-  ncols_md:    3, 
-  ncols_sm:    2, 
+  ncols_lg:    1, 
+  ncols_md:    1, 
+  ncols_sm:    1, 
   ncols_xs:    1, 
   container:   ".bottom-col",
   colmargin:   10,                
