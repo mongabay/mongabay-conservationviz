@@ -123,7 +123,7 @@ rect.selected {
 rect.plus    { fill: #309223; }
 rect.neutral { fill: #FACB57; }
 rect.minus   { fill: #d7063d; }
-.type2 { opacity: 0.5; }
+.type3 { opacity: 0.5; }
 .type1 { opacity: 1; }
 
 /* the legend */
