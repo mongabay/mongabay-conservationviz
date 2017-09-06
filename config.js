@@ -45,34 +45,12 @@ var config = {};
 config["map_height"] = 250,      // map height in px
 
 // configuration of the top chart
-config[groups.top] = {
-  ncols_lg:    1,                // number of chart cols for lg screens > 1200px
-  ncols_md:    1,                // number of chart cols for md screens > 992px
-  ncols_sm:    1,                // number of chart cols for sm screens > 768px
-  ncols_xs:    1,                // number of chart cols for xs screens < 768px
-  container:   ".top-col",       // selector for this chart's container
-  colmargin:   10,               // margin applied to right side of cols when ncols > 1
-  sqsize:      15,               // width and hight of chart squares
-  rowpadding:  10,               // padding between rows
-  labelsize:   15,               // size of text label size in pixels
-  countsize:   10,               // size of study count text in pixels
-  textwidth:   130,              // width of the text label "column"   
+config[groups.bottom] = {
+  sqsize:      17,               // width and hight of chart squares
+  rowpadding:  15,               // padding between rows
+  labelsize:   13,               // size of text label size in pixels
+  textwidth:   180,              // width of the text label "column"   
   textpadding: 10,               // right side padding of text label
 };
 
-// configuration of the bottom chart
-config[groups.bottom] = {
-  ncols_lg:    1, 
-  ncols_md:    1, 
-  ncols_sm:    1, 
-  ncols_xs:    1, 
-  container:   ".bottom-col",
-  colmargin:   10,                
-  sqsize:      17,                 
-  rowpadding:  30,
-  labelsize:   13,
-  countsize:   11,
-  textwidth:   180,                 
-  textpadding: 10,               
-};
 

@@ -380,17 +380,7 @@ function drawchart(data, container, tfast, group) {
   rows.attr("class", "chartrow")
     .style("width", config[group]["colwidth"] + "px")
     .transition(tfast)
-    .style("left", function(d) {
-      var x = 0; // col offset
-      // which column are we in?
-      var col = config[group][d.key]["col"];
-      // define the start x position, column * colwidth, minus one colwidth
-      var fullcol = config[group]["colwidth"];
-      var x = (col * fullcol) - fullcol;
-      // not sure why this works, multiplying by col-1
-      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
-      return x + "px";
-    })
+    .style("left", 0)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
@@ -402,17 +392,7 @@ function drawchart(data, container, tfast, group) {
   // create new rows if our updated dataset has more than the previous
   var rowenter = rows.enter().append("div")
     .attr("class", "chartrow")
-    .style("left", function(d) {
-      var x = 0; // col offset
-      // which column are we in?
-      var col = config[group][d.key]["col"];
-      // define the start x position, column * colwidth, minus one colwidth
-      var fullcol = config[group]["colwidth"];
-      var x = (col * fullcol) - fullcol;
-      // not sure why this works, multiplying by col-1
-      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
-      return x + "px";
-    })
+    .style("left", 0)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
@@ -567,7 +547,7 @@ function drawchart(data, container, tfast, group) {
     });
 
   //
-  // SQUARES: bind data
+  // SQUARES: sort and bind data
   //
 
   // reselect the chart groups, so that we get any new ones that were made
@@ -697,7 +677,6 @@ function mouseleaveSquare(d) {
 
 // resize all the containers listed below from config
 function resizeContainers() {
-  d3.select(".top").style("height", config[groups.top]["height"] + "px"); 
   d3.select(".bottom").style("height", config[groups.bottom]["height"] + "px"); 
 }
 
@@ -812,15 +791,7 @@ function calcOffsets(data, group) {
   // so always subtract 20px just in case
   // TODO: on subsequent updates, could check if there are scrollbars first? 
   var width = $(".chartcol").width() - 20;
-
-  // get ncols as configured for this screen width
-  var ncols = getCols(width, group);
-
-  // calc col width based on this ncols
-  // first, aadjust for margin padding 
-  var margin = ncols > 1 ? (ncols - 1) * config[group]["colmargin"] : 0;
-  var colwidth = (width - margin) / ncols;
-  config[group]["colwidth"]   = colwidth;
+  config[group]["colwidth"] = width;
 
   // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
@@ -828,7 +799,7 @@ function calcOffsets(data, group) {
     // Add an empty object for this group, e.g. config.theme.ENV
     config[group][d.key] = {};
 
-    // Set the current "y" offset, will be zero when i = 0, or when a column resets
+    // Set the current "y" offset, will be zero when i = 0
     config[group][d.key]["offset_y"] = nextoffset;
 
     // Now calc the next one, for the next iteration
@@ -841,12 +812,10 @@ function calcOffsets(data, group) {
     });
 
     // from these counts, figure out how many rows this takes
-    var number_that_fit = Math.floor( (colwidth - config[group]["textwidth"]) / sqsize);
+    var number_that_fit = Math.floor( (width - config[group]["textwidth"]) / sqsize);
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
-    // but, now that we include text with "study count", we always need additional height, and
-    // depending on font size, this is generally at least two rows, so always add a count of at least two here
-    var totalrows = plusrows + minusrows == 1 ? 2 : plusrows + minusrows;
+    var totalrows = plusrows + minusrows;
 
     config[group][d.key]["totalrows"] = totalrows; // save this for use when rendering
     // calc chart offsets for the minus chart, for this one row
@@ -862,53 +831,16 @@ function calcOffsets(data, group) {
     config[group][d.key]["totalcount"] = plus + minus;
 
     // keep a count of rows, from which to calculate total height
-    // this was the old way; some rows have plus, some minus, some both
-    // config[group]["chartrows"] += totalrows; 
-    // but, now that we include text with "study count", we always need additional height, and
-    // depending on font size, this is generally at least two rows, so always add a count of at least two here
-    config[group]["chartrows"] += totalrows == 1 ? 2 : totalrows; 
-
-    // and a placeholder for col, which will always be "1" on this initial pass
-    config[group][d.key]["col"] = 1;
+    config[group]["chartrows"] += totalrows; 
 
   });
 
-  // all done inital loop, add some calcs based on the sums we've just done
+  // all done, add some calcs based on the sums we've just done
   var charts_height              = config[group]["chartrows"] * sqsize;
   var pad_height                 = config[group]["rowpadding"] * config[group]["grouprows"];
-  var single_col_height          = (charts_height + pad_height) / ncols;
+  var single_col_height          = (charts_height + pad_height);
   config[group]["height"]        = single_col_height;
 
-  // if we have multiple cols, loop again to update offsets, based on col heights we just calc'd
-  if (ncols > 1) {
-    var curr_height = 0; 
-    var max_col_height = 0;
-    var nextoffset = 0; var nextcol = 1;
-    data.forEach(function(d,i) {
-      // Set the current "y" offset, will be zero when i = 0, or when a column resets
-      config[group][d.key]["offset_y"] = nextoffset;
-      // keep a note of which row this key belongs in 
-      config[group][d.key]["col"] = nextcol;
-
-      // check our chart height against the col height and adjust y_offset accordingly
-      curr_height += (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
-      if (curr_height > single_col_height) {
-        // keep a note of this col height, in order to find the tallest column
-        max_col_height = curr_height > max_col_height ? curr_height : max_col_height;
-
-        // if height > single_col_height, reset nextoffset
-        // reset curr_height, and add a column count
-        nextoffset = 0;
-        nextcol += 1;
-        curr_height = 0;
-      } else {
-        // if not, carry on as before
-        nextoffset = nextoffset + (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
-      }
-    });
-    // set the final height equal to the height of the tallest column, minus the final rows padding
-    config[group]["height"] = max_col_height - config[group]["rowpadding"];
-  }
 }
 
 // calc x position of rectangles, given container width, and square size
@@ -939,14 +871,6 @@ function scale_count_per_range(i, number) {
   var row = Math.floor( i / number );
   i = i - (row * number);
   return i;
-}
-
-// given a width, get the number of columns defined in config
-function getCols(w, group) {
-  return w > 1200 ? config[group]["ncols_lg"] :
-         w > 992  ? config[group]["ncols_md"] :
-         w > 768  ? config[group]["ncols_sm"] :
-                    config[group]["ncols_xs"];
 }
 
 // do we need a scrollbar for this height? 
