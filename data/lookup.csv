@@ -1,4 +1,5 @@
 key,name,latitude,longitude,parent
+alltext,All findings,,,
 ENV,Environmental,,,env
 ECON,Social,,,econ
 SOC,Economic,,,soc

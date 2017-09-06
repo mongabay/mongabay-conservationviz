@@ -218,31 +218,23 @@ dispatch.on("statechange.charts", function(data) {
   // turn off any open tooltips, as the position will no longer correspond to a square
   d3.select("div.tooltip").style("display", "none");
 
-  // // Top chart: nest, and draw
-  // data = nest(filtered,groups.top);
-  // calcOffsets(data,groups.top);
-  // var container = d3.select(".top");
-  // drawchart(data, container, tfast, groups.top);
-
-  // // Bottom chart: nest, and draw
-  // data = nest(filtered,groups.bottom);
-  // calcOffsets(data,groups.bottom);
-  // var container = d3.select(".bottom");
-  // drawchart(data, container, tfast, groups.bottom);
-
-  // TO DO: This will just be 3 cols now, that stack thanks to the magic of bootstrap
-  // no more y-offsets! Hooray! 
-
   // send off data to the chart renderer, one col at a time
+  // <- hack ->     
+  // config[groups.bottom]["colwidth"] = $($(".chartcol")[1]).width() - 5;
+  config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col){
-    calcOffsets(col.values,groups.bottom);
-    var container= d3.select("." + col.key + "-chart");
-    drawchart(col.values, container, tfast, groups.bottom);
+
+      // calculate total width and height of this groups chart
+      var colheight = calcOffsets(col.values,groups.bottom);
+
+      // select the container, and give it an explicit height
+      var container = d3.select("." + col.key + "-chart").style("height", colheight + config[groups.bottom]["buttonheight"] + "px");
+      drawchart(col.values, container, tfast, groups.bottom);
   });
 
   // resize
   // an option, but this means containers resize to fit charts, and everything bounces around
-  resizeContainers(); 
+  // resizeContainers(); 
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
@@ -378,27 +370,31 @@ function drawchart(data, container, tfast, group) {
 
   // update existing ones left over
   rows.attr("class", "chartrow")
+    .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
     .style("width", config[group]["colwidth"] + "px")
     .transition(tfast)
-    .style("left", 0)
+    .style("left", 15)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
     })
     .style("height", function(d,i) {
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px";
-    });
+      var pad = i == 0 ? config[group]["toprowpad"] : 0;
+      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
+    })
 
   // create new rows if our updated dataset has more than the previous
   var rowenter = rows.enter().append("div")
     .attr("class", "chartrow")
-    .style("left", 0)
+    .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
+    .style("left", 15)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
     })
     .style("height", function(d,i) {
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px";
+      var pad = i == 0 ? config[group]["toprowpad"] : 0;
+      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
     })
     .style("width", config[group]["colwidth"] + "px");
 
@@ -426,35 +422,19 @@ function drawchart(data, container, tfast, group) {
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  text
-    .text(function(d) {
-      return lookup[d.key]["name"]
-    })
-    // .style("font-size", function() { return config[group]["labelsize"] + "px"; })
-    .style("color",function(d) {
-      // color the text by the value defined in the lookup for this key
-      var parent = lookup[d.key]["parent"];
-      return colors[parent];
+  text.text(function(d) {
+    var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+    return text;
   });
 
   // enter
   text.enter().append("div")
     .attr("class","text")
     .text(function(d) {
-      return lookup[d.key]["name"]
+      var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+      return text;
     })
     .style("font-size", function() { return config[group]["labelsize"] + "px"; })
-    .style("color",function(d) {
-      // color the text by the value defined in the lookup for this key
-      var parent = lookup[d.key]["parent"];
-      return colors[parent];
-    })
-    .on("mouseover", function(d) { 
-      d3.select(this).style("color", function() { 
-        return shadeColor(colors[lookup[d.key]["parent"]],-0.3);
-      });  
-    })
-    .on("mouseout", function(d) { d3.select(this).style("color", colors[lookup[d.key]["parent"]]) })
     .on("click", function(d) {
       // update the selected group details, so we can track this, and apply with other filters 
       // value is simply the data key of the clicked upon label
@@ -489,6 +469,11 @@ function drawchart(data, container, tfast, group) {
 
   // update existing ones left over
   charts.attr("class", "chart")
+    .attr("class", function(d,i) { 
+      var clist = d3.select(this).node().parentNode.classList;
+      var c = clist.contains("toprow") ? " toprow" : "";      
+      return d3.select(this).attr("class") + c; 
+    })
     .style("top", function(d, i) {
       var key = d3.select(this.parentNode).datum().key;
       var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
@@ -498,6 +483,11 @@ function drawchart(data, container, tfast, group) {
   // create new ones if our updated dataset has more then the previous
   charts.enter().append("div")
     .attr("class","chart")
+    .attr("class", function(d,i) { 
+      var clist = d3.select(this).node().parentNode.classList;
+      var c = clist.contains("toprow") ? " toprow" : "";      
+      return d3.select(this).attr("class") + c; 
+    })
     .style("left", config[group]["textwidth"] + "px")
     .style("top", function(d, i) {
       var key = d3.select(this.parentNode).datum().key;
@@ -527,23 +517,35 @@ function drawchart(data, container, tfast, group) {
   // update
   chartcontainers
     .attr("class","chartcontainer")
+    .attr("class", function(d,i) { 
+      var clist = d3.select(this).node().parentNode.classList;
+      var c = clist.contains("toprow") ? " toprow" : "";      
+      return d3.select(this).attr("class") + c; 
+    })
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
-      var len   = d.values.length * config[group]["sqsize"];
+      var len   = d.values.length * (config[group]["sqsize"] + 1);
       var width = (config[group]["colwidth"] - config[group]["textwidth"]);
       var rows  = Math.ceil(len/width)
-      return (rows * config[group]["sqsize"]) + "px";
+      var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] : 0;
+      return (rows * config[group]["sqsize"]) + pad + "px";
     });
 
   // enter
   chartcontainers.enter().append("svg")
     .attr("class","chartcontainer")
+    .attr("class", function(d,i) { 
+      var clist = d3.select(this).node().parentNode.classList;
+      var c = clist.contains("toprow") ? " toprow" : "";      
+      return d3.select(this).attr("class") + c; 
+    })
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
-      var len   = d.values.length * config[group]["sqsize"];
+      var len   = d.values.length * (config[group]["sqsize"] + 1);
       var width = (config[group]["colwidth"] - config[group]["textwidth"]);
       var rows  = Math.ceil(len/width)
-      return (rows * config[group]["sqsize"]) + "px";
+      var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] : 0;
+      return (rows * config[group]["sqsize"]) + pad + "px";
     });
 
   //
@@ -584,8 +586,10 @@ function drawchart(data, container, tfast, group) {
         return x;
       })
       .attr("y", function(d,i) {
+        // top row needs padding
+        var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
         var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
-        return y;
+        return y + pad;
       });
 
   // make new squares
@@ -609,8 +613,10 @@ function drawchart(data, container, tfast, group) {
           return x;
         })
         .attr("y", function(d,i) {
+          // top row needs padding
+          var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
           var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
-          return y;
+          return y + pad;
         });
 
 } // update
@@ -774,7 +780,7 @@ function calcCountryKeys(data) {
 // - chart offset, for spacing between plus and minus rows
 function calcOffsets(data, group) {
   // placeholder, for the data iteration, below
-  var nextoffset = 0; 
+  var nextoffset = config[group]["buttonheight"]; // start not a 0, but rather after the button header height 
 
   // some initial settings 
   config[group]["chartrows"] = 0; // the actual chart rows (plus and minus)
@@ -782,16 +788,6 @@ function calcOffsets(data, group) {
 
   // set some names for convenience
   var sqsize = config[group]["sqsize"];
-
-  // calculate total width of this groups chart
-  // as a function of the main container width
-  // this will be applied to div.outergroup
-  // if/when there are scroll bars, this will change the total available width!
-  // on an initial pass (e.g. top chart) we have no way to know if there will be scrollbars
-  // so always subtract 20px just in case
-  // TODO: on subsequent updates, could check if there are scrollbars first? 
-  var width = $(".chartcol").width() - 20;
-  config[group]["colwidth"] = width;
 
   // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
@@ -812,7 +808,7 @@ function calcOffsets(data, group) {
     });
 
     // from these counts, figure out how many rows this takes
-    var number_that_fit = Math.floor( (width - config[group]["textwidth"]) / sqsize);
+    var number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / sqsize);
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
     var totalrows = plusrows + minusrows;
@@ -823,7 +819,8 @@ function calcOffsets(data, group) {
     config[group][d.key]["chartoffset"] = plusrows * sqsize;
 
     // Next, calc the row offset: rows * the height of one square, plus the bottom margin
-    nextoffset = nextoffset + (totalrows * sqsize) + config[group]["rowpadding"];
+    var pad = i == 0 ? config[group]["toprowpad"] : 0; // Top row (row 0) has some padding, so lets add that to row 1
+    nextoffset = nextoffset + (totalrows * sqsize) + config[group]["rowpadding"] + pad;
 
     // add plus/minus counts at this level (to facilitate sorting)
     config[group][d.key]["pluscount"] = plus;
@@ -838,8 +835,11 @@ function calcOffsets(data, group) {
   // all done, add some calcs based on the sums we've just done
   var charts_height              = config[group]["chartrows"] * sqsize;
   var pad_height                 = config[group]["rowpadding"] * config[group]["grouprows"];
-  var single_col_height          = (charts_height + pad_height);
-  config[group]["height"]        = single_col_height;
+  var toppad                     = config[group]["toprowpad"];
+  var single_col_height          = (charts_height + pad_height + toppad);
+
+  // we'll use this to give an explicity height to the col-
+  return single_col_height;
 
 }
 
@@ -895,12 +895,6 @@ function apply_options(data) {
   if (typeof selectedgroup.key !== "undefined") data = filter(data,selectedgroup.key,selectedgroup.value) 
 
   return data;
-}
-
-// shades a hex color darker or lighter, by a percentage param, for example in the form of 0.5 or -0.5
-function shadeColor(hex, percent) {   
-  var f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-  return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
 
 // clear all selections and filters, essentially reset the app state without a refresh

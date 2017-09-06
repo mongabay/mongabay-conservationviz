@@ -46,11 +46,13 @@ config["map_height"] = 250,      // map height in px
 
 // configuration of the top chart
 config[groups.bottom] = {
-  sqsize:      17,               // width and hight of chart squares
-  rowpadding:  15,               // padding between rows
-  labelsize:   13,               // size of text label size in pixels
-  textwidth:   180,              // width of the text label "column"   
-  textpadding: 10,               // right side padding of text label
+  sqsize:       17,               // width and hight of chart squares
+  rowpadding:   15,               // padding between rows
+  labelsize:    13,               // size of text label size in pixels
+  textwidth:    180,              // width of the text label "column"   
+  textpadding:  10,               // right side padding of text label
+  toprowpad:    20,               // padding around the top "summary" row in each column
+  buttonheight: 34,               // height of the button headers at top of row
 };
 
 

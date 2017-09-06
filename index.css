@@ -9,13 +9,17 @@ body {
   overflow-x: hidden;
 }
 
-/* button/headers at the top of the page */
+/* button/headers at the top of the page, and above the charts */
 div#button-container {margin-bottom: 1em;}
 div.btn-header {height:60px; width: 100%; color: #fff; padding:1em;}
+div.btn-bottom-header {height:30px; width: 100%; color: #fff;}
 div.btn-green {background: #307538;}
 div.btn-blue {background: #F28123}
 div.btn-orange {background: #42858C}
-div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:65%;}
+div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:65%; text-align:center;}
+div.subtitle-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:13px; width: 90%; text-align:left;}
+
+div.btn-bottom-header div.icon-cell img {width:67%; margin: 0 4px;}
 
 div.table-div {
   display:table;
@@ -25,7 +29,6 @@ div.table-div {
 div.table-cell {
   display:table-cell;
   vertical-align: middle;
-  text-align:center;
 }
 
 /* chart containers and related elements */
@@ -34,23 +37,19 @@ div.main {
   margin:10px;
 }
 
-div.top, div.bottom {
-  position:relative;
-}
-
-div.top {
-  margin-top:10px;
-  margin-bottom:10px;
-}
-
-div.bottom {
-  margin-top:10px;
+div.chart-outer {
+  padding:15px 0;
 }
 
 div.chartrow {
   position:absolute;
   display:table;
 }
+
+div.chartrow.toprow {
+  background: #EAEAEA;
+}
+
 
 div.textwrapper {
   cursor:pointer;
@@ -59,6 +58,12 @@ div.textwrapper {
 div.text {
   display:table-cell;
   vertical-align: middle;
+  padding-left:10px;
+}
+
+div.chartrow.toprow div.text {
+  font-weight: 500;
+  padding-top: 10px;
 }
 
 div.chart {
@@ -276,7 +281,7 @@ input.select2-search__field:disabled {
 }
 
 /* BOOTSTRAP OVERRIDES */
-div.container-fluid:not(.chart-container) {
+div.container-fluid {
   padding-left: 0;
   padding-right: 0;
 }
