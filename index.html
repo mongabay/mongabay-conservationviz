@@ -17,9 +17,10 @@
 
   <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
   <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
-
+  
   <!-- D3, jQuery, lodash -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3-drag.v1.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 
@@ -169,7 +170,7 @@
 
   </div>
 
-  <div class="tooltip">
+  <div class="tooltip" draggable="true">
     <span class="tooltip-close">×</span>
     <div class="tooltip-content">
       <div class="tooltip-name"></div>

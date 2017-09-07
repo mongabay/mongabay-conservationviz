@@ -23,7 +23,19 @@ defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["de
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
 
 // define the tooltips
-var tooltip = d3.select("div.tooltip");
+var tooltip = d3.select("div.tooltip")
+  .call(d3.drag().on("drag", dragged)
+);
+// and tooltip drag behavior
+function dragged(d) {
+  var tip = d3.select(this);
+  var top = parseInt(tip.style("top"));
+  var left = parseInt(tip.style("left"));
+  var dy = top + d3.event.dy + "px";  
+  var dx = left + d3.event.dx + "px";
+  d3.select(this).style("top", dy).style("left", dx);
+}
+// and tooltip close button
 tooltip.select("span.tooltip-close")
   .on("click", function() { d3.select(this.parentNode).style("display","none") });
 
@@ -622,7 +634,7 @@ function handleMarkerClick(markerdata) {
   $(event.target).parent().addClass("selected");
 }
 
-// define behavior on mouseenter square
+// define behavior on mouseenter square (now only triggered by click)
 function mouseenterSquare(d) {
   // first, clear any selected squares and circles
   clearCircles();
