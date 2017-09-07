@@ -14,6 +14,9 @@ var circleScale;
 var minzoom= 2;
 var maxzoom= 18;
 
+// track whether we've dragged a tooltip or not
+var dragged = false;
+
 // circle colors on map, for selected and unselected
 var circlecolors = {
   "default": "#64b0e0",
@@ -24,10 +27,11 @@ selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["s
 
 // define the tooltips
 var tooltip = d3.select("div.tooltip")
-  .call(d3.drag().on("drag", dragged)
+  .call(d3.drag().on("drag", drag)
 );
 // and tooltip drag behavior
-function dragged(d) {
+function drag(d) {
+  dragged = true;
   var tip = d3.select(this);
   var top = parseInt(tip.style("top"));
   var left = parseInt(tip.style("left"));
@@ -198,7 +202,7 @@ dispatch.on("statechange.charts", function(rawdata) {
   filtered = apply_options(rawdata);
   
   // then nest data by the two main groups (theme, variable)
-  // Note: we dont filter top row ever, this just gets rawdata!
+  // Note: we dont filter the top row ever, this just gets rawdata!
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
@@ -228,18 +232,15 @@ dispatch.on("statechange.charts", function(rawdata) {
   })
 
   // send off data to the chart renderer, one col at a time
-  // TODO: there's an issue with scrollbars here? that gives a 5px variance? 
   config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
-      // calculate total width and height of this groups chart
+      // - calculate total width and height of this groups chart
+      // - select the container, and give it an explicit height
+      // - draw
       var colheight = calcOffsets(col.values,groups.bottom);
-
-      // select the container, and give it an explicit height
       var container = d3.select("." + col.key + "-chart").style("height", colheight + config[groups.bottom]["buttonheight"] + "px");
-
       drawchart(col.values, container, tfast, groups.bottom);
   });
-
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
@@ -308,7 +309,6 @@ function drawmap(countries_keyed) {
   });
   // go over countries, and make circles. 
   // Before we start figure out what style to use
-  var style = somethingSelected() ? selectedStyle : defaultStyle;
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -324,7 +324,7 @@ function drawmap(countries_keyed) {
       // get an area from scale function, calc the radius, and then add the circles      
       var area = circleScale(country.count);
       var radius = Math.sqrt(area/Math.PI);
-      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(style).addTo(circles);
+      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(defaultStyle).addTo(circles);
       // add interactivity
       circle.data = country;
       circle.on('click',function(e) { 
@@ -673,13 +673,14 @@ function mouseenterSquare(d) {
   tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
   tooltip.style("display","block");
 
-  // position the tooltip
-  // debugger;
-  var xpos = isMobile() ? 10 : d3.select(this).node().getBoundingClientRect().right + 10;
-  var ypos = isMobile() ? 20 : -30;
-  tooltip
-    .style("left",xpos + "px")
-    .style("top", d3.event.pageY+ypos + "px");
+  // position the tooltip, but if we dragged it somewhere, leave it alone
+  if (!dragged) {
+    var xpos = isMobile() ? 10 : d3.select(this).node().getBoundingClientRect().right + 10;
+    var ypos = isMobile() ? 20 : -30;
+    tooltip
+      .style("left",xpos + "px")
+      .style("top", d3.event.pageY+ypos + "px");
+  }
 
   // update the map marker that contains this study
   selectCircle(d.fips);
@@ -926,15 +927,6 @@ function clear_all() {
   $('select#country').val('').trigger('change');  
   $('select#evidence').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
-}
-
-// is something selected among our filters?
-function somethingSelected() {
-  var value = false; 
-  if ($('select#country').val()) value = true;
-  if ($('select#evidence').val()) value = true;
-  if (typeof selectedgroup.key !== 'undefined') value = true;
-  return value;
 }
 
 // simple "mobile" detector
