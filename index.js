@@ -182,7 +182,7 @@ dispatch.on("load.dropdowns", function(options) {
     select.select2({
       placeholder: select.attr("placeholder"),
       minimumResultsForSearch: Infinity,
-      allowClear: false
+      allowClear: true
     }).show();
   });
   // because we're using select2, and these options are added dynamically, 
