@@ -126,17 +126,24 @@ div.tooltip div.tooltip-conclusion span {
 
 /* chart rectangles */
 
+rect {
+  shape-rendering: crispEdges;
+  cursor: pointer;
+  z-index:10000;
+}
+
 rect.selected {
   cursor:pointer;
-  fill: #7E3177 !important;
-  opacity:1 !important;
+  stroke-width:3px;
+  stroke-opacity:1 !important;
+  stroke: #7E3177 !important;
 }
 
 rect.plus    { fill: #309223; }
 rect.neutral { fill: #FACB57; }
 rect.minus   { fill: #d7063d; }
-.type3 { opacity: 0.5; }
-.type1 { opacity: 1; }
+.type3 { fill-opacity: 0.5; }
+.type1 { fill-opacity: 1; }
 
 /* the legend */
 

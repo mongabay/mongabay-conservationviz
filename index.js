@@ -332,7 +332,7 @@ function drawmap(countries_keyed) {
       });
       circle.bindPopup(country.name + ": " + country.count);
       circle.on('mouseover', function (e) {
-        // first clear any selected circles selected by other means
+        // first clear any selections selected by other means
         clearCircles();
         this.openPopup();
         this.setStyle(selectedStyle);
@@ -631,7 +631,7 @@ function drawchart(data, container, tfast, group) {
           // top row needs padding
           var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
           var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-          return y + pad;
+          return y + pad ;
         });
 
 } // update
@@ -651,12 +651,7 @@ function handleMarkerClick(markerdata) {
 function mouseenterSquare(d) {
   // first, clear any selected squares and circles
   clearCircles();
-  Object.keys(groups).forEach(function(group) {
-    d3.select("div." + group).selectAll("rect")
-      .each(function(d) {
-        d3.select(this).classed("selected",false);
-      });
-  });
+  clearSquares();
 
   // add selected style to this square, and the ones in adjacent charts
   // d3.select(this).classed("selected", true);  
@@ -958,26 +953,28 @@ function clearCircles() {
 function selectSquares(match) {
   var key = match.key; 
   var value = match.value;
-  Object.keys(groups).forEach(function(group) {
-    d3.select("div." + group).selectAll("rect")
-      .each(function(d) {
-        var self = d3.select(this);
-        // because d[key] can be an "array", test for that and treat 
-        var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
-        values.forEach(function(v) {
-          if (v == value) {
-            self.classed("selected",true);
-          }
-        }); 
-      });
-  });
+  d3.selectAll("rect")
+    .each(function(d) {
+      var rect = d3.select(this);
+      // because d[key] can be an "array", test for that and treat 
+      var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
+      values.forEach(function(v) {
+        if (v == value) {
+          // add a selected class
+          rect.classed("selected",true);
+          // bump up and to the left by 1px
+          // var x = rect.attr("x");
+          // var y = rect.attr("y");
+          // rect.attr("x", x - 1);
+          // rect.attr("y", y - 1);
+        }
+      }); 
+    });
 }
 // and the correlary: clear squares completely
 function clearSquares() {
-  Object.keys(groups).forEach(function(group) {
-    d3.select("div." + group).selectAll("rect")
-      .each(function(d) {
-        d3.select(this).classed("selected",false);
-      });
-  });
+  d3.selectAll("rect.selected")
+    .each(function(d) {
+      d3.select(this).classed("selected", false);
+    });
 }
