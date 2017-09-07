@@ -3,7 +3,6 @@
 //
 // data variables
 var rawdata; 
-var coldata = [];
 var lookup = {};
 var selectedgroup = {};
 
@@ -111,39 +110,7 @@ function main(error, lookups, lookups_study, data) {
 // listen for "load" and calculate global container dimensions based on incoming data
 // these will set the height for the top and bottom svg containers
 dispatch.on("load.setup", function(options) {
-  // nest data by the main groups (theme, variable)
-  var data1 = nest(rawdata, groups.top);
-  var data2 = nest(rawdata,groups.bottom);
 
-  // then structure data into cols, by colgroup, keeping the top row for the overview data
-  colgroups.forEach(function(col) {
-    // add a first row from old "top" data
-    data1.forEach(function(row){
-      if (row.key.toLowerCase() == col) {
-        coldata.push({key: col.toLowerCase(), values: [row]})
-      }
-    })
-    // add the remainder of the column from the old "bottom" data
-    data2.forEach(function(row) {
-      if (row.values[0].values[0].theme.toLowerCase() == col) {
-        coldata.forEach(function(c) {
-          if (c.key == col) {
-            c.values.push({key: row.key, values: row.values});
-          }
-        })          
-      }
-    })
-
-    // calc offsets per column? 
-    // calcOffsets(data2, groups.bottom);
-
-  })
-
-
-
-  // and then (optionally) resize: we could resize here, or on "statechange"
-  // but if not done on "statechange" then we do have to do it on "resize"
-  // resizeContainers(); 
 
 });
 
@@ -211,30 +178,55 @@ dispatch.on("load.dropdowns", function(options) {
 
 
 // register a callback to be invoked which updates the chart when "statechange" occurs
-dispatch.on("statechange.charts", function(data) {
-  // filter the data given current selections
-  filtered = apply_options(data);
-  
+dispatch.on("statechange.charts", function(rawdata) {
   // turn off any open tooltips, as the position will no longer correspond to a square
   d3.select("div.tooltip").style("display", "none");
 
+  // filter the data given current selections
+  filtered = apply_options(rawdata);
+  
+  // then nest data by the two main groups (theme, variable)
+  var data1 = nest(filtered, groups.top);
+  var data2 = nest(filtered,groups.bottom);
+
+  // then structure data into cols, by colgroup, keeping the top row for the overview data
+  var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
+  colgroups.forEach(function(col) {
+    // add a first row from old "top" data
+    data1.forEach(function(row){
+      if (row.key.toLowerCase() == col) {
+        coldata.forEach(function(c) {
+          if (c.key == col) {
+            c.values.push({key: row.key, values: row.values});
+          }
+        }) 
+      }
+    })
+    // add the remainder of the column from the old "bottom" data
+    data2.forEach(function(row) {
+      if (row.values[0].values[0].theme.toLowerCase() == col) {
+        coldata.forEach(function(c) {
+          if (c.key == col) {
+            c.values.push({key: row.key, values: row.values});
+          }
+        })          
+      }
+    })
+  })
+
   // send off data to the chart renderer, one col at a time
-  // <- hack ->     
-  // config[groups.bottom]["colwidth"] = $($(".chartcol")[1]).width() - 5;
+  // TODO: there's an issue with scrollbars here? that gives a 5px variance? 
   config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col){
-
       // calculate total width and height of this groups chart
       var colheight = calcOffsets(col.values,groups.bottom);
 
       // select the container, and give it an explicit height
       var container = d3.select("." + col.key + "-chart").style("height", colheight + config[groups.bottom]["buttonheight"] + "px");
+
       drawchart(col.values, container, tfast, groups.bottom);
   });
 
-  // resize
-  // an option, but this means containers resize to fit charts, and everything bounces around
-  // resizeContainers(); 
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
@@ -371,7 +363,6 @@ function drawchart(data, container, tfast, group) {
   // update existing ones left over
   rows.attr("class", "chartrow")
     .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
-    .style("width", config[group]["colwidth"] + "px")
     .transition(tfast)
     .style("left", 15)
     .style("top", function(d) {
@@ -395,8 +386,7 @@ function drawchart(data, container, tfast, group) {
     .style("height", function(d,i) {
       var pad = i == 0 ? config[group]["toprowpad"] : 0;
       return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
-    })
-    .style("width", config[group]["colwidth"] + "px");
+    });
 
   //
   // TEXT LABEL WRAPPERS
@@ -541,11 +531,11 @@ function drawchart(data, container, tfast, group) {
     })
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
-      var len   = d.values.length * (config[group]["sqsize"] + 1);
-      var width = (config[group]["colwidth"] - config[group]["textwidth"]);
-      var rows  = Math.ceil(len/width)
+      var name = d.values[0].variable; 
+      var rows = config["variable"][d.values[0].variable].totalrows;
       var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] : 0;
       return (rows * config[group]["sqsize"]) + pad + "px";
+
     });
 
   //
@@ -582,13 +572,13 @@ function drawchart(data, container, tfast, group) {
     .on("click", mouseenterSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
-        var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+        var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"] - 10, config[group]["sqsize"]);
         return x;
       })
       .attr("y", function(d,i) {
         // top row needs padding
         var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
-        var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+        var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"] - 10, config[group]["sqsize"]);
         return y + pad;
       });
 
@@ -609,13 +599,13 @@ function drawchart(data, container, tfast, group) {
       .on("click", mouseenterSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
-          var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+          var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"] - 10, config[group]["sqsize"]);
           return x;
         })
         .attr("y", function(d,i) {
           // top row needs padding
           var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
-          var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+          var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"] - 10, config[group]["sqsize"]);
           return y + pad;
         });
 
@@ -808,7 +798,7 @@ function calcOffsets(data, group) {
     });
 
     // from these counts, figure out how many rows this takes
-    var number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / sqsize);
+    var number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / (sqsize + 1));
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
     var totalrows = plusrows + minusrows;
@@ -845,7 +835,7 @@ function calcOffsets(data, group) {
 
 // calc x position of rectangles, given container width, and square size
 function calcx(i,width,sqsize) {
-  var number_that_fit = Math.floor(width / sqsize);
+  var number_that_fit = Math.floor(width / (sqsize + 1) );
 
   // scale i per row width, so that the count is based in terms of row width, 
   // not a continous linear scale. This makes 13 into 3, 17 into 2, etc. 
@@ -859,7 +849,7 @@ function calcx(i,width,sqsize) {
 
 // calc y position of rectangles, given container width, and square size
 function calcy(i,width,sqsize) {
-  var number_that_fit = Math.floor(width / sqsize);
+  var number_that_fit = Math.floor(width / (sqsize + 1) );
   var this_row = Math.floor(i / number_that_fit);
   var y = this_row * sqsize;
   return y;
