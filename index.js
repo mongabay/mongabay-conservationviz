@@ -582,7 +582,6 @@ function drawchart(data, container, tfast, group) {
 
   // update existing squares, transition
   squares
-    .style("fill-opacity", 1)
     .classed("neutral",function(d) { return d.valence == 0 })
     .classed("plus",function(d) { return d.valence > 0 })
     .classed("minus",function(d) { return d.valence < 0 })
