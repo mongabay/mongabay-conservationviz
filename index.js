@@ -480,14 +480,14 @@ function drawchart(data, container, tfast, group) {
     .style("top", function(d, i) {
       var key = d3.select(this.parentNode).datum().key;
       var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      return offset + "px";
+      var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
+      return offset + pad + "px";
     })    
     .style("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var pad = toprow ? config[group]["toprowpad"] : 0;
-      var height = (rows * config[group]["sqsize"]) + pad + "px";
+      var height = (rows * config[group]["sqsize"]) + "px";
       return height;
     });
 
@@ -503,14 +503,14 @@ function drawchart(data, container, tfast, group) {
     .style("top", function(d, i) {
       var key = d3.select(this.parentNode).datum().key;
       var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      return offset + "px";
+      var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
+      return offset + pad + "px";
     })
     .style("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var pad = toprow ? config[group]["toprowpad"] : 0;
-      var height = (rows * config[group]["sqsize"]) + pad + "px";
+      var height = (rows * config[group]["sqsize"]) + "px";
       return height;
     });
 
@@ -530,36 +530,24 @@ function drawchart(data, container, tfast, group) {
   // update
   chartcontainers
     .attr("class","chartcontainer")
-    .attr("class", function(d,i) { 
-      var clist = d3.select(this).node().parentNode.classList;
-      var c = clist.contains("toprow") ? " toprow" : "";      
-      return d3.select(this).attr("class") + c; 
-    })
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var pad = toprow ? config[group]["toprowpad"] : 0;
-      var height = (rows * config[group]["sqsize"]) + pad + "px";
+      var height = (rows * config[group]["sqsize"]) + "px";
       return height;
     });
 
   // enter
   chartcontainers.enter().append("svg")
     .attr("class","chartcontainer")
-    .attr("class", function(d,i) { 
-      var clist = d3.select(this).node().parentNode.classList;
-      var c = clist.contains("toprow") ? " toprow" : "";      
-      return d3.select(this).attr("class") + c; 
-    })
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var pad = toprow ? config[group]["toprowpad"] : 0;
-      var height = (rows * config[group]["sqsize"]) + pad + "px";
+      var height = (rows * config[group]["sqsize"]) + "px";
       return height;
     });
 
@@ -600,10 +588,8 @@ function drawchart(data, container, tfast, group) {
         return x;
       })
       .attr("y", function(d,i) {
-        // top row needs padding
-        var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
         var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-        return y + pad;
+        return y;
       });
 
   // make new squares
@@ -627,10 +613,8 @@ function drawchart(data, container, tfast, group) {
           return x;
         })
         .attr("y", function(d,i) {
-          // top row needs padding
-          var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
           var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-          return y + pad ;
+          return y;
         });
 
 } // update

@@ -57,6 +57,9 @@ div.chartrow.toprow {
   background: #EAEAEA;
 }
 
+svg.chartcontainer {
+  pointer-events: none;
+}
 
 div.textwrapper {
   cursor:pointer;
@@ -129,6 +132,7 @@ div.tooltip div.tooltip-conclusion span {
 rect {
   shape-rendering: crispEdges;
   cursor: pointer;
+  pointer-events: all;
   z-index:10000;
 }
 
