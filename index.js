@@ -199,6 +199,11 @@ dispatch.on("statechange.charts", function(rawdata) {
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
+  // apply a sort field, if there is one
+  // only sort other_rows, to always keep toprow at the top
+  var sortoption = d3.select("select#sort").node().value;
+  if (sortoption) nested = sort(other_rows, sortoption, groups.bottom);
+
   // then structure data into cols, by colgroup, keeping the top row for the overview data
   var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
   colgroups.forEach(function(col) {
@@ -688,10 +693,6 @@ function nest(data,group) {
     .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
     .entries(data);
 
-  // go ahead and apply a sort field, if there is one
-  var sortoption = d3.select("select#sort").node().value;
-  if (sortoption) nested = sort(nested, sortoption, group);
-
   return nested;
 
 } // nest
@@ -719,7 +720,7 @@ function delegate_event(selected) {
   });
 }
 
-// custom sort data with optional order
+// custom sort function, with optional order
 function sort(data, sortoption, group) {
   var sortoptions = sortoption.split("#");
   var sortfield = sortoptions[0]; 
@@ -875,7 +876,7 @@ function scrollbar(height) {
   return height > windowHeight ? true : false;
 }
 
-// apply these options to filter the flat (not filtered) data, in sequence
+// apply these options to filter the flat (not nested) data, in sequence
 function apply_options(data) { 
   // apply country filter, if there is one
   var countryoption = d3.select("select#country").node().value;
