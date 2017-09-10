@@ -228,10 +228,9 @@ dispatch.on("statechange.charts", function(rawdata) {
   config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row
+    // clear out the data completely so we only show the nodata message
     if (col.values.length == 1) {
       col.values = [];
-      console.log('hi')
-      return;
     } 
 
     // - calculate total width and height of this groups chart

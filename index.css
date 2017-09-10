@@ -43,6 +43,10 @@ div.main {
   margin:10px;
 }
 
+div.chartcol {
+  min-height: 75px;
+}
+
 div.chart-outer {
   padding:15px 0;
 }
