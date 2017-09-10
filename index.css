@@ -351,10 +351,12 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div#select-container select, div#select-container .select2-container {
     max-width: 100%;
   }
-
   div.title-cell {
     font-size:24px;
     width:40%;
+  }
+  div.chartcol:not(:last-child) {
+    margin-bottom:1em;
   }
 
 

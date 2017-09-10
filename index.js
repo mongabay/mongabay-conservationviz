@@ -332,20 +332,25 @@ function drawmap(countries_keyed) {
       // add interactivity
       circle.data = country;
       circle.on('click',function(e) { 
+        map.closePopup();
+        clearCircles();
+        clearSquares();
+        this.openPopup();
         handleMarkerClick(e.target.data); 
       });
       circle.bindPopup(country.name + ": " + country.count);
       circle.on('mouseover', function (e) {
         // first clear any selections selected by other means
         clearCircles();
+        clearSquares();
         this.openPopup();
         this.setStyle(selectedStyle);
         selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
         map.closePopup();
-        // clear style, but only if a country is NOT selected in the country dropdown
-        if ($("select#country").val() == "") this.setStyle(defaultStyle);
+        // clear style
+        this.setStyle(defaultStyle);
         clearSquares();
       });
     }
