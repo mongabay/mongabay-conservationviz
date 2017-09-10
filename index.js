@@ -41,7 +41,7 @@ function drag(d) {
 }
 // and tooltip close button
 tooltip.select("span.tooltip-close")
-  .on("click", function() { d3.select(this.parentNode).style("display","none") });
+  .on("click", function() { clearSquares(); d3.select(this.parentNode).style("display","none") });
 
 // close tooltips when hovering outside the chart
 // otherwise they get in the way of the selects and other controls at the top
