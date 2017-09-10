@@ -191,11 +191,11 @@ dispatch.on("statechange.charts", function(rawdata) {
   // turn off any open tooltips, as the position will no longer correspond to a square
   d3.select("div.tooltip").style("display", "none");
 
-  // filter the data given current selections
+  // filter the raw data given current selections
   filtered = apply_options(rawdata);
   
   // then nest data by the two main groups (theme, variable)
-  // Note: we dont filter the top row ever, this just gets rawdata!
+  // Note: we don't filter the top row ever, this just gets rawdata!
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
@@ -471,6 +471,15 @@ function drawchart(data, container, tfast, group) {
   var charts = rows.selectAll("div.chart")
     .data(function(d) { return d.values; }, function(d) {return d.key});
 
+  // define chartgroup functions
+  var charttopfunction = function(d,i) {
+    var key = d3.select(this.parentNode).datum().key;
+    var offset = i == 1 ? config[group][key]["neutraloffset"] : i == 2 ? config[group][key]["minusoffset"] : 0;
+    var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
+    return offset + pad + "px";
+  };   
+
+
   // get rid of the old ones we don't need when doing an update
   charts.exit().remove();
 
@@ -481,12 +490,7 @@ function drawchart(data, container, tfast, group) {
       var c = clist.contains("toprow") ? " toprow" : "";      
       return d3.select(this).attr("class") + c; 
     })
-    .style("top", function(d, i) {
-      var key = d3.select(this.parentNode).datum().key;
-      var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
-      return offset + pad + "px";
-    })    
+    .style("top", charttopfunction) 
     .style("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
@@ -504,12 +508,7 @@ function drawchart(data, container, tfast, group) {
       return d3.select(this).attr("class") + c; 
     })
     .style("left", config[group]["textwidth"] + "px")
-    .style("top", function(d, i) {
-      var key = d3.select(this.parentNode).datum().key;
-      var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
-      return offset + pad + "px";
-    })
+    .style("top", charttopfunction) 
     .style("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
@@ -690,7 +689,7 @@ function resizeContainers() {
 function nest(data,group) { 
   var nested = d3.nest()
     .key(function(d) { return d[group] })
-    .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
+    .key(function(d) {  if (d.valence > -1) { if (d.valence == 0) {return 'neutral'; } return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
     .entries(data);
 
   return nested;
@@ -771,8 +770,7 @@ function calcCountryKeys(data) {
 // Iterate through data in order to calc:
 // - overall chart and column area width and height
 // - row offsets (spacing between rows)
-// - col offsets
-// - chart offset, for spacing between plus and minus rows
+// - chart offset, for spacing between plus, neutral, minus rows
 function calcOffsets(data, group) {
   // placeholder, for the data iteration, below
   var nextoffset = config[group]["buttonheight"]; // start not a 0, but rather after the button header height 
@@ -797,9 +795,11 @@ function calcOffsets(data, group) {
     // first look through values and get sums for plus and minus
     var plus = 0;
     var minus = 0;
+    var neutral = 0;
     d.values.forEach(function(d) {
       if (d.key == "plus") plus = d.values.length;
       if (d.key == "minus") minus = d.values.length;
+      if (d.key == "neutral") neutral = d.values.length;
     });
 
     // from these counts, figure out how many rows this takes
@@ -807,16 +807,19 @@ function calcOffsets(data, group) {
     config[group][d.key]["number_that_fit"] = number_that_fit;
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
-    var totalrows = plusrows + minusrows;
+    var neutralrows = Math.ceil(neutral / number_that_fit);
+    var totalrows = plusrows + minusrows + neutralrows;
 
     // save this for use when rendering
     config[group][d.key]["totalrows"] = totalrows; 
     config[group][d.key]["plusrows"]  = plusrows; 
     config[group][d.key]["minusrows"] = minusrows; 
+    config[group][d.key]["neutralrows"] = neutralrows; 
 
     // calc chart offsets for the minus chart, for this one row
     // this is based on the total count of plus rows, considering overflow
-    config[group][d.key]["chartoffset"] = plusrows * sqsize;
+    config[group][d.key]["neutraloffset"] = plusrows * sqsize;
+    config[group][d.key]["minusoffset"] = (plusrows * sqsize) + (neutralrows * sqsize);
 
     // Next, calc the row offset: rows * the height of one square, plus the bottom margin
     var pad = i == 0 ? config[group]["toprowpad"] : 0; // Top row (row 0) has some padding, so lets add that to row 1
@@ -825,7 +828,8 @@ function calcOffsets(data, group) {
     // add plus/minus counts at this level (to facilitate sorting)
     config[group][d.key]["pluscount"] = plus;
     config[group][d.key]["minuscount"] = minus;
-    config[group][d.key]["totalcount"] = plus + minus;
+    config[group][d.key]["neutralcount"] = neutral;
+    config[group][d.key]["totalcount"] = plus + minus + neutral;
 
     // keep a count of rows, from which to calculate total height
     config[group]["chartrows"] += totalrows; 
