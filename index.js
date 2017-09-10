@@ -123,13 +123,6 @@ function main(error, lookups, lookups_study, data) {
 
 }
 
-// listen for "load" and calculate global container dimensions based on incoming data
-// these will set the height for the top and bottom svg containers
-dispatch.on("load.setup", function(options) {
-
-
-});
-
 // add a load listener to populate some of the markup for headers, descriptive text, etc. 
 dispatch.on("load.descriptions", function(){
   
@@ -234,12 +227,19 @@ dispatch.on("statechange.charts", function(rawdata) {
   // send off data to the chart renderer, one col at a time
   config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
-      // - calculate total width and height of this groups chart
-      // - select the container, and give it an explicit height
-      // - draw
-      var colheight = calcOffsets(col.values,groups.bottom);
-      var container = d3.select("." + col.key + "-chart").style("height", colheight + config[groups.bottom]["buttonheight"] + "px");
-      drawchart(col.values, container, tfast, groups.bottom);
+    // check for nodata condition: col.values.len == 1 means there is only one row
+    if (col.values.length == 1) {
+      col.values = [];
+      console.log('hi')
+      return;
+    } 
+
+    // - calculate total width and height of this groups chart
+    // - select the container, and give it an explicit height
+    // - draw
+    var colheight = calcOffsets(col.values,groups.bottom);
+    var container = d3.select("." + col.key + "-chart").style("height", colheight + config[groups.bottom]["buttonheight"] + "px");
+    drawchart(col.values, container, tfast, groups.bottom);
   });
 
   // draw the map 
@@ -373,6 +373,12 @@ function drawchart(data, container, tfast, group) {
   // remove old rows
   rows.exit().remove();
 
+  // define row functions
+  var rowheight = function(d, i) {
+    var pad = i == 0 ? config[group]["toprowpad"] : 0;
+    return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
+  }
+
   // update existing ones left over
   rows.attr("class", "chartrow")
     .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
@@ -382,10 +388,7 @@ function drawchart(data, container, tfast, group) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
     })
-    .style("height", function(d,i) {
-      var pad = i == 0 ? config[group]["toprowpad"] : 0;
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
-    })
+    .style("height", rowheight)
 
   // create new rows if our updated dataset has more than the previous
   var rowenter = rows.enter().append("div")
@@ -396,10 +399,7 @@ function drawchart(data, container, tfast, group) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
     })
-    .style("height", function(d,i) {
-      var pad = i == 0 ? config[group]["toprowpad"] : 0;
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
-    });
+    .style("height", rowheight);
 
   //
   // TEXT LABEL WRAPPERS
@@ -530,7 +530,7 @@ function drawchart(data, container, tfast, group) {
   // update
   chartcontainers
     .attr("class","chartcontainer")
-    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
+    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px") 
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
@@ -541,6 +541,7 @@ function drawchart(data, container, tfast, group) {
 
   // enter
   chartcontainers.enter().append("svg")
+    .attr("overflow","visible")
     .attr("class","chartcontainer")
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
@@ -932,32 +933,43 @@ function clearCircles() {
   })
 }
 
-// select squares given a matching data attribute key and value
+// select all matching squares given a matching data attribute key and value
 function selectSquares(match) {
   var key = match.key; 
   var value = match.value;
+
+  // first delete any squares already created by selection
+  d3.selectAll("rect.selected").remove();
+
   d3.selectAll("rect")
     .each(function(d) {
       var rect = d3.select(this);
-      // because d[key] can be an "array", test for that and treat 
+      // because d[key] can be an "array", test for that and handle appropriately
+      // I'm not 100% sure why this is necessary, but if we don't have this, 
+      // some rects are coming up without data, despite being removed from the dom, just above 
+      if ( typeof d === "undefined" || !d.hasOwnProperty(key) ) { return };
       var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
       values.forEach(function(v) {
         if (v == value) {
-          // add a selected class
-          rect.classed("selected",true);
-          // bump up and to the left by 1px
-          // var x = rect.attr("x");
-          // var y = rect.attr("y");
-          // rect.attr("x", x - 1);
-          // rect.attr("y", y - 1);
+          // draw order prevents the correct display of stroke
+          // to work around this, repaint a selected rect in its place 
+          var x = rect.attr("x");
+          var y = rect.attr("y");
+          var width = rect.attr("width");
+          var height = rect.attr("height");
+          var svg = rect.node().parentNode;
+          var r = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+          r.setAttribute("class","selected");
+          r.setAttribute("x",x);
+          r.setAttribute("y",y);
+          r.setAttribute("width",width);
+          r.setAttribute("height",height);
+          svg.appendChild(r);
         }
       }); 
     });
 }
-// and the correlary: clear squares completely
+// and the correlary: remove selected squares completely
 function clearSquares() {
-  d3.selectAll("rect.selected")
-    .each(function(d) {
-      d3.select(this).classed("selected", false);
-    });
+  d3.selectAll("rect.selected").remove();
 }

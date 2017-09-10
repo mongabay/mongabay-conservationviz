@@ -58,7 +58,7 @@ div.chartrow.toprow {
 }
 
 svg.chartcontainer {
-  pointer-events: none;
+  overflow: visible;
 }
 
 div.textwrapper {
@@ -90,6 +90,7 @@ div.tooltip {
   z-index: 1000;
   max-width:183px;
   display:none;
+  cursor:all-scroll;
 }
 
 div.tooltip span.tooltip-close {
@@ -132,7 +133,6 @@ div.tooltip div.tooltip-conclusion span {
 rect {
   shape-rendering: crispEdges;
   cursor: pointer;
-  pointer-events: all;
   z-index:10000;
 }
 
@@ -141,6 +141,7 @@ rect.selected {
   stroke-width:3px;
   stroke-opacity:1 !important;
   stroke: #7E3177 !important;
+  fill-opacity: 0;
 }
 
 rect.plus    { fill: #309223; }
