@@ -338,11 +338,12 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 /*@media queries*/
 
-@media (max-width: 1400px) {
+/*@media (max-width: 1400px) {
   div.btn-header {
-    min-height: 80px;
+    min-height: 100px;
   }
 }
+*/
 
 @media (max-width: 1200px) {
   div.title-cell {
@@ -356,17 +357,33 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div.legend-container {
     float: right;
   }
-  div#select-container select, div#select-container .select2-container {
-    max-width: 100%;
-  }
-  div.title-cell {
-    font-size:24px;
-    width:40%;
-  }
-  div.chartcol:not(:last-child) {
-    margin-bottom:1em;
+
+  div.button-wrapper {
+    max-height:50px;
+    min-height:50px;
   }
 
+  div.btn-header {
+    padding:0;
+    height:auto;
+  }
+
+  div.filter-wrapper {
+    text-align:center;
+  }
+
+  div#select-container select, div#select-container .select2-container {
+    /*max-width: 350px;*/
+    margin:0 auto;
+    text-align:left;
+  }
+  div.title-cell {
+    font-size:26px;
+    width:50%;
+  }
+  div.col-md-4:not(:last-child) {
+    margin-bottom:1em;
+  }
 
 }
 
@@ -395,8 +412,8 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 @media (max-width: 600px) {
 
   div.title-cell {
-    font-size:16px;
-    width:45%;
+    font-size:20px;
+    width:50%;
   }
 
 }

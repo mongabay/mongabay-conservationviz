@@ -56,21 +56,21 @@
     <!-- top buttons -->
     <div id="button-container" class="container-fluid">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 button-wrapper">
           <div class="btn-header btn-green table-div">
             <div class="table-cell title-cell">environmental</div>
             <div class="table-cell icon-cell"><img class="img-responsive" src="./icons/environmental_large.png" /></div>
             <div class="table-cell text-cell env"></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 button-wrapper">
           <div class="btn-header btn-blue table-div">
             <div class="table-cell title-cell">social</div>
             <div class="table-cell icon-cell"><img class="img-responsive" src="./icons/social_large.png" /></div>
             <div class="table-cell text-cell soc"></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 button-wrapper">
           <div class="btn-header btn-orange table-div">
             <div class="table-cell title-cell">economic</div>
             <div class="table-cell icon-cell"><img class="img-responsive" src="./icons/economic_large.png" /></div>
@@ -84,17 +84,17 @@
     <div id="select-container" class="container-fluid">
       <div class="row">
         <!-- country filter -->
-        <div class="col-sm-3 col-sm-offset-1 col-md-offset-1 col-md-3">
+        <div class="filter-wrapper col-sm-3 col-sm-offset-1 col-md-offset-1 col-md-3">
           <select id="country" placeholder="Select a country" style="width:100%;"></select>
         </div>
 
         <!-- strength filter -->
-        <div class="col-sm-3 col-md-3">
+        <div class="filter-wrapper col-sm-3 col-md-3">
           <select id="evidence" placeholder="Select type of evidence" style="width:100%;"></select>
         </div>
 
         <!-- sort options -->
-        <div class="col-sm-3 col-md-3">
+        <div class="filter-wrapper col-sm-3 col-md-3">
           <select id="sort" placeholder="Sort by evidence" style="width:100%;">
             <option></option>
             <option value="pluscount#reverse">Most positive evidence</option>
