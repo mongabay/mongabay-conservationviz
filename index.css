@@ -37,6 +37,12 @@ div.nothing {
   color: #9e9e9e;
 }
 
+div.details {
+  float:right;
+  margin-right:1em;
+  cursor:pointer;
+}
+
 /* chart containers and related elements */
 
 div.main {

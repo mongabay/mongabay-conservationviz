@@ -44,6 +44,10 @@
   <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet"> -->
   <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500" rel="stylesheet"> -->
   <link href="./offline/fonts.css" rel="stylesheet">
+
+  <!-- font awesome -->
+  <script src="https://use.fontawesome.com/234f271872.js"></script>
+
 </head>
 
 <body>
@@ -146,28 +150,28 @@
 
     <div class="chart-container container-fluid">
       <div class="row">
-        <div class="col-md-4 chartcol env-chart">
+        <div class="col-md-4 chartcol env-chart" data-details="show">
           <div class="btn-bottom-header btn-green table-div">
             <div class="table-cell icon-cell"><img src="./icons/environmental_large.png" /></div>
-            <div class="table-cell subtitle-cell">environmental</div>
+            <div class="table-cell subtitle-cell">environmental<div class="details" data-col="env" onclick="toggledetails(event)"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
           </div>
           <div class="chart-outer env-chart">
             <div class="nothing">No data to show</div>
           </div>
         </div>
-        <div class="col-md-4 chartcol soc-chart">
+        <div class="col-md-4 chartcol soc-chart" data-details="show">
           <div class="btn-bottom-header btn-blue table-div">
             <div class="table-cell icon-cell"><img src="./icons/social_large.png" /></div>
-            <div class="table-cell subtitle-cell">social</div>
+            <div class="table-cell subtitle-cell">social<div class="details" data-col="soc"  onclick="toggledetails(event)"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
           </div>          
           <div class="chart-outer soc-chart">
             <div class="nothing">No data to show</div>
           </div>
         </div>
-        <div class="col-md-4 chartcol econ-chart">
+        <div class="col-md-4 chartcol econ-chart" data-details="show">
           <div class="btn-bottom-header btn-orange table-div">
             <div class="table-cell icon-cell"><img src="./icons/economic_large.png" /></div>
-            <div class="table-cell subtitle-cell">economic</div>
+            <div class="table-cell subtitle-cell">economic<div class="details" data-col="econ" onclick="toggledetails(event)"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
           </div>
           <div class="chart-outer econ-chart">
             <div class="nothing">No data to show</div>

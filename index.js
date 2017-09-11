@@ -187,6 +187,11 @@ dispatch.on("load.dropdowns", function(options) {
 
 
 // register a callback to be invoked which updates the chart when "statechange" occurs
+// apply a number of conditional filters and sorts here that determine what data is shown
+// -- filter raw data by country and type of evidence (but not the first, summary row)
+// -- sort by strength of evidence (but always keep the summary row on top)
+// -- toggle show/hide the "details" (everything row but the top row)
+// by their nature these filters have to be applied at different points in the function, which is a bit messy
 dispatch.on("statechange.charts", function(rawdata) {
   // turn off any open tooltips, as the position will no longer correspond to a square
   d3.select("div.tooltip").style("display", "none");
@@ -232,17 +237,22 @@ dispatch.on("statechange.charts", function(rawdata) {
   // send off data to the chart renderer, one col at a time
   config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
-    // check for nodata condition: col.values.len == 1 means there is only one row
-    // clear out the data completely so we only show the nodata message
+    // check for nodata condition: col.values.len == 1 means there is only one row:
+    // clear out the data completely so we only show the "no data" div
     if (col.values.length == 1) {
       col.values = [];
     } 
+
+    // check if we are showing or hiding details
+    // if hide, remove all but the top level summary chart
+    if ($('div.' + col.key + '-chart').data().details == 'hide' ) col.values = [col.values[0]];
 
     // - calculate total width and height of this groups chart
     // - select the container, and give it an explicit height
     // - draw
     var colheight = calcOffsets(col.values,groups.bottom);
-    var container = d3.select("." + col.key + "-chart").style("height", colheight + config[groups.bottom]["buttonheight"] + "px");
+    var fullheight = colheight + config[groups.bottom]["buttonheight"] + "px";
+    var container = d3.select("." + col.key + "-chart").style("height", fullheight).attr("data-fullheight", fullheight);
     drawchart(col.values, container, tfast, groups.bottom);
   });
 
@@ -348,7 +358,7 @@ function drawmap(countries_keyed) {
         selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
-        map.closePopup();
+        if (! isMobile() ) map.closePopup();
         // clear style
         this.setStyle(defaultStyle);
         clearSquares();
@@ -981,4 +991,21 @@ function selectSquares(match) {
 // and the correlary: remove selected squares completely
 function clearSquares() {
   d3.selectAll("rect.selected").remove();
+}
+
+// show or hide chart details below the top chart
+function toggledetails(e) {
+  // hide or show this cols details
+  var col = e.target.parentElement.getAttribute("data-col");
+
+  var target = $('div.' + col + '-chart');
+  var type = target.data('details') == 'show' ? 'hide' : 'show';
+  var type = target.data('details', type);
+
+  // toggle the message
+  $('div.' + col + '-chart span.details-msg').toggle();
+
+  // dispatch to redraw the charts
+  dispatch.call("statechange",this,rawdata);
+
 }
