@@ -148,7 +148,7 @@ rect {
 
 rect.selected {
   cursor:pointer;
-  stroke-width:3px;
+  stroke-width:4px;
   stroke-opacity:1 !important;
   stroke: #07395B !important;
   fill-opacity: 0;
@@ -338,18 +338,19 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 /*@media queries*/
 
-/*@media (max-width: 1400px) {
+@media (max-width: 1400px) {
   div.btn-header {
-    min-height: 100px;
+    min-height: 80px;
   }
 }
-*/
+
 
 @media (max-width: 1200px) {
   div.title-cell {
     font-size:20px;
     width:62%;
   }
+
 
 }
 
@@ -359,13 +360,14 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   }
 
   div.button-wrapper {
-    max-height:50px;
-    min-height:50px;
+    /*max-height:50px;*/
+    /*min-height:50px;*/
   }
 
   div.btn-header {
-    padding:0;
+    /*padding:0;*/
     height:auto;
+    min-height:auto;
   }
 
   div.filter-wrapper {
