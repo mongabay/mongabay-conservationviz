@@ -143,16 +143,16 @@ id,zb_id,valence,continent,fips,strategy,theme,variable,type,conclusion
 142,1.42.7,1,southandcentralamerica,BR,FSC,ECON,pricepremium,type3,"Price increased by 30%, but production volume decreased"
 143,1.42.8,0,asia,MY,FSC,ECON,pricepremium,type3,No price premium achieved (KPKKT)
 144,1.42.9,-1,southandcentralamerica,BR,FSC,ECON,profit,type3,Negative NPV under all scenarios (Cikel) after certification
-145,1.43.1,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type2,FSC certification lead to fewer malnourished people in communities associated with the logging concessions
-146,1.43.10,0,asia,ID,FSC,SOC,infrastructureandinstitutions,type2,FSC certification did not lead to an increase in health centres
-147,1.43.2,1,asia,ID,FSC,SOC,directeconomicbenefits,type2,FSC certification resulted in more private funding available
-148,1.43.3,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type2,FSC certification lead to reduced air pollution
-149,1.43.4,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type2,FSC certification lead to less firewood dependence in communities associated with the logging concessions
-150,1.43.5,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type2,FSC certification lead to a lower incidence of air-pollution related diseases
-151,1.43.6,0,asia,ID,FSC,ENV,waterregulationerosionprevention,type2,FSC certification did not lead to a reduction in water pollution
-152,1.43.7,1,asia,ID,FSC,ENV,deforestationfragmentationanddegradation,type2,FSC certification caused a 4.97% reduction in deforestation in certified villages
-153,1.43.8,0,asia,ID,FSC,ENV,deforestationfragmentationanddegradation,type2,FSC certification did not lead to a change in Forest fire occurrence
-154,1.43.9,0,asia,ID,FSC,SOC,infrastructureandinstitutions,type2,FSC certification did not lead to a change in street lighting in villages associated with the concession
+145,1.43.1,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to fewer malnourished people in communities associated with the logging concessions
+146,1.43.10,0,asia,ID,FSC,SOC,infrastructureandinstitutions,type1,FSC certification did not lead to an increase in health centres
+147,1.43.2,1,asia,ID,FSC,SOC,directeconomicbenefits,type1,FSC certification resulted in more private funding available
+148,1.43.3,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to reduced air pollution
+149,1.43.4,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to less firewood dependence in communities associated with the logging concessions
+150,1.43.5,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to a lower incidence of air-pollution related diseases
+151,1.43.6,0,asia,ID,FSC,ENV,waterregulationerosionprevention,type1,FSC certification did not lead to a reduction in water pollution
+152,1.43.7,1,asia,ID,FSC,ENV,deforestationfragmentationanddegradation,type1,FSC certification caused a 4.97% reduction in deforestation in certified villages
+153,1.43.8,0,asia,ID,FSC,ENV,deforestationfragmentationanddegradation,type1,FSC certification did not lead to a change in Forest fire occurrence
+154,1.43.9,0,asia,ID,FSC,SOC,infrastructureandinstitutions,type1,FSC certification did not lead to a change in street lighting in villages associated with the concession
 155,1.44.1,1,asia,MY,FSC,ENV,collateraldamage,type3,"Under RIL, 21% of original stems were damaged, compared to 44% under CL."
 156,1.44.10,-1,asia,MY,FSC,ECON,workerproductivity,type3,Felling time was significantly higher under RIL
 157,1.44.2,1,asia,MY,FSC,SOC,compliancewithharvestregulations,type3,Steep slopes not all logged under RIL
@@ -173,7 +173,7 @@ id,zb_id,valence,continent,fips,strategy,theme,variable,type,conclusion
 172,1.48.2,0,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter was about the same for RIL and CL
 173,1.49.1,0,asia,MY,FSC,ECON,profit,type3,Profit per hectare was about the same under RIL and CL
 174,1.49.2,1,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter was lower under RIL
-175,1.51.1,0,southandcentralamerica,MX,FSC,ENV,deforestationfragmentationanddegradation,type2,The results offer no evidence that FSC certification affects deforestation.
+175,1.51.1,0,southandcentralamerica,MX,FSC,ENV,deforestationfragmentationanddegradation,type1,The results offer no evidence that FSC certification affects deforestation.
 176,1.52.1,1,southandcentralamerica,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Species richness in RIL concessions is higher than in CL concessions.
 177,1.52.2,1,pantropical,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Bird species richness in RIL concessions was marginally higher than in CL concessions.
 178,1.52.3,1,pantropical,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Arthropod species richness in RIL concessions was higher than in CL concessions.

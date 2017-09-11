@@ -1,11 +1,11 @@
 key,name,latitude,longitude,parent
+alltext,All findings,,,
 ENV,Environmental,,,env
 ECON,Social,,,econ
 SOC,Economic,,,soc
 strength0,Unknown,,,
-type1,"Case Report, Study I & II",,,
-type2,Study III & RCT,,,
-type3,Meta-analysis & systematic review,,,
+type1,Case Study,,,
+type3,Meta-analysis or Causal,,,
 africa,Africa,,,
 southandcentralamerica,South and Central America,,,
 asia,Asia,,,
@@ -30,7 +30,7 @@ totalcostofloggingoperations,Total cost of logging operations,,,econ
 accesstoland,Access to land,,,soc
 awarenessempowermentparticipation,"Awareness, empowerment, participation",,,soc
 compliancewithlawsandregulations,Compliance with laws and regulations,,,soc
-directeconomicbenefits,Direct economic benefits,,,soc
+directeconomicbenefits,Direct economic benefits,,,econ
 infrastructureandinstitutions,Infrastructure and Institutions,,,soc
 livingandworkingconditionsofemployees,Living and working conditions of employees,,,soc
 illegalhuntingloggingmining,"Illegal hunting, logging, mining",,,env

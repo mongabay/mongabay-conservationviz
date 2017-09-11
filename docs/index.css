@@ -9,28 +9,66 @@ body {
   overflow-x: hidden;
 }
 
+/* button/headers at the top of the page, and above the charts */
+div#button-container {margin-bottom: 1em;}
+div.btn-header {height:60px; width: 100%; color: #fff; padding:1em;}
+div.btn-bottom-header {height:30px; width: 100%; color: #fff;}
+div.btn-green {background: #307538;}
+div.btn-blue {background: #F28123}
+div.btn-orange {background: #42858C}
+div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:65%; text-align:center;}
+div.subtitle-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:13px; text-align:left;}
+
+div.btn-bottom-header div.icon-cell img {width:21px; margin: 2px 4px 0 5px;}
+div.btn-bottom-header div.icon-cell { width: 35px; }
+
+div.table-div {
+  display:table;
+  table-layout: fixed;
+}
+
+div.table-cell {
+  display:table-cell;
+  vertical-align: middle;
+}
+
+div.nothing {
+  margin-left: 10px;
+  color: #9e9e9e;
+}
+
+div.details {
+  float:right;
+  margin-right:1em;
+  cursor:pointer;
+}
+
 /* chart containers and related elements */
 
 div.main {
   margin:10px;
 }
 
-div.top, div.bottom {
-  position:relative;
+div.chartcol {
+  min-height: 75px;
 }
 
-div.top {
-  margin-top:10px;
-  margin-bottom:10px;
-}
-
-div.bottom {
-  margin-top:10px;
+div.chart-outer {
+  padding:15px 0;
 }
 
 div.chartrow {
   position:absolute;
   display:table;
+  width: calc(100% - 30px);
+}
+
+div.chartrow.toprow {
+  background: #EAEAEA;
+}
+
+svg.chartcontainer {
+  overflow: visible;
 }
 
 div.textwrapper {
@@ -40,6 +78,12 @@ div.textwrapper {
 div.text {
   display:table-cell;
   vertical-align: middle;
+  padding-left:10px;
+}
+
+div.chartrow.toprow div.text {
+  font-weight: 500;
+  padding-top: 10px;
 }
 
 div.chart {
@@ -56,6 +100,7 @@ div.tooltip {
   z-index: 1000;
   max-width:183px;
   display:none;
+  cursor:all-scroll;
 }
 
 div.tooltip span.tooltip-close {
@@ -93,34 +138,42 @@ div.tooltip div.tooltip-conclusion span {
   margin-bottom:4px;
 }
 
-/* chart rectangles */
+/* chart rects */
+
+rect {
+  shape-rendering: crispEdges;
+  cursor: pointer;
+  z-index:10000;
+}
 
 rect.selected {
   cursor:pointer;
-  fill: #7E3177 !important;
-  opacity:1 !important;
+  stroke-width:3px;
+  stroke-opacity:1 !important;
+  stroke: #07395B !important;
+  fill-opacity: 0;
 }
 
-rect.plus    { fill: #309223; }
+rect.plus    { fill: #52BF58; }
+span.plus    { background: #52BF58; }
 rect.neutral { fill: #FACB57; }
-rect.minus   { fill: #d7063d; }
-rect.type3 { opacity: 0.6; }
-rect.type2 { opacity: 0.8; }
-rect.type1 { opacity: 1; }
+span.neutral { background: #FACB57; }
+rect.minus   { fill: #BC2A2A; }
+span.minus   { background: #BC2A2A; }
+rect.type3   { fill-opacity: 0.5; }
+span.type3   { opacity: 0.5; }
+rect.type1   { fill-opacity: 1; }
+span.type2   { opacity: 1; }
 
 /* the legend */
 
-div.legend-container {height: 100px; margin-top:2em;}
+div.legend-container {height: 100px; margin: 2em auto;}
 div.legend {clear:both; width: auto; height:20px; margin-bottom:2px;}
 div.legend span {float:left;}
-span.rect {width: 20px; height: 20px; margin-right:2px;}
-span.legend-text {width: auto; height: 20px; line-height:20px;margin-left:4px;}
-span.plus    { background: #309223;}
-span.neutral { background: #FACB57; }
-span.minus   { background: #d7063d; }
-span.type1   { opacity: 1.0; }
-span.type2   { opacity: 0.8; }
-span.type3   { opacity: 0.6; }
+span.rect, span.legend-text {margin:0 30px 10px;}
+span.legend-title {display:inline-block; max-width:84px; text-align: center;}
+span.rect {width: 20px; height: 20px;}
+span.legend-text {width: auto; min-width:50px; height: 20px; line-height:20px;}
 span.angled  { 
   position:relative;
   bottom:-4px;
@@ -191,13 +244,13 @@ a#clearall:hover {
 
 div#select-container {
   width: 100%;
-  max-width: 1020px;
+  max-width: 1300px;
+  margin: 0 auto 0.6em;
 }
 
-div#select-container div.row {
-  width:90%;
+div#select-container select, div#select-container .select2-container{
+  max-width: 300px;
 }
-
 /* LEAFLET OVERRIDES */
 
 .leaflet-popup-content-wrapper {
@@ -285,18 +338,56 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 /*@media queries*/
 
-@media (max-width: 992px) {
-  div.clearall-container {
-    position:absolute;
-    top:11px; right:10px;
+/*@media (max-width: 1400px) {
+  div.btn-header {
+    min-height: 100px;
   }
+}
+*/
 
-  div.legend-container {
-    float: right;
+@media (max-width: 1200px) {
+  div.title-cell {
+    font-size:20px;
+    width:62%;
   }
 
 }
 
+@media (max-width: 992px) {
+  div.legend-container {
+    float: right;
+  }
+
+  div.button-wrapper {
+    max-height:50px;
+    min-height:50px;
+  }
+
+  div.btn-header {
+    padding:0;
+    height:auto;
+  }
+
+  div.filter-wrapper {
+    text-align:center;
+  }
+
+  div#select-container select, div#select-container .select2-container {
+    /*max-width: 350px;*/
+    margin:0 auto;
+    text-align:left;
+  }
+  div.title-cell {
+    font-size:26px;
+    width:50%;
+  }
+  div.col-md-4:not(:last-child) {
+    margin-bottom:1em;
+  }
+
+}
+
+/* iPad portrait */
 @media (max-width: 768px) {
   div.clearall-container {
     text-align: center;
@@ -318,4 +409,15 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 }
 
+@media (max-width: 600px) {
+
+  div.title-cell {
+    font-size:20px;
+    width:50%;
+  }
+
+}
+
+@media (max-width: 360px) {
+}
 

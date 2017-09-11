@@ -14,18 +14,34 @@ var circleScale;
 var minzoom= 2;
 var maxzoom= 18;
 
+// track whether we've dragged a tooltip or not
+var dragged = false;
+
 // circle colors on map, for selected and unselected
 var circlecolors = {
   "default": "#64b0e0",
-  "selected": "#7E3177",
+  "selected": "#07395B",
 }
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
 
 // define the tooltips
-var tooltip = d3.select("div.tooltip");
+var tooltip = d3.select("div.tooltip")
+  .call(d3.drag().on("drag", drag)
+);
+// and tooltip drag behavior
+function drag(d) {
+  dragged = true;
+  var tip = d3.select(this);
+  var top = parseInt(tip.style("top"));
+  var left = parseInt(tip.style("left"));
+  var dy = top + d3.event.dy + "px";  
+  var dx = left + d3.event.dx + "px";
+  d3.select(this).style("top", dy).style("left", dx);
+}
+// and tooltip close button
 tooltip.select("span.tooltip-close")
-  .on("click", function() { d3.select(this.parentNode).style("display","none") });
+  .on("click", function() { clearSquares(); d3.select(this.parentNode).style("display","none") });
 
 // close tooltips when hovering outside the chart
 // otherwise they get in the way of the selects and other controls at the top
@@ -99,7 +115,7 @@ function main(error, lookups, lookups_study, data) {
 
   // Data prep all done!
   // call our dispatch events with `this` context, and corresponding data
-  dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed}); 
+  dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed, data: data}); 
   dispatch.call("statechange", this, data);
   // finally, fit the map to bounds one time, this will always be the extent, despite state changes
   // cannot fit bounds to circles for some reason, so we fit to points instead
@@ -107,21 +123,21 @@ function main(error, lookups, lookups_study, data) {
 
 }
 
-// listen for "load" and calculate global container dimensions based on incoming data
-// these will set the height for the top and bottom svg containers
-dispatch.on("load.setup", function(options) {
-  // calc offsets for top and bottom
-  var data = nest(rawdata, groups.top);
-  calcOffsets(data, groups.top);
+// add a load listener to populate some of the markup for headers, descriptive text, etc. 
+dispatch.on("load.descriptions", function(){
+  
+  // adds the descriptive words for each theme
+  var keys = Object.keys(words);
+  keys.forEach(function(key) {
+    var text = words[key];
+    var elem = "div.text-cell." + key;
+    $(elem).text(text);
+  });
 
-  var data = nest(rawdata,groups.bottom);
-  calcOffsets(data, groups.bottom);
+  // adds the description/explanatory text next to the legend
+  $('div.description-container').html(description);
 
-  // and then (optionally) resize: we could resize here, or on "statechange"
-  // but if not done on "statechange" then we do have to do it on "resize"
-  resizeContainers(); 
-
-});
+})
 
 // register a listener for "load" and create dropdowns for various fiters
 dispatch.on("load.dropdowns", function(options) {
@@ -159,7 +175,7 @@ dispatch.on("load.dropdowns", function(options) {
     select.select2({
       placeholder: select.attr("placeholder"),
       minimumResultsForSearch: Infinity,
-      allowClear: false
+      allowClear: true
     }).show();
   });
   // because we're using select2, and these options are added dynamically, 
@@ -171,29 +187,74 @@ dispatch.on("load.dropdowns", function(options) {
 
 
 // register a callback to be invoked which updates the chart when "statechange" occurs
-dispatch.on("statechange.charts", function(data) {
-  // filter the data given current selections
-  filtered = apply_options(data);
-  
+// apply a number of conditional filters and sorts here that determine what data is shown
+// -- filter raw data by country and type of evidence (but not the first, summary row)
+// -- sort by strength of evidence (but always keep the summary row on top)
+// -- toggle show/hide the "details" (everything row but the top row)
+// by their nature these filters have to be applied at different points in the function, which is a bit messy
+dispatch.on("statechange.charts", function(rawdata) {
   // turn off any open tooltips, as the position will no longer correspond to a square
   d3.select("div.tooltip").style("display", "none");
 
-  // Top chart: nest, and draw
-  data = nest(filtered,groups.top);
-  calcOffsets(data,groups.top);
-  var container = d3.select(".top");
-  drawchart(data, container, tfast, groups.top);
+  // filter the raw data given current selections
+  filtered = apply_options(rawdata);
+  
+  // then nest data by the two main groups (theme, variable)
+  // Note: we don't filter the top row ever, this just gets rawdata!
+  var toprow = nest(rawdata, groups.top);
+  var other_rows = nest(filtered,groups.bottom);
 
-  // Bottom chart: nest, and draw
-  data = nest(filtered,groups.bottom);
-  calcOffsets(data,groups.bottom);
-  var container = d3.select(".bottom");
-  drawchart(data, container, tfast, groups.bottom);
+  // apply a sort field, if there is one
+  // only sort other_rows, to always keep toprow at the top
+  var sortoption = d3.select("select#sort").node().value;
+  if (sortoption) nested = sort(other_rows, sortoption, groups.bottom);
 
-  // resize
-  // an option, but this means containers resize to fit charts, and everything bounces around
-  // for now, only apply on mobile
-  if (isMobile()) resizeContainers(); 
+  // then structure data into cols, by colgroup, keeping the top row for the overview data
+  var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
+  colgroups.forEach(function(col) {
+    // add a first row from old "top" data
+    toprow.forEach(function(row){
+      if (row.key.toLowerCase() == col) {
+        coldata.forEach(function(c) {
+          if (c.key == col) {
+            c.values.push({key: row.key, values: row.values});
+          }
+        }) 
+      }
+    })
+    // add the remainder of the column from the old "bottom" data
+    other_rows.forEach(function(row) {
+      if (row.values[0].values[0].theme.toLowerCase() == col) {
+        coldata.forEach(function(c) {
+          if (c.key == col) {
+            c.values.push({key: row.key, values: row.values});
+          }
+        })          
+      }
+    })
+  })
+
+  // send off data to the chart renderer, one col at a time
+  config[groups.bottom]["colwidth"] = $(".chartcol").width();
+  coldata.forEach(function(col, i){
+    // check for nodata condition: col.values.len == 1 means there is only one row:
+    // clear out the data completely so we only show the "no data" div
+    if (col.values.length == 1) {
+      col.values = [];
+    } 
+
+    // check if we are showing or hiding details
+    // if hide, remove all but the top level summary chart
+    if ($('div.' + col.key + '-chart').data().details == 'hide' ) col.values = [col.values[0]];
+
+    // - calculate total width and height of this groups chart
+    // - select the container, and give it an explicit height
+    // - draw
+    var colheight = calcOffsets(col.values,groups.bottom);
+    var fullheight = colheight + config[groups.bottom]["buttonheight"] + "px";
+    var container = d3.select("." + col.key + "-chart").style("height", fullheight).attr("data-fullheight", fullheight);
+    drawchart(col.values, container, tfast, groups.bottom);
+  });
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
@@ -262,7 +323,6 @@ function drawmap(countries_keyed) {
   });
   // go over countries, and make circles. 
   // Before we start figure out what style to use
-  var style = somethingSelected() ? selectedStyle : defaultStyle;
   countries.forEach(function(name){
     // skip countries that don't have matching name, counts, lat/lngs, etc.
     if (countries_keyed[name] === undefined) return;
@@ -278,24 +338,29 @@ function drawmap(countries_keyed) {
       // get an area from scale function, calc the radius, and then add the circles      
       var area = circleScale(country.count);
       var radius = Math.sqrt(area/Math.PI);
-      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(style).addTo(circles);
+      var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(defaultStyle).addTo(circles);
       // add interactivity
       circle.data = country;
       circle.on('click',function(e) { 
+        map.closePopup();
+        clearCircles();
+        clearSquares();
+        this.openPopup();
         handleMarkerClick(e.target.data); 
       });
       circle.bindPopup(country.name + ": " + country.count);
       circle.on('mouseover', function (e) {
-        // first clear any selected circles selected by other means
+        // first clear any selections selected by other means
         clearCircles();
+        clearSquares();
         this.openPopup();
         this.setStyle(selectedStyle);
         selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
-        map.closePopup();
-        // clear style, but only if a country is NOT selected in the country dropdown
-        if ($("select#country").val() == "") this.setStyle(defaultStyle);
+        if (! isMobile() ) map.closePopup();
+        // clear style
+        this.setStyle(defaultStyle);
         clearSquares();
       });
     }
@@ -327,51 +392,33 @@ function drawchart(data, container, tfast, group) {
   // remove old rows
   rows.exit().remove();
 
+  // define row functions
+  var rowheight = function(d, i) {
+    var pad = i == 0 ? config[group]["toprowpad"] : 0;
+    return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
+  }
+
   // update existing ones left over
   rows.attr("class", "chartrow")
-    .style("width", config[group]["colwidth"] + "px")
+    .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
     .transition(tfast)
-    .style("left", function(d) {
-      var x = 0; // col offset
-      // which column are we in?
-      var col = config[group][d.key]["col"];
-      // define the start x position, column * colwidth, minus one colwidth
-      var fullcol = config[group]["colwidth"];
-      var x = (col * fullcol) - fullcol;
-      // not sure why this works, multiplying by col-1
-      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
-      return x + "px";
-    })
+    .style("left", 15)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
     })
-    .style("height", function(d,i) {
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px";
-    });
+    .style("height", rowheight)
 
   // create new rows if our updated dataset has more than the previous
   var rowenter = rows.enter().append("div")
     .attr("class", "chartrow")
-    .style("left", function(d) {
-      var x = 0; // col offset
-      // which column are we in?
-      var col = config[group][d.key]["col"];
-      // define the start x position, column * colwidth, minus one colwidth
-      var fullcol = config[group]["colwidth"];
-      var x = (col * fullcol) - fullcol;
-      // not sure why this works, multiplying by col-1
-      if (col > 1) x += (config[group]["colmargin"] * (col - 1));
-      return x + "px";
-    })
+    .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
+    .style("left", 15)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
       return y + "px";
     })
-    .style("height", function(d,i) {
-      return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + "px";
-    })
-    .style("width", config[group]["colwidth"] + "px");
+    .style("height", rowheight);
 
   //
   // TEXT LABEL WRAPPERS
@@ -397,35 +444,19 @@ function drawchart(data, container, tfast, group) {
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  text
-    .text(function(d) {
-      return lookup[d.key]["name"]
-    })
-    // .style("font-size", function() { return config[group]["labelsize"] + "px"; })
-    .style("color",function(d) {
-      // color the text by the value defined in the lookup for this key
-      var parent = lookup[d.key]["parent"];
-      return colors[parent];
+  text.text(function(d) {
+    var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+    return text;
   });
 
   // enter
   text.enter().append("div")
     .attr("class","text")
     .text(function(d) {
-      return lookup[d.key]["name"]
+      var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+      return text;
     })
     .style("font-size", function() { return config[group]["labelsize"] + "px"; })
-    .style("color",function(d) {
-      // color the text by the value defined in the lookup for this key
-      var parent = lookup[d.key]["parent"];
-      return colors[parent];
-    })
-    .on("mouseover", function(d) { 
-      d3.select(this).style("color", function() { 
-        return shadeColor(colors[lookup[d.key]["parent"]],-0.3);
-      });  
-    })
-    .on("mouseout", function(d) { d3.select(this).style("color", colors[lookup[d.key]["parent"]]) })
     .on("click", function(d) {
       // update the selected group details, so we can track this, and apply with other filters 
       // value is simply the data key of the clicked upon label
@@ -447,35 +478,6 @@ function drawchart(data, container, tfast, group) {
   text.exit().remove();
 
   //
-  // TEXT ATTRIBUTE FOR STUDY COUNT
-  //
-  var textwrappers = container.selectAll("div.textwrapper");
-  var textcount = textwrappers.selectAll("div.count")
-    .data(function(d) {return [d]}, function(d) {return d.key});
-
-  // update
-  textcount
-    .text(function(d) {
-      var count = config[group][d.key]["totalcount"]; 
-      var studies_text = count == 1 ? " study" : " studies";
-      return  count + studies_text;
-    })
-    .style("font-size", config[group]["countsize"] + "px");
-
-  // enter
-  textcount.enter().append("div")
-    .attr("class","count")
-    .text(function(d) {
-      var count = config[group][d.key]["totalcount"]; 
-      var studies_text = count == 1 ? " study" : " studies";
-      return  count + studies_text;
-    })
-    .style("font-size", config[group]["countsize"] + "px");
-
-  // exit
-  textcount.exit().remove();
-
-  //
   // CHART GROUPS
   //
   // create chart groups for each of our chart categories
@@ -484,31 +486,50 @@ function drawchart(data, container, tfast, group) {
   var charts = rows.selectAll("div.chart")
     .data(function(d) { return d.values; }, function(d) {return d.key});
 
+  // define chartgroup functions
+  var charttopfunction = function(d,i) {
+    var key = d3.select(this.parentNode).datum().key;
+    var offset = i == 1 ? config[group][key]["neutraloffset"] : i == 2 ? config[group][key]["minusoffset"] : 0;
+    var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
+    return offset + pad + "px";
+  };   
+
+
   // get rid of the old ones we don't need when doing an update
   charts.exit().remove();
 
   // update existing ones left over
   charts.attr("class", "chart")
-    .style("top", function(d, i) {
-      var key = d3.select(this.parentNode).datum().key;
-      var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      return offset + "px";
+    .attr("class", function(d,i) { 
+      var clist = d3.select(this).node().parentNode.classList;
+      var c = clist.contains("toprow") ? " toprow" : "";      
+      return d3.select(this).attr("class") + c; 
+    })
+    .style("top", charttopfunction) 
+    .style("height",function(d) {
+      var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
+      var valence = d.key + "rows";
+      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
+      var height = (rows * config[group]["sqsize"]) + "px";
+      return height;
     });
 
   // create new ones if our updated dataset has more then the previous
   charts.enter().append("div")
     .attr("class","chart")
-    .style("left", config[group]["textwidth"] + "px")
-    .style("top", function(d, i) {
-      var key = d3.select(this.parentNode).datum().key;
-      var offset = i == 1 ? config[group][key]["chartoffset"] : 0;
-      return offset + "px";
+    .attr("class", function(d,i) { 
+      var clist = d3.select(this).node().parentNode.classList;
+      var c = clist.contains("toprow") ? " toprow" : "";      
+      return d3.select(this).attr("class") + c; 
     })
+    .style("left", config[group]["textwidth"] + "px")
+    .style("top", charttopfunction) 
     .style("height",function(d) {
-      var len   = d.values.length * config[group]["sqsize"];
-      var width = (config[group]["colwidth"] - config[group]["textwidth"]);
-      var rows  = Math.ceil(len/width)
-      return (rows * config[group]["sqsize"]) + "px";
+      var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
+      var valence = d.key + "rows";
+      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
+      var height = (rows * config[group]["sqsize"]) + "px";
+      return height;
     });
 
 
@@ -527,27 +548,30 @@ function drawchart(data, container, tfast, group) {
   // update
   chartcontainers
     .attr("class","chartcontainer")
-    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
+    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px") 
     .attr("height",function(d) {
-      var len   = d.values.length * config[group]["sqsize"];
-      var width = (config[group]["colwidth"] - config[group]["textwidth"]);
-      var rows  = Math.ceil(len/width)
-      return (rows * config[group]["sqsize"]) + "px";
+      var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
+      var valence = d.key + "rows";
+      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
+      var height = (rows * config[group]["sqsize"]) + "px";
+      return height;
     });
 
   // enter
   chartcontainers.enter().append("svg")
+    .attr("overflow","visible")
     .attr("class","chartcontainer")
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
-      var len   = d.values.length * config[group]["sqsize"];
-      var width = (config[group]["colwidth"] - config[group]["textwidth"]);
-      var rows  = Math.ceil(len/width)
-      return (rows * config[group]["sqsize"]) + "px";
+      var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
+      var valence = d.key + "rows";
+      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
+      var height = (rows * config[group]["sqsize"]) + "px";
+      return height;
     });
 
   //
-  // SQUARES: bind data
+  // SQUARES: sort and bind data
   //
 
   // reselect the chart groups, so that we get any new ones that were made
@@ -565,7 +589,6 @@ function drawchart(data, container, tfast, group) {
 
   // update existing squares, transition
   squares
-    .style("fill-opacity", 1)
     .classed("neutral",function(d) { return d.valence == 0 })
     .classed("plus",function(d) { return d.valence > 0 })
     .classed("minus",function(d) { return d.valence < 0 })
@@ -580,11 +603,11 @@ function drawchart(data, container, tfast, group) {
     .on("click", mouseenterSquare)
     .transition(tfast)
       .attr("x",function(d,i) {
-        var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+        var x = calcx(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
         return x;
       })
       .attr("y", function(d,i) {
-        var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+        var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
         return y;
       });
 
@@ -605,11 +628,11 @@ function drawchart(data, container, tfast, group) {
       .on("click", mouseenterSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
-          var x = calcx(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+          var x = calcx(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
           return x;
         })
         .attr("y", function(d,i) {
-          var y = calcy(i, config[group]["colwidth"] - config[group]["textwidth"], config[group]["sqsize"]);
+          var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
           return y;
         });
 
@@ -626,16 +649,11 @@ function handleMarkerClick(markerdata) {
   $(event.target).parent().addClass("selected");
 }
 
-// define behavior on mouseenter square
+// define behavior on mouseenter square (now only triggered by click)
 function mouseenterSquare(d) {
   // first, clear any selected squares and circles
   clearCircles();
-  Object.keys(groups).forEach(function(group) {
-    d3.select("div." + group).selectAll("rect")
-      .each(function(d) {
-        d3.select(this).classed("selected",false);
-      });
-  });
+  clearSquares();
 
   // add selected style to this square, and the ones in adjacent charts
   // d3.select(this).classed("selected", true);  
@@ -652,13 +670,14 @@ function mouseenterSquare(d) {
   tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
   tooltip.style("display","block");
 
-  // position the tooltip
-  // debugger;
-  var xpos = isMobile() ? 10 : d3.select(this).node().getBoundingClientRect().right + 10;
-  var ypos = isMobile() ? 20 : -30;
-  tooltip
-    .style("left",xpos + "px")
-    .style("top", d3.event.pageY+ypos + "px");
+  // position the tooltip, but if we dragged it somewhere, leave it alone
+  if (!dragged) {
+    var xpos = isMobile() ? 10 : d3.select(this).node().getBoundingClientRect().right + 10;
+    var ypos = isMobile() ? 20 : -30;
+    tooltip
+      .style("left",xpos + "px")
+      .style("top", d3.event.pageY+ypos + "px");
+  }
 
   // update the map marker that contains this study
   selectCircle(d.fips);
@@ -677,7 +696,6 @@ function mouseleaveSquare(d) {
 
 // resize all the containers listed below from config
 function resizeContainers() {
-  d3.select(".top").style("height", config[groups.top]["height"] + "px"); 
   d3.select(".bottom").style("height", config[groups.bottom]["height"] + "px"); 
 }
 
@@ -686,12 +704,8 @@ function resizeContainers() {
 function nest(data,group) { 
   var nested = d3.nest()
     .key(function(d) { return d[group] })
-    .key(function(d) {  if (d.valence > 0) { return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
+    .key(function(d) {  if (d.valence > -1) { if (d.valence == 0) {return 'neutral'; } return 'plus'; } return 'minus'; }).sortKeys(d3.descending)
     .entries(data);
-
-  // go ahead and apply a sort field, if there is one
-  var sortoption = d3.select("select#sort").node().value;
-  if (sortoption) nested = sort(nested, sortoption, group);
 
   return nested;
 
@@ -720,7 +734,7 @@ function delegate_event(selected) {
   });
 }
 
-// custom sort data with optional order
+// custom sort function, with optional order
 function sort(data, sortoption, group) {
   var sortoptions = sortoption.split("#");
   var sortfield = sortoptions[0]; 
@@ -771,11 +785,10 @@ function calcCountryKeys(data) {
 // Iterate through data in order to calc:
 // - overall chart and column area width and height
 // - row offsets (spacing between rows)
-// - col offsets
-// - chart offset, for spacing between plus and minus rows
+// - chart offset, for spacing between plus, neutral, minus rows
 function calcOffsets(data, group) {
   // placeholder, for the data iteration, below
-  var nextoffset = 0; 
+  var nextoffset = config[group]["buttonheight"]; // start not a 0, but rather after the button header height 
 
   // some initial settings 
   config[group]["chartrows"] = 0; // the actual chart rows (plus and minus)
@@ -784,117 +797,73 @@ function calcOffsets(data, group) {
   // set some names for convenience
   var sqsize = config[group]["sqsize"];
 
-  // calculate total width of this groups chart
-  // as a function of the main container width
-  // this will be applied to div.outergroup
-  // if/when there are scroll bars, this will change the total available width!
-  // on an initial pass (e.g. top chart) we have no way to know if there will be scrollbars
-  // so always subtract 20px just in case
-  // TODO: on subsequent updates, could check if there are scrollbars first? 
-  var width = $(config[group]["container"]).width() - 20;
-
-  // get ncols as configured for this screen width
-  var ncols = getCols(width, group);
-
-  // calc col width based on this ncols
-  // first, aadjust for margin padding 
-  var margin = ncols > 1 ? (ncols - 1) * config[group]["colmargin"] : 0;
-  var colwidth = (width - margin) / ncols;
-  config[group]["colwidth"]   = colwidth;
-
   // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
   data.forEach(function(d,i) {
     // Add an empty object for this group, e.g. config.theme.ENV
     config[group][d.key] = {};
 
-    // Set the current "y" offset, will be zero when i = 0, or when a column resets
+    // Set the current "y" offset, will be zero when i = 0
     config[group][d.key]["offset_y"] = nextoffset;
 
     // Now calc the next one, for the next iteration
     // first look through values and get sums for plus and minus
     var plus = 0;
     var minus = 0;
+    var neutral = 0;
     d.values.forEach(function(d) {
       if (d.key == "plus") plus = d.values.length;
       if (d.key == "minus") minus = d.values.length;
+      if (d.key == "neutral") neutral = d.values.length;
     });
 
     // from these counts, figure out how many rows this takes
-    var number_that_fit = Math.floor( (colwidth - config[group]["textwidth"]) / sqsize);
+    var number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / (sqsize + 1));
+    config[group][d.key]["number_that_fit"] = number_that_fit;
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
-    // but, now that we include text with "study count", we always need additional height, and
-    // depending on font size, this is generally at least two rows, so always add a count of at least two here
-    var totalrows = plusrows + minusrows == 1 ? 2 : plusrows + minusrows;
+    var neutralrows = Math.ceil(neutral / number_that_fit);
+    var totalrows = plusrows + minusrows + neutralrows;
 
-    config[group][d.key]["totalrows"] = totalrows; // save this for use when rendering
+    // save this for use when rendering
+    config[group][d.key]["totalrows"] = totalrows; 
+    config[group][d.key]["plusrows"]  = plusrows; 
+    config[group][d.key]["minusrows"] = minusrows; 
+    config[group][d.key]["neutralrows"] = neutralrows; 
+
     // calc chart offsets for the minus chart, for this one row
     // this is based on the total count of plus rows, considering overflow
-    config[group][d.key]["chartoffset"] = plusrows * sqsize;
+    config[group][d.key]["neutraloffset"] = plusrows * sqsize;
+    config[group][d.key]["minusoffset"] = (plusrows * sqsize) + (neutralrows * sqsize);
 
     // Next, calc the row offset: rows * the height of one square, plus the bottom margin
-    nextoffset = nextoffset + (totalrows * sqsize) + config[group]["rowpadding"];
+    var pad = i == 0 ? config[group]["toprowpad"] : 0; // Top row (row 0) has some padding, so lets add that to row 1
+    nextoffset = nextoffset + (totalrows * sqsize) + config[group]["rowpadding"] + pad;
 
     // add plus/minus counts at this level (to facilitate sorting)
     config[group][d.key]["pluscount"] = plus;
     config[group][d.key]["minuscount"] = minus;
-    config[group][d.key]["totalcount"] = plus + minus;
+    config[group][d.key]["neutralcount"] = neutral;
+    config[group][d.key]["totalcount"] = plus + minus + neutral;
 
     // keep a count of rows, from which to calculate total height
-    // this was the old way; some rows have plus, some minus, some both
-    // config[group]["chartrows"] += totalrows; 
-    // but, now that we include text with "study count", we always need additional height, and
-    // depending on font size, this is generally at least two rows, so always add a count of at least two here
-    config[group]["chartrows"] += totalrows == 1 ? 2 : totalrows; 
-
-    // and a placeholder for col, which will always be "1" on this initial pass
-    config[group][d.key]["col"] = 1;
+    config[group]["chartrows"] += totalrows; 
 
   });
 
-  // all done inital loop, add some calcs based on the sums we've just done
+  // all done, add some calcs based on the sums we've just done
   var charts_height              = config[group]["chartrows"] * sqsize;
   var pad_height                 = config[group]["rowpadding"] * config[group]["grouprows"];
-  var single_col_height          = (charts_height + pad_height) / ncols;
-  config[group]["height"]        = single_col_height;
+  var toppad                     = config[group]["toprowpad"];
+  var single_col_height          = (charts_height + pad_height + toppad);
 
-  // if we have multiple cols, loop again to update offsets, based on col heights we just calc'd
-  if (ncols > 1) {
-    var curr_height = 0; 
-    var max_col_height = 0;
-    var nextoffset = 0; var nextcol = 1;
-    data.forEach(function(d,i) {
-      // Set the current "y" offset, will be zero when i = 0, or when a column resets
-      config[group][d.key]["offset_y"] = nextoffset;
-      // keep a note of which row this key belongs in 
-      config[group][d.key]["col"] = nextcol;
+  // we'll use this to give an explicity height to the col-
+  return single_col_height;
 
-      // check our chart height against the col height and adjust y_offset accordingly
-      curr_height += (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
-      if (curr_height > single_col_height) {
-        // keep a note of this col height, in order to find the tallest column
-        max_col_height = curr_height > max_col_height ? curr_height : max_col_height;
-
-        // if height > single_col_height, reset nextoffset
-        // reset curr_height, and add a column count
-        nextoffset = 0;
-        nextcol += 1;
-        curr_height = 0;
-      } else {
-        // if not, carry on as before
-        nextoffset = nextoffset + (config[group][d.key]["totalrows"] * sqsize) + config[group]["rowpadding"];
-      }
-    });
-    // set the final height equal to the height of the tallest column, minus the final rows padding
-    config[group]["height"] = max_col_height - config[group]["rowpadding"];
-  }
 }
 
 // calc x position of rectangles, given container width, and square size
-function calcx(i,width,sqsize) {
-  var number_that_fit = Math.floor(width / sqsize);
-
+function calcx(i, number_that_fit, sqsize) {
   // scale i per row width, so that the count is based in terms of row width, 
   // not a continous linear scale. This makes 13 into 3, 17 into 2, etc. 
   i = scale_count_per_range(i, number_that_fit);
@@ -906,8 +875,7 @@ function calcx(i,width,sqsize) {
 }
 
 // calc y position of rectangles, given container width, and square size
-function calcy(i,width,sqsize) {
-  var number_that_fit = Math.floor(width / sqsize);
+function calcy(i,number_that_fit, sqsize) {
   var this_row = Math.floor(i / number_that_fit);
   var y = this_row * sqsize;
   return y;
@@ -921,21 +889,13 @@ function scale_count_per_range(i, number) {
   return i;
 }
 
-// given a width, get the number of columns defined in config
-function getCols(w, group) {
-  return w > 1200 ? config[group]["ncols_lg"] :
-         w > 992  ? config[group]["ncols_md"] :
-         w > 768  ? config[group]["ncols_sm"] :
-                    config[group]["ncols_xs"];
-}
-
 // do we need a scrollbar for this height? 
 function scrollbar(height) {
   var windowHeight = window.innerHeight;
   return height > windowHeight ? true : false;
 }
 
-// apply these options to filter the flat (not filtered) data, in sequence
+// apply these options to filter the flat (not nested) data, in sequence
 function apply_options(data) { 
   // apply country filter, if there is one
   var countryoption = d3.select("select#country").node().value;
@@ -953,12 +913,6 @@ function apply_options(data) {
   return data;
 }
 
-// shades a hex color darker or lighter, by a percentage param, for example in the form of 0.5 or -0.5
-function shadeColor(hex, percent) {   
-  var f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-  return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
-}
-
 // clear all selections and filters, essentially reset the app state without a refresh
 function clear_all() {
   // clear the vis (map will clear with change, below)
@@ -971,15 +925,6 @@ function clear_all() {
   $('select#country').val('').trigger('change');  
   $('select#evidence').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
-}
-
-// is something selected among our filters?
-function somethingSelected() {
-  var value = false; 
-  if ($('select#country').val()) value = true;
-  if ($('select#evidence').val()) value = true;
-  if (typeof selectedgroup.key !== 'undefined') value = true;
-  return value;
 }
 
 // simple "mobile" detector
@@ -1007,30 +952,60 @@ function clearCircles() {
   })
 }
 
-// select squares given a matching data attribute key and value
+// select all matching squares given a matching data attribute key and value
 function selectSquares(match) {
   var key = match.key; 
   var value = match.value;
-  Object.keys(groups).forEach(function(group) {
-    d3.select("div." + group).selectAll("rect")
-      .each(function(d) {
-        var self = d3.select(this);
-        // because d[key] can be an "array", test for that and treat 
-        var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
-        values.forEach(function(v) {
-          if (v == value) {
-            self.classed("selected",true);
-          }
-        }); 
-      });
-  });
+
+  // first delete any squares already created by selection
+  d3.selectAll("rect.selected").remove();
+
+  d3.selectAll("rect")
+    .each(function(d) {
+      var rect = d3.select(this);
+      // because d[key] can be an "array", test for that and handle appropriately
+      // I'm not 100% sure why this is necessary, but if we don't have this, 
+      // some rects are coming up without data, despite being removed from the dom, just above 
+      if ( typeof d === "undefined" || !d.hasOwnProperty(key) ) { return };
+      var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
+      values.forEach(function(v) {
+        if (v == value) {
+          // draw order prevents the correct display of stroke
+          // to work around this, repaint a selected rect in its place 
+          var x = rect.attr("x");
+          var y = rect.attr("y");
+          var width = rect.attr("width");
+          var height = rect.attr("height");
+          var svg = rect.node().parentNode;
+          var r = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+          r.setAttribute("class","selected");
+          r.setAttribute("x",x);
+          r.setAttribute("y",y);
+          r.setAttribute("width",width);
+          r.setAttribute("height",height);
+          svg.appendChild(r);
+        }
+      }); 
+    });
 }
-// and the correlary: clear squares completely
+// and the correlary: remove selected squares completely
 function clearSquares() {
-  Object.keys(groups).forEach(function(group) {
-    d3.select("div." + group).selectAll("rect")
-      .each(function(d) {
-        d3.select(this).classed("selected",false);
-      });
-  });
+  d3.selectAll("rect.selected").remove();
+}
+
+// show or hide chart details below the top chart
+function toggledetails(e) {
+  // hide or show this cols details
+  var col = e.target.parentElement.getAttribute("data-col");
+
+  var target = $('div.' + col + '-chart');
+  var type = target.data('details') == 'show' ? 'hide' : 'show';
+  var type = target.data('details', type);
+
+  // toggle the message
+  $('div.' + col + '-chart span.details-msg').toggle();
+
+  // dispatch to redraw the charts
+  dispatch.call("statechange",this,rawdata);
+
 }
