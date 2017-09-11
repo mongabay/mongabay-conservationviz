@@ -150,15 +150,20 @@ rect.selected {
   cursor:pointer;
   stroke-width:3px;
   stroke-opacity:1 !important;
-  stroke: #7E3177 !important;
+  stroke: #07395B !important;
   fill-opacity: 0;
 }
 
-rect.plus    { fill: #309223; }
+rect.plus    { fill: #52BF58; }
+span.plus    { background: #52BF58; }
 rect.neutral { fill: #FACB57; }
-rect.minus   { fill: #d7063d; }
-.type3 { fill-opacity: 0.5; }
-.type1 { fill-opacity: 1; }
+span.neutral { background: #FACB57; }
+rect.minus   { fill: #BC2A2A; }
+span.minus   { background: #BC2A2A; }
+rect.type3   { fill-opacity: 0.5; }
+span.type3   { opacity: 0.5; }
+rect.type1   { fill-opacity: 1; }
+span.type2   { opacity: 1; }
 
 /* the legend */
 
@@ -169,9 +174,6 @@ span.rect, span.legend-text {margin:0 30px 10px;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
 span.rect {width: 20px; height: 20px;}
 span.legend-text {width: auto; min-width:50px; height: 20px; line-height:20px;}
-span.plus    { background: #309223;}
-span.neutral { background: #FACB57; }
-span.minus   { background: #d7063d; }
 span.angled  { 
   position:relative;
   bottom:-4px;

@@ -20,7 +20,7 @@ var dragged = false;
 // circle colors on map, for selected and unselected
 var circlecolors = {
   "default": "#64b0e0",
-  "selected": "#7E3177",
+  "selected": "#07395B",
 }
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
