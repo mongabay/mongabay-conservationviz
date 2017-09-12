@@ -1,127 +1,184 @@
 id,zb_id,valence,continent,fips,strategy,theme,variable,type,conclusion
-1,2.1.1,1,,MX,PES,ENV,deforestationfragmentationanddegradation,type1,"Deforestation decreased on average in PES areas by 50%, but in areas where the overall deforestation rate was low. Additionality was achieved only in low-poverty areas, leakage was high in poor areas, sometimes even leading to overall increase in deforestation. Negative leakage in richer areas. Program more effective in southern and northeastern states of Mexico."
-2,2.10.1,1,,KE,PES,ENV,reforestation,type3,Auction and performance driven PES was more successful than reforestation contracted by Kenyan Forestry Service. Seedling survival was on average 15% higher.
-3,2.10.2,1,,KE,PES,SOC,equalityequitylessmarginalization,type3,Poor households accounted for the majority of participating households and they were not excluded by external reasons from participating.
-4,2.11.1,-1,,BL,PES,SOC,communitywellbeingandlivelihoods,type3,Some sections of the local communities became financially poorer.
-5,2.11.2,1,,BL,PES,SOC,communitywellbeingandlivelihoods,type3,"Despite employment and resource losses and gains, overall, the communities have gained. (e.g. jobs from timber industry lost, new jobs in carbon gained)"
-6,2.12.1,1,,CB,PES,ENV,animaldiversity,type3,"Substantial increases in species populations. Local people have begun to enforce the land-use plan regulations to protect habitats, for example by refusing to accept in-migrants and controlling where new forest is cleared. But authors suggest that understanding if this program is effective at delivering conservation will require a counterfactual comparison once it have been in operation for several years"
-7,2.12.2,1,,CB,PES,SOC,equalityequitylessmarginalization,type3,"Equitable - Significant payments are made only to a minority of families since the number of tourism employees is limited. It is perceived to be fair by the majority of participants, despite apparent inequalities since communal benefits derived, such as a new school, building a road and fish ponds are ranked highly"
-8,2.12.3,1,,CB,PES,ECON,directeconomicbenefits,type3,Yearly increase of tourist numbers by about 36% since 2005
-9,2.12.4,0,,CB,PES,ENV,animaldiversity,type3,The effect of the program in protecting species is not clear.
-10,2.12.5,1,,CB,PES,ECON,opportunitycost,type3,"Villagers selling rice through the program were initially offered 200% price premium, which caused even the worst buyers to rise prices, but villagers still preferred selling rice under the PES scheme."
-11,2.12.6,1,,CB,PES,SOC,equalityequitylessmarginalization,type3,"Equitable – payments are approximately proportional to the size of land holdings, meaning that wealthier individuals with larger fields will benefit the most. It is perceived to be fair by the majority of participants, despite apparent inequalities since communal benefits derived are ranked highly"
-12,2.12.7,1,,CB,PES,ECON,directeconomicbenefits,type3,"Substantial income was gained by many families, contributing significantly to their yearly income."
-13,2.12.8,1,,CB,PES,ENV,animaldiversity,type3,Substantial increase in threatened bird species populations; reduction in nest poaching.
-14,2.12.9,0,,CB,PES,SOC,equalityequitylessmarginalization,type3,"Inequitable - Payments were widely perceived as being unfair, because only a few individuals benefited and no local institution existed to mediate conflicts and incorporate mechanisms for wider benefit-sharing"
-15,2.13.1,1,,MX,PES,ENV,deforestationfragmentationanddegradation,type1,"2.6% reduction in deforestation, when using a spatially explicit counterfactual model (result reversed if using simple comparison). Reduction not significantly different from 0. 198ha would have been deforested without the initiative."
-16,2.13.2,1,,MX,PES,ENV,deforestationfragmentationanddegradation,type1,"11.6% decrease in degradation, when using a spatially explicit counterfactual model (result reversed if using simple comparisons). 700 ha would have been degraded without the initiative."
-17,2.14.1,1,,ID,PES,ENV,waterregulationerosionprevention,type3,"20% reduction in sediment concentration was achieved. The reward was gradated according to the amount of reduction in sediment concentration achieved, 30% was the highest goal."
-18,2.15.1,1,,BL,PES,ENV,waterregulationerosionprevention,type3,"All participants apart from one complied with the program rules (i.e. maintained forest cover). There is little data on whether higher cloud forest cover actually leads to better hydrology downstream, however, study is under way.  Low additionality, if any, as farmers are enrolling parcels that they would not have cut anyway. Main benefit is land tenure establishment."
-19,2.15.2,1,,BL,PES,ENV,animaldiversity,type3,"All participants apart from one complied with the program rules. Bird survey established that avian diversity is the highest in cloud forests, which are the focus of the PES schemes. Low additionality, if any, as farmers are enrolling parcels that they would not have cut anyway. Main benefit is land tenure establishment."
-20,2.15.3,0,,BL,PES,SOC,equalityequitylessmarginalization,type3,"Inequitable - The landless are unable to participate; these people are normally the poorest in the region studied. The impact on livelihood is very variable, since the payments are in kind (beehive) and the returns to beekeeping have been extremely skill-dependent. The net present values of beehive transfers range between –US$15.25/ha/year (negative value) and +US$12.66/ha/year (positive value). Some landless people are employed through PES."
-21,2.16.1,0,,MX,PES,SOC,equalityequitylessmarginalization,type3,"Poor recognition of women as resource managers, difficulties in involving the poorest smallholders in the project and a progressive deficit in the level of knowledge transfer concerning forests, climate change and carbon trading. However, payments have contributed to increase individual and collective welfare"
-22,2.17.1,1,,MX,PES,ENV,carbonstockemissions,type3,"Between 29076 and 34000 tCO2eq were sequestered in each of the analysed cases over 5 years, and 51850 – 67584 tCO2eq over 15 years. Perceived possible increase in water and air quality, greater commitment to control forest fires and illegal activites. Mostly forest restoration, complete reforestation was less successful. "
-23,2.17.2,1,,MX,PES,ECON,directeconomicbenefits,type3,"About half of interviewees considered income from PES to be important, the other half did not. There were some issues with inequality. The perceived benefits also differed between communities. Communities received between 38.73% to 77.67% of total investment."
-24,2.18.1,1,,EC,PES,ECON,directeconomicbenefits,type3,43% stated that their family received benefits from the PES scheme
-25,2.18.2,1,,EC,PES,SOC,infrastructureandinstitutions,type3,"53% perceived communal benefits (school equipment, scholarships, water tanks)"
-26,2.18.3,1,,EC,PES,SOC,awarenessempowermentparticipation,type3,"Most individuals agreed with having some  conservation rule (84%), most knew about the project and conservation areas (77% and 80%). Fewer knew the specifics of the project (e.g. duration; 61%, or size; 77%) "
-27,2.18.4,1,,EC,PES,SOC,awarenessempowermentparticipation,type3,66% said they participated; 84% said that location of conservation area was decided in an assembly; most did not know how incentives were managed (23% knew) and that there was an investment plan.
-28,2.19.1,1,,EC,PES,SOC,equalityequitylessmarginalization,type3,"Presented as equitable, with strong emphasis on reaching the poorest. This is achieved by relating incentives to the size of the set aside area (the first ha pays the most). Even though only owners with a formal land title can participate, there has been legal assistance to achieve formal ownership and many participants sign up exactly for this reason."
-29,2.2.1,0,,MX,PES,SOC,equalityequitylessmarginalization,type3,Only richer households are able to dedicate land to tree planting.
-30,2.2.2,0,,MX,PES,SOC,equalityequitylessmarginalization,type3,"Men were prioritized in decision making, and decisions favoured men (e.g. which type of tree would be planted)"
-31,2.2.3,0,,MX,PES,ECON,opportunitycost,type3,Payments just about meet opportunity costs but not establishment and maintenance costs.
-32,2.2.4,0,,GT,PES,SOC,awarenessempowermentparticipation,type3,Local communities were not included from the beginning and were mostly unaware of environmental benefits. Conflicts existed even before project began.
-33,2.2.5,1,,GT,PES,ECON,directeconomicbenefits,type3,"The PES amounted to 6% of NGO income; and 40% of protection costs, which is a substantial part of costs needed for protection of the forest."
-34,2.2.6,-1,,NU,PES,ECON,opportunitycost,type3,The PES covers only a fraction of income (26USD compared to 147USD that can be made of year ha/year); i.e. does not come close to covering the opportunity costs
-35,2.2.7,0,,NU,PES,SOC,awarenessempowermentparticipation,type3,"68% unaware of PES, 78% stated that they were never consulted"
-36,2.2.8,1,,BH,PES,ECON,directeconomicbenefits,type3,The PES enabled purchase of new land added to the existing protected area. Carbon payments covered 4% of NGO costs and 9% of protection costs
-37,2.20.1,0,,CO,PES,SOC,awarenessempowermentparticipation,type3,Only 13% stated that they were required to conserve forest on their land as a part of the program.
-38,2.21.1,1,,MZ,PES,ECON,directeconomicbenefits,type1,There was a significant positive effect on the amount of cash and spending in participating households.
-39,2.21.2,0,,MZ,PES,ENV,illegalhuntingloggingmining,type1,There was a slight (but not significant) decrease in the use of forest resources for subsistence by households.
-40,2.21.3,-1,,MZ,PES,SOC,accesstoland,type1,"There was a significant decline in the yield of crops early in the project. This is likely because of tree planting along field boundaries, mixed row crops, etc."
-41,2.21.4,0,,MZ,PES,SOC,equalityequitylessmarginalization,type1,"It was clear that male-headed and richer households were favoured by the project when compared to female-headed and poorer households, even though participation was open to everyone."
-42,2.21.5,1,,MZ,PES,ENV,carbonstockemissions,type3,"Over 5 years more than 500000 trees were planted, expecting to sequester 82056 tCO2"
-43,2.22.1,1,,CS,PES,ENV,reforestation,type3,27000 ha reforested (3000 ha/year)
-44,2.22.10,1,,CS,PES,SOC,infrastructureandinstitutions,type3,"There was a highly positive impact on strengthening forestry institutions, especially regarding NGOs and law enforcements, and to a lesser extent public organizations."
-45,2.22.11,1,,CS,PES,SOC,awarenessempowermentparticipation,type3,"There was a strong increase in awareness of ecosystem services and goods, and sustainable practices were adopted. Land owners stated that they would continue with the new practices even without payments."
-46,2.22.12,-1,,CS,PES,SOC,equalityequitylessmarginalization,type3,"Poorer households were at a disadvantage, because investment beyond payments were required. i.e. in the short run, the program was not profitable. The gap between poor and rich widens."
-47,2.22.2,1,,CS,PES,ECON,directeconomicbenefits,type3,"Even though reforestation was not profitable initially (investment beyond payments required), it payed off after several years. This put poorer households at a disadvantage. 71% of households perceived long-term reforestation as financially beneficial."
-48,2.22.3,0,,CS,PES,SOC,communitywellbeingandlivelihoods,type3,"Overall, there was no significant difference, because multiple individual criteria showed opposing results: whereas farmers were satisfied with the regularity of payments, the payments did no contribute to a lower economic risk (for example it did not become easier to take loans)."
-49,2.22.4,1,,CS,PES,SOC,jobs,type3,"There was a positive impact on job creation within the reforestation sector (transport, processing). Work conditions did not improve. Most people perceived reforestation to be better for job creation than livestock breeding."
-50,2.22.5,0,,CS,PES,SOC,conflict,type3,"The program did induce land concentration (i.e. richer land owners buying more land for reforestation), but the impact on conflict and migration was not signification."
-51,2.22.6,0,,CS,PES,SOC,infrastructureandinstitutions,type3,"The majority of landowners did not perceive a significant change in infrastructure at a regional level, as reforestation was a minor activity compared to agriculture."
-52,2.22.7,1,,CS,PES,SOC,landgrabbingbetterlandtenure,type3,"There was a small positive impact on legalization of land tenure. The majority of participating land owners already did have a legal title before the program, but those that did not were able to obtain legal titles through the program."
-53,2.22.8,-1,,CS,PES,SOC,conflict,type3,"The majority of landowners saw potential sources of conflict in the long run due to the restrictions of land use under the program, and also due to the level of payments, which was perceived to be too low."
-54,2.22.9,1,,CS,PES,SOC,infrastructureandinstitutions,type3,There was a positive impact. Landowners felt that they had a possibility to request and receive support from local and national organizations.
-55,2.23.1,0,,TZ,PES,ENV,deforestationfragmentationanddegradation,type3,No changes can be demonstrated during the initial pilot period of 2000-2008.
-56,2.23.2,1,,TZ,PES,ECON,directeconomicbenefits,type3,"Income of farmers improved, and they were able to invest into roofs and seeds."
-57,2.24.1,0,,CB,PES,SOC,equalityequitylessmarginalization,type3,"Because of power dynamics, elites did not have to comply with PES contracts, whereas poorer community members did."
-58,2.25.1,1,,BR,PES,ECON,directeconomicbenefits,type3,"77.2% of households received monthly allowance, including allowance per child and disabled or elderly member. The allowance accounted for between 2.9% to 69.5% of monthly income."
-59,2.25.2,-1,,BR,PES,ECON,opportunitycost,type3,"Respondents perceived the payments to be too low to cover opportunity costs, stating that swidden agriculture can bring a much higher proft."
-60,2.26.1,1,,MX,PES,SOC,equalityequitylessmarginalization,type3,"In the whole community overall, Gini coefficient (measure of income inequality) decreased after PES implementation. This is due to the higher importance of PES in lower-income households compared to higher income households."
-61,2.26.2,-1,,MX,PES,SOC,equalityequitylessmarginalization,type3,PES payments increased the inequality between ejidatarios and pobladores (landless) by 2%.
-62,2.26.3,1,,MX,PES,ECON,opportunitycost,type3,The payments were considerably higher than the return to effort for other activities.
-63,2.26.4,-1,,MX,PES,ECON,opportunitycost,type3,87% of people thought the amount of payment was insufficient to compensate their expectations.
-64,2.26.5,0,,MX,PES,ENV,deforestationfragmentationanddegradation,type3,"Those ejidatarios who own mature forest stated that conservation efforts would continue even without payments, indicating low additionality. However, the poorer segments of the population indicated that they would deforest without incentive."
-65,2.27.1,-1,,CH,PES,ENV,treediversity,type1,The limited evidence there is on biodiversity shows that planting non-native trees and monocultures might have negative impacts on biodiversity.
-66,2.27.2,0,,CH,PES,SOC,communitywellbeingandlivelihoods,type1,"Some households have been negatively impacted due to local reductions of grain productivity, but at the county and national level, grain production increased."
-67,2.27.3,1,,CH,PES,ECON,directeconomicbenefits,type1,"The majority of households received full compensation (77.08% in one study); or were satisfied (75-98% in one study) with the payment. The majority of households in most studies reported improvements in life quality, but some reported also a decline in life quality."
-68,2.27.4,1,,CH,PES,ENV,carbonstockemissions,type1,"An average of 132.3 million tonnes of carbon equivalent were sequestered by cropland conversion, and more if barren land conversion was included."
-69,2.27.5,1,,CH,PES,ENV,reforestation,type1,The estimated increase in forest cover nationally was higher in PES counties by 5.6% than in non-PES counties. There is however a lot of variation between regions and counties.
-70,2.27.6,1,,CH,PES,ENV,waterregulationerosionprevention,type1,"Several studies within the meta-analysis found reduction in soil erosion (38.8% over 10 years in one region), and increased nutrient retention. No study reported negative or no change."
-71,2.27.7,1,,CH,PES,ENV,waterregulationerosionprevention,type1,"Two studies had evidence on water retention, and they both found increased water retention, up to 56% in the dry season. This would likely lead to a decline in flooding."
-72,2.27.8,1,,CH,PES,SOC,landgrabbingbetterlandtenure,type1,"Forestland certificates have been issued to the majority of owners, which has been associated with a differentiation effect in households access to land."
-73,2.27.9,1,,CH,PES,SOC,equalityequitylessmarginalization,type1,"Several studies found that inequality was initially reduced by the scheme, but later was unable to cope with the increased inequality due to rapid development of off-farm jobs. But initially, there was a significant reduction in the Gini coefficient and increase in income mobility."
-74,2.28.1,1,,EC,PES,ENV,deforestationfragmentationanddegradation,type3,"Deforestation has stopped, and native vegetation cover has increased. Previous occasional timber sales have stopped. However, this coincided with a nationally reduced pressure on forests due to lower profitability of cattle ranching."
-75,2.28.2,1,,EC,PES,SOC,equalityequitylessmarginalization,type3,"Not formally assessed, but most participating households are the poorest, and the income from PES seems to exceed opportunity costs (but these are only rough estimates), and accounts for about 31% of household expenditure."
-76,2.28.3,1,,EC,PES,ENV,reforestation,type3,"22287 ha of forest planted, which is less than originally planned, but accounts for about half of all Ecuadorian reforestation. In some ecosystems where reforestation happened on volcanic soil, net carbon sequestration is low or even negative, due to initial planting of pine trees. Later, the project experimented with native species."
-77,2.28.4,1,,EC,PES,SOC,equalityequitylessmarginalization,type3,"Even though minimum land area that can be enrolled increased due to large set-up costs for small areas, PROFAFOR took measures to include poor land holders, by aggregate community groups being able to participate. The NPV of participating households was positive."
-78,2.29.1,1,,CS,PES,ENV,carbonstockemissions,type3,"Overall, the PES program in Costa Rica sequestered about 1 million tC between 1998 and 2005 through establishing plantations."
-79,2.29.2,1,,CS,PES,ENV,carbonstockemissions,type3,"Using a model of avoided deforestation, the national PES program in Costa Rica is estimated to have prevented the emission of 11 million tC between 1999 and 2005."
-80,2.3.1,1,,CS,PES,ENV,deforestationfragmentationanddegradation,type1,Additional forest cover of 11-17% of the mean contracted area in PES farms over 8 years.
-81,2.30.1,1,,CS,PES,ENV,deforestationfragmentationanddegradation,type3,"PES appears to speed up agricultural land abandonment, which would likely happen even without PES, but slower. Additionally, it is not guaranteed that abandoned land will become forest."
-82,2.31.1,1,,VM,PES,ECON,directeconomicbenefits,type3,"Participating households received about 600 USD/year, which is about 3.75 times higher than their income prior to PES implementation"
-83,2.31.2,-1,,VM,PES,ECON,opportunitycost,type3,"Opportunity costs were not covered by the PES scheme: each ha can generate about 800 USD/year through corn agriculture, whereas PES only 22USD/year. Very poor households would have to opt for agriculture."
-84,2.31.3,0,,VM,PES,ECON,directeconomicbenefits,type3,"Only 14% of payments were actually disbursed to the households, and less than 10% of the eligible households received payments. Problems due to unclear land tenure."
-85,2.31.4,0,,VM,PES,SOC,equalityequitylessmarginalization,type3,"The PES schemes was set up in a way that the poorest households, which were also the most dependent on forest resources, were unable to participate."
-86,2.32.1,0,,"CS,CH,MX,MZ",PES,SOC,equalityequitylessmarginalization,type1,"In general, it is more difficult for poor households to participate."
-87,2.32.2,1,,"CH,MZ",PES,ECON,directeconomicbenefits,type1,"Only 2 studies available, one (Mozambique) found that household incomes improved by 4%, another (China) found that household incomes improved by 14%."
-88,2.32.3,1,,"CS,CH,MX,MZ",PES,ENV,deforestationfragmentationanddegradation,type1,"PES programs have on average reduced deforestation rate by 0.21 percentage points and they have reduced forest cover change (which includes both forest loss and gain) by between 0.5 and 1.6 percentage points. This is interpreted by the study as low, however, both numbers were significantly different from zero, therefore here we include the result as positive."
-89,2.33.1,-1,,CH,PES,ENV,animaldiversity,type3,"In monoculture plantations, there were modest losses of bird diversity. The vast majority of China's new forests are monoculture plantations."
-90,2.33.2,-1,,CH,PES,ENV,animaldiversity,type3,There were major losses in bee diversity in monoculture and mixed plantations.
-91,2.33.3,1,,CH,PES,ENV,animaldiversity,type3,"In mixed plantations, there were modest gains in bird diversity. Only a small proportion of China's new forests are mixed plantations."
-92,2.34.1,0,,CS,PES,SOC,landgrabbingbetterlandtenure,type3,No major impact: land-reform effects predate the initiative.
-93,2.34.10,-1,,EC,PES,SOC,awarenessempowermentparticipation,type3,"Farmers' association was weakened, but probably prior to the scheme's introduction."
-94,2.34.2,1,,CS,PES,SOC,awarenessempowermentparticipation,type3,PES scheme encouraged the creation and strengthening of community associations
-95,2.34.3,-1,,CS,PES,SOC,infrastructureandinstitutions,type3,There was a deterioration in roads due to increased use for forestry and wood-processing industry.
-96,2.34.4,1,,CS,PES,SOC,communitywellbeingandlivelihoods,type3,Recovery of forest landscape in the region has improved soils and has provided a side benefit of promoting tourism
-97,2.34.5,1,,EC,PES,SOC,landgrabbingbetterlandtenure,type3,The plantation helped to secure land tenure
-98,2.34.6,0,,EC,PES,SOC,awarenessempowermentparticipation,type3,"Communities mention few impacts, but the initiative has helped establish a community credit system"
-99,2.34.7,0,,EC,PES,SOC,infrastructureandinstitutions,type3,No major impact.
-100,2.34.8,1,,EC,PES,ENV,waterregulationerosionprevention,type3,Participants perceive reduced soil erosion and protection of water sources
-101,2.34.9,0,,EC,PES,SOC,landgrabbingbetterlandtenure,type3,"No change, activities preceding the initiative helped secure individual land titles"
-102,2.35.1,1,,MX,PES,ENV,deforestationfragmentationanddegradation,type1,"The annual deforestation rate was 6.75%, and majority occurred in control ejidos (non-participants). Additional 12-14.7% of forest area that was enrolled in PES has been not deforested as a result of PES during 8 years of the program."
-103,2.36.1,1,,UG,PES,ENV,deforestationfragmentationanddegradation,type3,"In villages where PES was implemented, tree cover declined by 2-5% in 2 years, which is less than the 7-10% decline in control villages."
-104,2.36.2,0,,UG,PES,ECON,directeconomicbenefits,type3,There was no appreciable effect on participants' consumption or other measures of economic well-being.
-105,2.37.1,1,,CH,PES,ENV,deforestationfragmentationanddegradation,type3,The total habitat area suitable for Giant pandas increased by 3.4% between 2001 and 2007. Effectiveness seems to depend on who receives the payment.
-106,2.37.2,1,,CH,PES,ENV,animaldiversity,type3,The habitat suitability index for Giant panda increased by 7.1% from 2001 to 2007. Effectiveness seems to depend on who receives the payment.
-107,2.4.1,0,,CS,PES,SOC,communitywellbeingandlivelihoods,type1,No significant (causal) difference between PES and non-PES households.
-108,2.4.2,0,,CS,PES,SOC,communitywellbeingandlivelihoods,type1,No significant (causal) difference between PES and non-PES households.
-109,2.5.1,1,,RW,PES,ENV,illegalhuntingloggingmining,type3,"Decrease in human activity after the PES implementation for most cells, but results are not statistically significant. Authors consider the observed pattern to be generally supportive of PES effectiveness for conservation since they suspect that the reduction observed in control cells is in part because of their hope that project will be expanded into their cells in the future"
-110,2.5.2,1,,RW,PES,SOC,equalityequitylessmarginalization,type3,The vast majority of interviewees thought that the project was fair (all households receiving the same payment)
-111,2.5.3,0,,RW,PES,SOC,communitywellbeingandlivelihoods,type3,"Household wealth seemed to be the same across control and treatment cells, only the very poorest perceived to be negatively impacted (those dependent on bamboo)"
-112,2.5.4,-1,,RW,PES,SOC,equalityequitylessmarginalization,type3,A minority of interviewees perceived the project as unfair and negatively impacting their livelihoods. This group of people were Bamboo collectors and basket makers who lived the closest to the park.
-113,2.7.1,1,,BR,PES,ENV,deforestationfragmentationanddegradation,type3,"Forest cover has decreased by 12% more in PES implementing areas than non-PES areas. However, deforestation rate is declining in non-PES areas as well. Projected future deforestation varies broadly according to the model used."
-114,2.7.2,1,,BR,PES,SOC,communitywellbeingandlivelihoods,type3,"More people felt better off than before the project, and the majority of these indicated that it was due to external support."
-115,2.7.3,1,,BR,PES,SOC,landgrabbingbetterlandtenure,type3,Slightly but significantly fewer invasions after project implementation.
-116,2.7.4,1,,BR,PES,ECON,opportunitycost,type3,"For a large number of households, the foregone income is far below the annual cash allowance from the PES project."
-117,2.8.1,0,,MA,PES,SOC,equalityequitylessmarginalization,type3,Households that are most at risk from cyclones (reliant on tavy) cannot participate in the project because they don't own permanent rice plots.
-118,2.9.1,1,,HO,PES,ENV,waterregulationerosionprevention,type3,Majority of users perceived that water quality and availability had improved during the past two years
-119,2.9.2,-1,,HO,PES,ECON,opportunitycost,type3,Opportunity costs exceed payments substantially.
-120,2.9.3,0,,HO,PES,SOC,equalityequitylessmarginalization,type3,Most providers think payments too low and not fair.
-121,2.9.4,0,,CS,PES,ENV,waterregulationerosionprevention,type3,Most users considered that the water quality and availability had not changed during the past two years (it had remained good)
-122,2.9.5,-1,,CS,PES,ECON,opportunitycost,type3,Opportunity costs exceed payments substantially.
-123,2.9.6,0,,CS,PES,SOC,equalityequitylessmarginalization,type3,Most providers think payments too low and not fair.
-124,2.9.7,1,,NU,PES,ENV,waterregulationerosionprevention,type3,Majority of users perceived that water quality and availability had improved during the past two years
-125,2.9.8,-1,,NU,PES,ECON,opportunitycost,type3,Opportunity costs exceed payments substantially.
-126,2.9.9,0,,NU,PES,SOC,equalityequitylessmarginalization,type3,Most providers think payments too low and not fair.
+1,1.1.1,0,africa,GB,FSC,ENV,canopylossgapsize,type3,Difference in felling gap size per tree harvested not significant
+2,1.1.2,1,africa,GB,FSC,ENV,carbonstockemissions,type3,Significantly less biomass converted to necromass
+3,1.1.3,1,africa,GB,FSC,ENV,collateraldamage,type3,Significantly fewer trees destroyed per tree extracted
+4,1.1.4,1,africa,GB,FSC,ENV,grounddisturbance,type3,Less above-ground biomass destroyed
+5,1.1.5,1,africa,GB,FSC,ECON,harvestefficiency,type3,More commercial timber wasted in conventional logging concession
+6,1.1.6,1,africa,GB,FSC,ENV,roadandskidtraildensity,type3,"Even though per tree extracted, there is not a significant difference in all measures employed, overall, there are fewer and narrower skid trails and roads in the certified concession"
+7,1.1.7,1,africa,GB,FSC,ECON,timberstock(sustainabilityofincome),type3,Significantly lower logging intensity in certified concession
+8,1.1.8,0,africa,GB,FSC,ENV,treediversity,type3,"Before and after logging comparison of CL and FSC, both very little change, and no significant change"
+9,1.10.1,1,global,PAN,FSC,ENV,deforestationfragmentationanddegradation,type1,"The higher the area of FSC-certified forest in a country, the less deforestation there is. This is not however a cause-and-effect relationship."
+10,1.11.1,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,Lower canopy damage per tree
+11,1.11.2,1,southandcentralamerica,BR,FSC,ENV,roadandskidtraildensity,type3,"Lower average % road, deck, and skid area in RIL harvest blocks"
+12,1.12.1,1,asia,MY,FSC,ENV,animaldiversity,type3,Higher diversity and species richness of dung beetles was found in the RIL cutting blocks.
+13,1.12.2,1,asia,MY,FSC,ENV,animaldiversity,type3,Higher number of forest specialist species of dung beetles was found in RIL cutting blocks.
+14,1.13.1,1,asia,ID,FSC,ENV,collateraldamage,type3,Lower tree injury rate in RIL cutting blocks
+15,1.13.2,1,asia,ID,FSC,ENV,roadandskidtraildensity,type3,Less skidding damage in RIL cutting blocks
+16,1.14.1,1,southandcentralamerica,"BR,VE,NS,PA",FSC,ENV,grounddisturbance,type3,"Even when logging intensity is taken into account, ground disturbance is lower in RIL and certified concessions."
+17,1.16.1,1,southandcentralamerica,BR,FSC,ECON,profit,type3,"When all regulations are fulfilled, in the 1st harvest cycle, RIL is more profitable than CL"
+18,1.17.1,-1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-W, gap size was higher in RIL concession"
+19,1.17.2,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-W, canopy loss was higher in CL concession"
+20,1.17.3,-1,southandcentralamerica,BR,FSC,ENV,collateraldamage,type3,"Brazil-W, there were fewer damaged trees in CL concession"
+21,1.17.4,1,southandcentralamerica,BR,FSC,ENV,grounddisturbance,type3,"Brazil-W, ground area disturbed was lower in RIL concession"
+22,1.17.5,-1,southandcentralamerica,BR,FSC,ECON,preloggingcosts,type3,"Brazil-W, planning and infrastructure costs were lower for CL operations"
+23,1.17.6,-1,southandcentralamerica,BR,FSC,ECON,skiddingcost,type3,"Brazil-W, productivity of RIL skidding was lower (more careful skidding is required)"
+24,1.17.7,1,southandcentralamerica,BR,FSC,ECON,workerproductivity,type3,"Brazil-W, productivity of workers was higher in RIL concessions"
+25,1.18.1,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Taking the number of trees felled into account, there was less canopy loss in RIL concession"
+26,1.18.2,1,southandcentralamerica,BR,FSC,ENV,grounddisturbance,type3,"Taking the number of trees felled into account, there was less ground disturbance in the RIL concession"
+27,1.19.1,-1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Benches of Amburana cearensis brought higher prices when not certified
+28,1.19.10,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Hura crepitans doors brought higher price when certified
+29,1.19.11,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Boards of Hymenea courbaril brought slightly higher price when certified
+30,1.19.12,0,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Boards of certified Cariniana sp did not differ in price from non-certified
+31,1.19.13,0,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Boards of Hura crepitans did not differ in price with certification
+32,1.19.2,0,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Boards of Phyllostylon rhamnoides did not differ in price with certification
+33,1.19.3,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Amburana cearensis sawn wood brought higher price if certified
+34,1.19.4,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Vochysia haenkeana sawnwood brought higher price when certified
+35,1.19.5,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Boards of Ficus spp brought higher price when certified
+36,1.19.6,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Boards of Vochysia haenkeana brought higher price when certified
+37,1.19.7,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Ficus spp doors brought higher price when certified
+38,1.19.8,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Doors from Cariniana sp brought higher price when certified
+39,1.19.9,1,southandcentralamerica,BL,FSC,ECON,pricepremium,type3,Vochysia haenkeana doors brought higher price when certified
+40,1.20.1,1,asia,ID,FSC,ENV,canopylossgapsize,type3,"Canopy damage was lower in RIL cutting blocks, harvest intensity controlled for"
+41,1.20.2,1,asia,ID,FSC,ENV,collateraldamage,type3,"There were fewer trees destroyed in RIL cutting blocks, harvest intensity controlled for"
+42,1.20.3,0,asia,ID,FSC,ENV,collateraldamage,type3,"There was about the same number of trees injured, harvest intensity controlled for"
+43,1.20.4,0,asia,ID,FSC,ENV,collateraldamage,type3,"Under higher logging intensities, collateral damage was about the same in RIL and CL cutting blocks"
+44,1.20.5,1,asia,ID,FSC,ENV,roadandskidtraildensity,type3,"Damage due to skidding was lower in RIL cutting blocks, harvest intensity controlled for"
+45,1.21.1,0,africa,CM,FSC,ENV,collateraldamage,type3,"Vine cutting, which is a practice that is typically part of Reduced Impact Logging, did not significantly change the level of collateral damage"
+46,1.22.1,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Percentage of biomass loss lower in RIL concession
+47,1.22.2,1,asia,MY,FSC,ENV,collateraldamage,type3,"Controlling for logging intensity, collateral damage was lower in RIL concession"
+48,1.23.1,1,asia,MY,FSC,ENV,collateraldamage,type3,"Proportion of basal area killed relative to timber extracted was lower in RIL concession, controlled for logging intensity"
+49,1.23.2,1,asia,MY,FSC,ENV,collateraldamage,type3,"Percentage of uprooted and crushed trees, snapped crowns was lower in RIL concession"
+50,1.23.3,1,asia,MY,FSC,ENV,grounddisturbance,type3,"Area of soil damaged, disturbance to top soils was lower in RIL concession"
+51,1.23.4,-1,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Direct operation costs were higher in the case of RIL
+52,1.23.5,-1,asia,MY,FSC,ECON,workerproductivity,type3,"Time efficiency in skidding and felling was higher in CL, because RIL requires more careful harvest"
+53,1.26.1,-1,pantropical,PAN,FSC,ECON,profit,type3,Sustainable forest management systematically less profitable than CL; potentially profitable at a discount rate of 5-10%
+54,1.27.1,-1,southandcentralamerica,BR,FSC,SOC,accesstoland,type3,"Perceived decline in animal abundance for hunting (tapir, jaguar, deer)"
+55,1.27.2,1,southandcentralamerica,BR,FSC,SOC,awarenessempowermentparticipation,type3,All workers reported better and new skills
+56,1.27.3,1,southandcentralamerica,BR,FSC,SOC,compliancewithlawsandregulations,type3,"Labor law, harvest regulations were followed"
+57,1.27.4,0,southandcentralamerica,BR,FSC,SOC,directeconomicbenefits,type3,Local level of investment in community did not change with RIL
+58,1.27.5,1,southandcentralamerica,BR,FSC,SOC,infrastructureandinstitutions,type3,Roads improved with project implementation
+59,1.27.6,1,southandcentralamerica,BR,FSC,SOC,livingandworkingconditionsofemployees,type3,Perceived welfare and purchasing power of workers employed by the project increased with project implementation
+60,1.28.1,1,pantropical,"BL,BR,FG,GY,MY,CF,UG,VE",FSC,ENV,animaldiversity,type1,Changes (both positive and negative) in bird abundance lower in forests that are logged with RIL
+61,1.29.1,1,pantropical,PAN,FSC,ENV,animaldiversity,type1,Smaller shifts in animal abundance under RIL
+62,1.3.1,0,africa,"CM,GB,CF",FSC,SOC,accesstoland,type3,"The conventional concessions are perceived as less of a constraint to hunting, NTFP gathering, and shifting agriculture, but the difference is not significant."
+63,1.3.10,0,africa,"CM,GB,CF",FSC,SOC,livingandworkingconditionsofemployees,type3,"This variable had a better outcome in FSC-certified concessions, but the difference was not significant."
+64,1.3.11,0,africa,"CM,GB,CF",FSC,SOC,livingandworkingconditionsofemployees,type3,"This variable had a better outcome in FSC-certified concessions, but the difference was not significant."
+65,1.3.12,0,africa,"CM,GB,CF",FSC,SOC,livingandworkingconditionsofemployees,type3,"These variables had better outcomes in FSC-certified concessions, but the difference was not significant."
+66,1.3.2,0,africa,"CM,GB,CF",FSC,ENV,deforestationfragmentationanddegradation,type3,"There was more shifting agriculture in the certified concessions, but this difference was not significant."
+67,1.3.3,0,africa,"CM,GB,CF",FSC,ENV,illegalhuntingloggingmining,type3,"There was more hunting and NTFP gathering in the conventional concessions than in certified ones, but the difference was not significant."
+68,1.3.4,0,africa,"CM,GB,CF",FSC,SOC,equalityequitylessmarginalization,type3,There was no difference in the percentage of staff who were women. This was low in both certified and conventional concessions (3% in both cases).
+69,1.3.5,1,africa,"CM,GB,CF",FSC,SOC,infrastructureandinstitutions,type3,This variable had significantly better outcome in FSC-certified concessions.
+70,1.3.6,1,africa,"CM,GB,CF",FSC,SOC,infrastructureandinstitutions,type3,This variable had significantly better outcome in FSC-certified concessions.
+71,1.3.7,1,africa,"CM,GB,CF",FSC,SOC,communitywellbeingandlivelihoods,type3,This variable had significantly better outcome in FSC-certified concessions.
+72,1.3.8,1,africa,"CM,GB,CF",FSC,SOC,livingandworkingconditionsofemployees,type3,"These variables had better outcomes in FSC-certified concessions, and the difference was significant."
+73,1.3.9,1,africa,"CM,GB,CF",FSC,SOC,livingandworkingconditionsofemployees,type3,"These variables had better outcomes in FSC-certified concessions, and the difference was significant."
+74,1.30.1,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Above-ground biomass was higher 2 years post-logging in RIL concession
+75,1.30.2,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Root biomass was higher 2 years post logging in RIL concession
+76,1.30.3,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Soil carbon was higher 2 years post logging in RIL concession
+77,1.30.4,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Necromass was lower 2 years post-logging in RIL concession
+78,1.32.1,1,asia,MY,FSC,ECON,pricepremium,type3,"17% to 24% price difference on average, but highest for expensive species groups"
+79,1.33.1,1,southandcentralamerica,BR,FSC,SOC,conflict,type3,"Public confidence, communication with landowners was perceived to be better after certification was implemented"
+80,1.33.2,1,southandcentralamerica,BR,FSC,ECON,managementandadministration,type3,"Management systems and performance, and forest management practices were perceived to be better after certification was implemented"
+81,1.33.3,0,southandcentralamerica,BR,FSC,ECON,managementandadministration,type3,Expectation of simplified regulation was not perceived as fulfilled after certification was implemented
+82,1.33.4,1,southandcentralamerica,BR,FSC,ECON,marketaccess,type3,"After certification, companies either gained or retained access to markets that demand certified wood"
+83,1.33.5,0,southandcentralamerica,BR,FSC,ECON,pricepremium,type3,No price premium was achieved after certification was implemented
+84,1.33.6,0,southandcentralamerica,BR,FSC,ECON,profit,type3,Profitability was overall perceived to not have changed
+85,1.35.1,-1,southandcentralamerica,GY,FSC,ENV,canopylossgapsize,type3,"Guyana-H, canopy loss higher under RIL"
+86,1.35.10,-1,southandcentralamerica,GY,FSC,ECON,workerproductivity,type3,"Guyana-H, RIL more time consuming"
+87,1.35.2,-1,southandcentralamerica,GY,FSC,ENV,canopylossgapsize,type3,"Guyana-H, gap size larger under RIL"
+88,1.35.3,1,southandcentralamerica,GY,FSC,ENV,collateraldamage,type3,"Guyana-H, fewer damaged trees under RIL"
+89,1.35.4,1,southandcentralamerica,GY,FSC,ENV,grounddisturbance,type3,"Guyana-H, less ground area disturbed under RIL"
+90,1.35.5,-1,southandcentralamerica,GY,FSC,ECON,preloggingcosts,type3,"Guyana-H, planning and infrastructure costs higher under RIL"
+91,1.35.6,-1,southandcentralamerica,GY,FSC,ECON,profit,type3,Guyana-H profit margins lower under RIL
+92,1.35.7,1,southandcentralamerica,GY,FSC,ECON,skiddingcost,type3,"Guyana-H, productivity of RIL skidding higher than CL skidding"
+93,1.35.8,-1,southandcentralamerica,GY,FSC,ECON,totalcostofloggingoperations,type3,"Guyana-H, Total cost of RIL logging operation higher, not adjusted for timber wasted"
+94,1.35.9,1,southandcentralamerica,BR,FSC,ECON,totalcostofloggingoperations,type3,"Brazil-H, total cost of logging operations was lower under RIL, when adjusted for waste"
+95,1.36.1,1,southandcentralamerica,EC,FSC,ENV,grounddisturbance,type3,"Ecuador, less ground area disturbed under RIL"
+96,1.36.2,-1,southandcentralamerica,EC,FSC,ECON,preloggingcosts,type3,"Ecuador, planning and infrastructure costs higher under RIL"
+97,1.36.3,-1,southandcentralamerica,EC,FSC,ECON,skiddingcost,type3,"Ecuador, productivity of RIL skidding was lower than CL skidding"
+98,1.36.4,-1,southandcentralamerica,EC,FSC,ECON,totalcostofloggingoperations,type3,"Ecuador, total cost of logging operation was higher under RIL, not waste adjusted"
+99,1.36.5,-1,southandcentralamerica,EC,FSC,ECON,workerproductivity,type3,"Ecuador, RIL more time consuming"
+100,1.37.1,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-H, canopy loss higher under CL"
+101,1.37.2,0,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-H, gap size was the same under RIL and CL"
+102,1.37.3,0,southandcentralamerica,BR,FSC,ENV,collateraldamage,type3,"Brazil-H, RIL and CL damaged about the same number of trees"
+103,1.37.4,1,southandcentralamerica,BR,FSC,ENV,grounddisturbance,type3,"Brazil-H, less ground area was disturbed under RIL"
+104,1.37.5,-1,southandcentralamerica,BR,FSC,ECON,preloggingcosts,type3,"Brazil-H, planning and infrastructure costs were higher under RIL"
+105,1.37.6,1,southandcentralamerica,BR,FSC,ECON,profit,type3,Brazil-H profit margins were higher under RIL
+106,1.37.7,1,southandcentralamerica,BR,FSC,ECON,skiddingcost,type3,"Brazil-H, skidding costs were higher under CL"
+107,1.37.8,-1,southandcentralamerica,BR,FSC,ECON,workerproductivity,type3,"Brazil-H, RIL more time consuming"
+108,1.38.1,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-Bb, there was less canopy loss under RIL"
+109,1.38.10,-1,southandcentralamerica,BR,FSC,ECON,preloggingcosts,type3,"Brazil-Bs, planning and infrastructure costs were higher under RIL"
+110,1.38.11,1,southandcentralamerica,BR,FSC,ECON,profit,type3,Brazil-Bb profit margins were higher under RIL
+111,1.38.12,1,southandcentralamerica,BR,FSC,ECON,profit,type3,Brazil-Bs profit margins were higher under RIL
+112,1.38.13,1,southandcentralamerica,BR,FSC,ECON,skiddingcost,type3,"Brazil-Bb, skidding costs were lower under RIL"
+113,1.38.14,1,southandcentralamerica,BR,FSC,ECON,workerproductivity,type3,"Brazil-Bs, worker productivity was higher under RIL"
+114,1.38.15,1,southandcentralamerica,BR,FSC,ECON,totalcostofloggingoperations,type3,"Brazil-Bb, when adjusted was waste, total costs of logging operations were lower under RIL"
+115,1.38.16,1,southandcentralamerica,BR,FSC,ECON,totalcostofloggingoperations,type3,"Brazil-Bs, when adjusted was waste, total costs of logging operations were lower under RIL"
+116,1.38.17,-1,southandcentralamerica,BR,FSC,ECON,workerproductivity,type3,"Brazil-Bb, RIL more time consuming"
+117,1.38.18,1,southandcentralamerica,BR,FSC,ECON,skiddingcost,type3,"Brazil-Bs, skidding costs were lower under RIL"
+118,1.38.2,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-Bs, canopy loss lower under RIL"
+119,1.38.3,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-Bb, gap size lower under RIL"
+120,1.38.4,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,"Brazil-Bs, gap size lower under RIL"
+121,1.38.5,1,southandcentralamerica,BR,FSC,ENV,collateraldamage,type3,"Brazil-Bb, there were fewer damaged trees under RIL"
+122,1.38.6,1,southandcentralamerica,BR,FSC,ENV,collateraldamage,type3,"Brazil-Bs, there were fewer damaged trees under RIL"
+123,1.38.7,1,southandcentralamerica,BR,FSC,ENV,grounddisturbance,type3,"Brazil-Bb, less ground area disturbed under RIL"
+124,1.38.8,1,southandcentralamerica,BR,FSC,ENV,grounddisturbance,type3,"Brazil-Bs, less ground area disturbed under RIL"
+125,1.38.9,-1,southandcentralamerica,BR,FSC,ECON,preloggingcosts,type3,"Brazil-Bb, planning and infrastructure costs were higher under RIL"
+126,1.39.1,1,southandcentralamerica,GY,FSC,ECON,preloggingcosts,type3,"RIL costs were lower than CL costs, which is exceptional because typically skid trails are not planned in CL"
+127,1.39.2,1,southandcentralamerica,GY,FSC,ECON,skiddingcost,type3,RIL Skidding more productive
+128,1.39.3,1,southandcentralamerica,GY,FSC,ECON,totalcostofloggingoperations,type3,"RIL total cost of logging operation was lower, which is exceptional, and it is because these cost do not include felling"
+129,1.40.1,0,pantropical,"MY,ET,ID,PP,BR,BL,CM,CB,GB,GY,CS,BH,FG,CT,NI,GH,LA",FSC,ENV,carbonstockemissions,type1,"Effect of RIL on above ground biomass not discernible, mostly due to logging intensity"
+130,1.40.2,1,pantropical,PAN,FSC,ENV,collateraldamage,type1,Residual tree damage lower under RIL
+131,1.40.3,0,pantropical,PAN,FSC,ENV,treediversity,type1,Richness only impacted by logging intensity
+132,1.42.1,1,asia,ID,FSC,ENV,canopylossgapsize,type3,"Smaller canopy loss, less damage (DRT) after certification"
+133,1.42.10,-1,asia,MY,FSC,ECON,profit,type3,Negative NPV under all scenarios (KPKKT) after certification
+134,1.42.11,-1,asia,MY,FSC,ECON,profit,type3,Negative NPV under all scenarios (PITC) after certification
+135,1.42.12,1,asia,ID,FSC,ECON,profit,type3,Positive NPV under all scenarios (DRT) after certification
+136,1.42.13,1,southandcentralamerica,BR,FSC,ECON,skiddingcosts,type3,Lower skidding and road construction costs after certification implemented
+137,1.42.2,1,southandcentralamerica,BR,FSC,SOC,jobs,type3,"Despite lower production, more jobs were created (Cikel) after certification was implemented"
+138,1.42.3,1,asia,ID,FSC,SOC,jobs,type3,More jobs were created (DRT) after certification was implemented
+139,1.42.4,0,asia,MY,FSC,SOC,jobs,type3,Only marginal effect (KPKKT) on jobs after certification was implemented
+140,1.42.5,1,asia,ID,FSC,ECON,managementandadministration,type3,"Reduction of intermediaries in export, which lead to reduced cost (DRT) after certification was implemented"
+141,1.42.6,1,asia,MY,FSC,ECON,marketaccess,type3,Main driver of certification in this case is market access (KPKKT)
+142,1.42.7,1,southandcentralamerica,BR,FSC,ECON,pricepremium,type3,"Price increased by 30%, but production volume decreased"
+143,1.42.8,0,asia,MY,FSC,ECON,pricepremium,type3,No price premium achieved (KPKKT)
+144,1.42.9,-1,southandcentralamerica,BR,FSC,ECON,profit,type3,Negative NPV under all scenarios (Cikel) after certification
+145,1.43.1,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to fewer malnourished people in communities associated with the logging concessions
+146,1.43.10,0,asia,ID,FSC,SOC,infrastructureandinstitutions,type1,FSC certification did not lead to an increase in health centres
+147,1.43.2,1,asia,ID,FSC,SOC,directeconomicbenefits,type1,FSC certification resulted in more private funding available
+148,1.43.3,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to reduced air pollution
+149,1.43.4,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to less firewood dependence in communities associated with the logging concessions
+150,1.43.5,1,asia,ID,FSC,SOC,communitywellbeingandlivelihoods,type1,FSC certification lead to a lower incidence of air-pollution related diseases
+151,1.43.6,0,asia,ID,FSC,ENV,waterregulationerosionprevention,type1,FSC certification did not lead to a reduction in water pollution
+152,1.43.7,1,asia,ID,FSC,ENV,deforestationfragmentationanddegradation,type1,FSC certification caused a 4.97% reduction in deforestation in certified villages
+153,1.43.8,0,asia,ID,FSC,ENV,deforestationfragmentationanddegradation,type1,FSC certification did not lead to a change in Forest fire occurrence
+154,1.43.9,0,asia,ID,FSC,SOC,infrastructureandinstitutions,type1,FSC certification did not lead to a change in street lighting in villages associated with the concession
+155,1.44.1,1,asia,MY,FSC,ENV,collateraldamage,type3,"Under RIL, 21% of original stems were damaged, compared to 44% under CL."
+156,1.44.10,-1,asia,MY,FSC,ECON,workerproductivity,type3,Felling time was significantly higher under RIL
+157,1.44.2,1,asia,MY,FSC,SOC,compliancewithharvestregulations,type3,Steep slopes not all logged under RIL
+158,1.44.3,-1,asia,MY,FSC,ECON,preloggingcosts,type3,"Per cubic meter and per ha, pre-logging costs were higher under RIL"
+159,1.44.4,-1,asia,MY,FSC,ECON,profit,type3,Net Present Value was lower for RIL than for CL
+160,1.44.5,-1,asia,MY,FSC,ECON,profit,type3,"Per ha area logged, the profit was lower for RIL than for CL"
+161,1.44.6,1,asia,MY,FSC,ENV,roadandskidtraildensity,type3,"Under CL, roads and skid trails were longer and covered more area, log landings and bladed surface was larger"
+162,1.44.7,1,asia,MY,FSC,ENV,setasidesandbufferzones,type3,"Steep slopes, buffers were set aside under RIL"
+163,1.44.8,1,asia,MY,FSC,ECON,timberstock(sustainabilityofincome),type3,There was a 10% difference in growing timber stock
+164,1.44.9,-1,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,The total costs of logging operations was 18% lower under CL compared to RIL
+165,1.45.1,-1,asia,ID,FSC,ECON,profit,type3,Profit per hectare was lower under RIL
+166,1.45.2,0,asia,ID,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter were about the same for RIL and CL
+167,1.46.1,-1,asia,MY,FSC,ECON,profit,type3,Profit per hectare was lower under RIL
+168,1.46.2,-1,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter was lower under CL
+169,1.47.1,0,africa,GB,FSC,ECON,profit,type3,Profit per hectare was about the same under RIL and CL
+170,1.47.2,-1,africa,GB,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter was lower under CL
+171,1.48.1,-1,asia,MY,FSC,ECON,profit,type3,Profit per hectare was lower under RIL
+172,1.48.2,0,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter was about the same for RIL and CL
+173,1.49.1,0,asia,MY,FSC,ECON,profit,type3,Profit per hectare was about the same under RIL and CL
+174,1.49.2,1,asia,MY,FSC,ECON,totalcostofloggingoperations,type3,Cost per cubic meter was lower under RIL
+175,1.51.1,0,southandcentralamerica,MX,FSC,ENV,deforestationfragmentationanddegradation,type1,The results offer no evidence that FSC certification affects deforestation.
+176,1.52.1,1,southandcentralamerica,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Species richness in RIL concessions is higher than in CL concessions.
+177,1.52.2,1,pantropical,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Bird species richness in RIL concessions was marginally higher than in CL concessions.
+178,1.52.3,1,pantropical,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Arthropod species richness in RIL concessions was higher than in CL concessions.
+179,1.52.4,1,pantropical,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,treediversity,type1,Plant species richness in RIL concessions was higher than in CL concessions.
+180,1.52.5,0,pantropical,"BH,BL,BR,GH,MY,CS,EC,IN,ID,MY",FSC,ENV,animaldiversity,type1,Mammal species richness in RIL concessions was about the same as in CL concessions.
+181,1.7.1,1,pantropical,MY,FSC,ENV,animaldiversity,type3,Significantly higher species richness of large bodied mammals in certified concession
+182,1.7.2,1,asia,MY,FSC,ENV,carbonstockemissions,type3,Higher carbon density in above-ground vegetation can be attributed to sustainable forest management in certified concession
+183,1.7.3,1,asia,MY,FSC,ENV,setasidesandbufferzones,type3,Conservation areas (where no logging happens) established in certified concessions

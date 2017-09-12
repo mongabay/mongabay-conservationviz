@@ -41,7 +41,7 @@ function drag(d) {
 }
 // and tooltip close button
 tooltip.select("span.tooltip-close")
-  .on("click", function() { clearSquares(); d3.select(this.parentNode).style("display","none") });
+  .on("click", function() { clearSquares(); closeTooltip() });
 
 // close tooltips when hovering outside the chart
 // otherwise they get in the way of the selects and other controls at the top
@@ -56,7 +56,7 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 // get data and a callback when download is complete
 d3.queue()
     .defer(d3.csv, 'data/lookup.csv')
-    .defer(d3.csv, 'data/lookup_study.csv')
+    .defer(d3.csv, 'data/lookup_strategy.csv')
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
@@ -67,7 +67,6 @@ $(window).on("resize", _.debounce(function () {
 
   // then, resize the containers
   // only needed here if not included in "Statechange"
-  // latest approach: also include in Statechange, but only for mobile
   resizeContainers();
 }, 250));
 
@@ -137,6 +136,14 @@ dispatch.on("load.descriptions", function(){
   // adds the description/explanatory text next to the legend
   $('div.description-container').html(description);
 
+  // adds text to the legend
+  var legends = d3.selectAll("td.legend-text").data(legend_text);
+
+  legends.selectAll("span")
+    .data(function(d) {return d})
+    .enter()
+    .append("span")
+    .text(function(d) {return d});
 })
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -358,10 +365,12 @@ function drawmap(countries_keyed) {
         selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
+        // close map popups (but not on mobile)
         if (! isMobile() ) map.closePopup();
-        // clear style
+        // clear style, clear squares, close tooltip
         this.setStyle(defaultStyle);
         clearSquares();
+        closeTooltip();
       });
     }
 
@@ -659,15 +668,14 @@ function mouseenterSquare(d) {
   // d3.select(this).classed("selected", true);  
   selectSquares({key: "id",value: d.id});
 
-  // add tooltips
+  // add tooltip content and display it
   var split = d.zb_id.toString().split(".");
   var id = (split[0] + "." + split[1]);
-  var text = lookup[id].name;
-  tooltip.select("div.tooltip-name").text(lookup[id].name);
-  tooltip.select("div.tooltip-author-year").text(lookup[id].author + ", " + lookup[id].pubyear);
-  var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + d.conclusion;
-  tooltip.select("div.tooltip-conclusion").html(conclusion);
-  tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
+  var link = tooltip.select("a.tooltip-author-link")
+  link.text(lookup[id].author);
+  link.attr("href", lookup[id].url);
+  var conclusion = lookup[id].conclusion == "" ? "" : ": " + d.conclusion;
+  tooltip.select("span.tooltip-conclusion").html(conclusion);
   tooltip.style("display","block");
 
   // position the tooltip, but if we dragged it somewhere, leave it alone
@@ -972,10 +980,10 @@ function selectSquares(match) {
         if (v == value) {
           // draw order prevents the correct display of stroke on top of neighboring svg
           // to work around this, add an absolutely positioned div 
-          var x = rect.attr("x") * 1 - 1;
-          var y = rect.attr("y") * 1 - 1;
-          var width = rect.attr("width") * 1 + 2;
-          var height = rect.attr("height") * 1 + 2;
+          var x = rect.attr("x") * 1 - 2;
+          var y = rect.attr("y") * 1 - 2;
+          var width = rect.attr("width") * 1 + 4;
+          var height = rect.attr("height") * 1 + 4;
 
           var parent = rect.node().parentNode.parentNode;
           var div = document.createElement('div');
@@ -993,7 +1001,12 @@ function selectSquares(match) {
 }
 // and the correlary: remove selected squares completely
 function clearSquares() {
-  d3.selectAll("dov.selected").remove();
+  d3.selectAll("div.selected").remove();
+}
+
+// close any open tooltip (not on the map, this refers to the squares tooltip)
+function closeTooltip() {
+  d3.selectAll("div.tooltip").style("display","none");
 }
 
 // show or hide chart details below the top chart

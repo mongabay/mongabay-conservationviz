@@ -95,7 +95,7 @@
             <option value="pluscount">Least positive evidence</option>
             <option value="neutralcount#reverse">Most neutral evidence</option>
             <option value="neutralcount">Least neutral evidence</option>
-            <option value="minuscount#reverse">Most neagative evidence</option>
+            <option value="minuscount#reverse">Most negative evidence</option>
             <option value="minuscount">Least negative evidence</option>
           </select>
         </div>
@@ -116,27 +116,43 @@
 
         <div class="col-md-4 col-sm-3">
           <div class="legend-container">
-            <div class="legend">
-              <span class="legend-text"></span>
-              <span class="legend-title">Meta-analysis, Causal</span>
-              <span class="legend-title">Case Study</span>
-            </div>
 
-            <div class="legend">
-              <span class="legend-text">Better</span>
-              <span class="rect type1 plus"></span>
-              <span class="rect type3 plus"></span>
-            </div>
-            <div class="legend">
-              <span class="legend-text">Same</span>
-              <span class="rect type1 neutral"></span>
-              <span class="rect type3 neutral"></span>
-            </div>
-            <div class="legend">
-              <span class="legend-text">Worse</span>
-              <span class="rect type1 minus"></span>
-              <span class="rect type3 minus"></span>
-            </div>
+            <table id="legend">
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>Meta-analysis, Causal</td>
+                  <td>Case<br>Study</td>
+                </tr>
+                  <td class="legend-text"></td>
+                  <td>
+                    <span class="rect type1 plus"></span>
+                  </td>
+                  <td>
+                    <span class="rect type3 plus"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="legend-text"></td>
+                  <td>
+                    <span class="rect type1 neutral"></span>
+                  </td>
+                  <td>
+                    <span class="rect type3 neutral"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="legend-text"></td>
+                  <td>
+                    <span class="rect type1 minus"></span>
+                  </td>
+                  <td>
+                    <span class="rect type3 minus"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
           </div><!-- legend-container -->
         </div><!-- col -->
       </div><!-- row -->
@@ -179,12 +195,7 @@
   <div class="tooltip" draggable="true">
     <span class="tooltip-close">×</span>
     <div class="tooltip-content">
-      <div class="tooltip-name"></div>
-      <div class="tooltip-author-year"></div>
-      <div class="tooltip-conclusion"></div>
-      <div class="tooltip-link">
-        <a target="_blank" href="">More information</a>
-      </div>
+      <a class="tooltip-author-link"></a><span class="tooltip-conclusion"></span>
     </div>
   </div>
 

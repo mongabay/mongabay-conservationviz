@@ -21,15 +21,13 @@ words[colgroups[0]] = "some words about env";
 words[colgroups[1]] = "some words about soc";
 words[colgroups[2]] = "some words about econ";
 
-var description = "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut\
-wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure\
-dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto.</p>\
-<p>Better definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
-ut laoreet dolore magna aliquam erat volutpat.</p>\
-<p>Same definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
-ut laoreet dolore magna aliquam erat volutpat.</p>\
-<p>Worse definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
-ut laoreet dolore magna aliquam erat volutpat. dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper</p>";
+var description = 'Each square represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>. The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. See <a href="" target="_blank">details on methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a>';
+
+var legend_text = [
+  "Certified better than conventional",
+  "Certified same as conventional",
+  "Certified worse than conventional"
+]
 
 // map circle areas, in km2
 var circleareas = {

@@ -7,7 +7,7 @@ id,zb_id,valence,continent,fips,strategy,theme,variable,type,conclusion
 6,1.1.6,1,africa,GB,FSC,ENV,roadandskidtraildensity,type3,"Even though per tree extracted, there is not a significant difference in all measures employed, overall, there are fewer and narrower skid trails and roads in the certified concession"
 7,1.1.7,1,africa,GB,FSC,ECON,timberstock(sustainabilityofincome),type3,Significantly lower logging intensity in certified concession
 8,1.1.8,0,africa,GB,FSC,ENV,treediversity,type3,"Before and after logging comparison of CL and FSC, both very little change, and no significant change"
-9,1.10.1,1,global,GLOBE,FSC,ENV,deforestationfragmentationanddegradation,type1,"The higher the area of FSC-certified forest in a country, the less deforestation there is. This is not however a cause-and-effect relationship."
+9,1.10.1,1,global,PAN,FSC,ENV,deforestationfragmentationanddegradation,type1,"The higher the area of FSC-certified forest in a country, the less deforestation there is. This is not however a cause-and-effect relationship."
 10,1.11.1,1,southandcentralamerica,BR,FSC,ENV,canopylossgapsize,type3,Lower canopy damage per tree
 11,1.11.2,1,southandcentralamerica,BR,FSC,ENV,roadandskidtraildensity,type3,"Lower average % road, deck, and skid area in RIL harvest blocks"
 12,1.12.1,1,asia,MY,FSC,ENV,animaldiversity,type3,Higher diversity and species richness of dung beetles was found in the RIL cutting blocks.
