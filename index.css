@@ -33,6 +33,8 @@ div.subtitle-cell {font-family: 'Montserrat', sans-serif; text-transform: upperc
 div.btn-bottom-header div.icon-cell img {width:21px; margin: 2px 4px 0 5px;}
 div.btn-bottom-header div.icon-cell { width: 35px; }
 
+div.toggler {cursor:pointer;}
+
 div.table-div {
   display:table;
   table-layout: fixed;

@@ -250,7 +250,7 @@ dispatch.on("statechange.charts", function(rawdata) {
 
     // check if we are showing or hiding details
     // if hide, remove all but the top level summary chart
-    if ($('div.' + col.key + '-chart').data().details == 'hide' ) col.values = [col.values[0]];
+    if ($('div.toggler[data-col="' + col.key + '"]').data().details == 'hide' ) col.values = [col.values[0]];
 
     // - calculate total width and height of this groups chart
     // - select the container, and give it an explicit height
@@ -1019,10 +1019,10 @@ function closeTooltip() {
 // show or hide chart details below the top chart
 function toggledetails(e) {
   // hide or show this cols details
-  var col = e.target.parentElement.getAttribute("data-col");
+  var target = $(e.currentTarget);
+  var col = target.data().col;
 
   // toggle data-details
-  var target = $('div.' + col + '-chart');
   var type = target.data('details') == 'show' ? 'hide' : 'show';
   target.data('details', type);
 
