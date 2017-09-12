@@ -127,7 +127,7 @@ dispatch.on("load.descriptions", function(){
   });
 
   // adds the description/explanatory text next to the legend
-  $('div.description-container').html(description);
+  $('table.description-container td').html(description);
 
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text);
@@ -137,6 +137,10 @@ dispatch.on("load.descriptions", function(){
     .enter()
     .append("span")
     .text(function(d) {return d});
+
+  // resize cols to enable vertical centering
+  resizeCols();
+
 })
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -696,10 +700,25 @@ function mouseleaveSquare(d) {
 function resizePage() {
   // recalc offets for all groups, then trigger a statechange
   dispatch.call("statechange",this,rawdata);
-console.log('reezie')
+
   // then, resize the containers
   // only needed here if not included in "Statechange"
   resizeContainers();
+
+  // then, make middle cols equal height
+  resizeCols();
+
+}
+
+// resize middle cols to same height, for vertical centering
+function resizeCols() {
+  var heights = $(".middle").map(function() {
+      return $(this).height();
+  }).get(),
+
+  maxHeight = isMobile() ? "auto" : Math.max.apply(null, heights);
+
+  $(".middle").css({height: maxHeight});
 
 }
 
