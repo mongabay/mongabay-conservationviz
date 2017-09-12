@@ -155,7 +155,7 @@ span.type2   { opacity: 1; }
 
 /* the legend */
 table#legend {table-layout: fixed;}
-table#legend td {padding: 4px 10px; text-align:center; max-width:78px;}
+table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
 div.legend-container {height: 100px; margin: 2em auto;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
 span.rect {display:inline-block; width: 20px; height: 20px;}

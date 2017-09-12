@@ -136,6 +136,14 @@ dispatch.on("load.descriptions", function(){
   // adds the description/explanatory text next to the legend
   $('div.description-container').html(description);
 
+  // adds text to the legend
+  var legends = d3.selectAll("td.legend-text").data(legend_text);
+
+  legends.selectAll("span")
+    .data(function(d) {return d})
+    .enter()
+    .append("span")
+    .text(function(d) {return d});
 })
 
 // register a listener for "load" and create dropdowns for various fiters

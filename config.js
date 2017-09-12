@@ -31,6 +31,12 @@ ut laoreet dolore magna aliquam erat volutpat.</p>\
 <p>Worse definition and explanation would all go here. Lorem ipsum dolor sit amet, cons ectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt\
 ut laoreet dolore magna aliquam erat volutpat. dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper</p>";
 
+var legend_text = [
+  "Certified better than conventional",
+  "Certified same as conventional",
+  "Certified worse than conventional"
+]
+
 // map circle areas, in km2
 var circleareas = {
   min: 15000, 
