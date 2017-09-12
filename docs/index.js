@@ -958,7 +958,7 @@ function selectSquares(match) {
   var value = match.value;
 
   // first delete any squares already created by selection
-  d3.selectAll("rect.selected").remove();
+  d3.selectAll("div.selected").remove();
 
   d3.selectAll("rect")
     .each(function(d) {
@@ -970,31 +970,36 @@ function selectSquares(match) {
       var values = d[key].indexOf(",") > -1 ? d[key].split(",") : [d[key]];
       values.forEach(function(v) {
         if (v == value) {
-          // draw order prevents the correct display of stroke
-          // to work around this, repaint a selected rect in its place 
-          var x = rect.attr("x");
-          var y = rect.attr("y");
-          var width = rect.attr("width");
-          var height = rect.attr("height");
-          var svg = rect.node().parentNode;
-          var r = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-          r.setAttribute("class","selected");
-          r.setAttribute("x",x);
-          r.setAttribute("y",y);
-          r.setAttribute("width",width);
-          r.setAttribute("height",height);
-          svg.appendChild(r);
+          // draw order prevents the correct display of stroke on top of neighboring svg
+          // to work around this, add an absolutely positioned div 
+          var x = rect.attr("x") * 1 - 1;
+          var y = rect.attr("y") * 1 - 1;
+          var width = rect.attr("width") * 1 + 2;
+          var height = rect.attr("height") * 1 + 2;
+
+          var parent = rect.node().parentNode.parentNode;
+          var div = document.createElement('div');
+          div.style.position = 'absolute';
+          div.style.width = width + 'px';
+          div.style.height = height + 'px';
+          div.style.top = y + 'px';
+          div.style.left = x + 'px';
+          div.setAttribute('class','selected');
+          parent.appendChild(div);
+
         }
       }); 
     });
 }
 // and the correlary: remove selected squares completely
 function clearSquares() {
-  d3.selectAll("rect.selected").remove();
+  d3.selectAll("dov.selected").remove();
 }
 
 // show or hide chart details below the top chart
 function toggledetails(e) {
+  // need to clear selected squares, otherwise the
+
   // hide or show this cols details
   var col = e.target.parentElement.getAttribute("data-col");
 
