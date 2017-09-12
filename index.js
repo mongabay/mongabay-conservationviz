@@ -41,7 +41,7 @@ function drag(d) {
 }
 // and tooltip close button
 tooltip.select("span.tooltip-close")
-  .on("click", function() { clearSquares(); d3.select(this.parentNode).style("display","none") });
+  .on("click", function() { clearSquares(); closeTooltip() });
 
 // close tooltips when hovering outside the chart
 // otherwise they get in the way of the selects and other controls at the top
@@ -360,9 +360,10 @@ function drawmap(countries_keyed) {
       circle.on('mouseout', function (e) {
         // close map popups (but not on mobile)
         if (! isMobile() ) map.closePopup();
-        // clear style
+        // clear style, clear squares, close tooltip
         this.setStyle(defaultStyle);
         clearSquares();
+        closeTooltip();
       });
     }
 
@@ -973,10 +974,10 @@ function selectSquares(match) {
         if (v == value) {
           // draw order prevents the correct display of stroke on top of neighboring svg
           // to work around this, add an absolutely positioned div 
-          var x = rect.attr("x") * 1 - 1;
-          var y = rect.attr("y") * 1 - 1;
-          var width = rect.attr("width") * 1 + 2;
-          var height = rect.attr("height") * 1 + 2;
+          var x = rect.attr("x") * 1 - 2;
+          var y = rect.attr("y") * 1 - 2;
+          var width = rect.attr("width") * 1 + 4;
+          var height = rect.attr("height") * 1 + 4;
 
           var parent = rect.node().parentNode.parentNode;
           var div = document.createElement('div');
@@ -995,6 +996,11 @@ function selectSquares(match) {
 // and the correlary: remove selected squares completely
 function clearSquares() {
   d3.selectAll("div.selected").remove();
+}
+
+// close any open tooltip (not on the map, this refers to the squares tooltip)
+function closeTooltip() {
+  d3.selectAll("div.tooltip").style("display","none");
 }
 
 // show or hide chart details below the top chart

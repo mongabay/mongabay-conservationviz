@@ -150,6 +150,7 @@ div.selected {
   border: 3px solid #07395B;
   opacity: 1;
   cursor:pointer;
+  z-index:50000000;
 }
 
 rect.plus    { fill: #52BF58; }
