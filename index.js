@@ -56,7 +56,7 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 // get data and a callback when download is complete
 d3.queue()
     .defer(d3.csv, 'data/lookup.csv')
-    .defer(d3.csv, 'data/lookup_study.csv')
+    .defer(d3.csv, 'data/lookup_strategy.csv')
     .defer(d3.csv, 'data/data.csv')
     .await(main);
 
@@ -67,7 +67,6 @@ $(window).on("resize", _.debounce(function () {
 
   // then, resize the containers
   // only needed here if not included in "Statechange"
-  // latest approach: also include in Statechange, but only for mobile
   resizeContainers();
 }, 250));
 
