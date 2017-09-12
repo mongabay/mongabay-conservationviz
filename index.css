@@ -147,7 +147,7 @@ rect {
 }
 
 div.selected {
-  border: 4px solid #07395B;
+  border: 3px solid #07395B;
   opacity: 1;
   cursor:pointer;
 }

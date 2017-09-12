@@ -358,6 +358,7 @@ function drawmap(countries_keyed) {
         selectSquares({key: "fips", value: e.target.data.fips});
       });
       circle.on('mouseout', function (e) {
+        // close map popups (but not on mobile)
         if (! isMobile() ) map.closePopup();
         // clear style
         this.setStyle(defaultStyle);
@@ -993,7 +994,7 @@ function selectSquares(match) {
 }
 // and the correlary: remove selected squares completely
 function clearSquares() {
-  d3.selectAll("dov.selected").remove();
+  d3.selectAll("div.selected").remove();
 }
 
 // show or hide chart details below the top chart
