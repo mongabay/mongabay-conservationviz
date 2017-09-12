@@ -660,15 +660,14 @@ function mouseenterSquare(d) {
   // d3.select(this).classed("selected", true);  
   selectSquares({key: "id",value: d.id});
 
-  // add tooltips
+  // add tooltip content and display it
   var split = d.zb_id.toString().split(".");
   var id = (split[0] + "." + split[1]);
-  var text = lookup[id].name;
-  tooltip.select("div.tooltip-name").text(lookup[id].name);
-  tooltip.select("div.tooltip-author-year").text(lookup[id].author + ", " + lookup[id].pubyear);
-  var conclusion = lookup[id].conclusion == "" ? "" : "<span>Conclusion:</span> " + d.conclusion;
-  tooltip.select("div.tooltip-conclusion").html(conclusion);
-  tooltip.select("div.tooltip-link").select("a").attr("href",lookup[id].url);
+  var link = tooltip.select("a.tooltip-author-link")
+  link.text(lookup[id].author);
+  link.attr("href", lookup[id].url);
+  var conclusion = lookup[id].conclusion == "" ? "" : ": " + d.conclusion;
+  tooltip.select("span.tooltip-conclusion").html(conclusion);
   tooltip.style("display","block");
 
   // position the tooltip, but if we dragged it somewhere, leave it alone

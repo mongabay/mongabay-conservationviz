@@ -95,7 +95,7 @@ div.chart {
 div.tooltip {
   background: rgba(255,255,255,0.85);
   box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
-  padding: 4px;
+  padding: 10px 16px 8px 10px;
   position: absolute;
   z-index: 1000;
   max-width:183px;
@@ -116,26 +116,15 @@ div.tooltip span.tooltip-close {
   opacity:0.3;
 }
 
-div.tooltip div.tooltip-content {
-  padding: 5px 15px 5px 5px;
+/*to match Mongabay link styles*/
+div.tooltip a.tooltip-author-link {
+  color: #0275d8;
+  text-decoration:none;
 }
 
-div.tooltip div.tooltip-name {
-  font-weight:500;
-  margin-bottom:4px;
-}
-
-div.tooltip div.tooltip-author-year {
-  font-style: italic;
-  margin-bottom:4px;
-}
-div.tooltip div.tooltip-conclusion {
-  margin-bottom:4px;
-}
-
-div.tooltip div.tooltip-conclusion span {
-  font-weight:500;
-  margin-bottom:4px;
+div.tooltip a.tooltip-author-link:hover {
+  color: #444;
+  text-decoration:underline;
 }
 
 /* chart rects */
