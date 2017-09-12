@@ -146,12 +146,10 @@ rect {
   z-index:10000;
 }
 
-rect.selected {
+div.selected {
+  border: 4px solid #07395B;
+  opacity: 1;
   cursor:pointer;
-  stroke-width:4px;
-  stroke-opacity:1 !important;
-  stroke: #07395B !important;
-  fill-opacity: 0;
 }
 
 rect.plus    { fill: #52BF58; }
