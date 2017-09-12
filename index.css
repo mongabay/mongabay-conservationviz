@@ -156,7 +156,7 @@ span.type2   { opacity: 1; }
 /* the legend */
 table#legend {table-layout: fixed;}
 table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
-div.legend-container {height: 100px; margin: 2em auto;}
+div.legend-container {margin: 2em auto;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
 span.rect {display:inline-block; width: 20px; height: 20px;}
 span.legend-text {height: 20px; line-height:20px;}
@@ -165,9 +165,7 @@ span.legend-text {height: 20px; line-height:20px;}
 div.description-container {
   font-size: 13px;
   margin: 1em auto;
-  vertical-align: middle;
   min-height: 163px;
-
 }
 
 /* the map */
@@ -344,9 +342,6 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 }
 
 @media (max-width: 992px) {
-  div.legend-container {
-    float: right;
-  }
 
   div.button-wrapper {
     /*max-height:50px;*/
@@ -376,6 +371,10 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
     margin-bottom:1em;
   }
 
+  div.legend-container table#legend {
+    margin: 0 auto;
+  }
+
 }
 
 /* iPad portrait */
@@ -383,7 +382,7 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div.clearall-container {
     text-align: center;
     position:static;
-    margin-bottom:2em;
+    margin-bottom:1em;
   }
 
   div#select-container div.row {
@@ -396,6 +395,10 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
   span.angled {
     top:8px;
+  }
+
+  div.description-container {
+    min-height:0;
   }
 
 }

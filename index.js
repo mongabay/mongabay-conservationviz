@@ -61,14 +61,7 @@ d3.queue()
     .await(main);
 
 // set a window resize callback
-$(window).on("resize", _.debounce(function () {
-  // recalc offets for all groups, then trigger a statechange
-  dispatch.call("statechange",this,rawdata);
-
-  // then, resize the containers
-  // only needed here if not included in "Statechange"
-  resizeContainers();
-}, 250));
+$(window).on("resize", _.debounce(resizePage, 350));
 
 // callback from d3.queue()
 function main(error, lookups, lookups_study, data) {
@@ -598,27 +591,25 @@ function drawchart(data, container, tfast, group) {
 
   // update existing squares, transition
   squares
-    .classed("neutral",function(d) { return d.valence == 0 })
-    .classed("plus",function(d) { return d.valence > 0 })
-    .classed("minus",function(d) { return d.valence < 0 })
-    .classed("type1", function(d) {return d.type == "type1"})
-    .classed("type2", function(d) {return d.type == "type2"})
-    .classed("type3", function(d) {return d.type == "type3"})
-    .classed("type4", function(d) {return d.type == "type4"})
-    .attr("height", config[group]["sqsize"] - 1)
-    .attr("width", config[group]["sqsize"] - 1)
-    // .on("mouseenter", mouseenterSquare)
-    // .on("mouseleave", mouseleaveSquare)
-    .on("click", mouseenterSquare)
-    .transition(tfast)
-      .attr("x",function(d,i) {
-        var x = calcx(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-        return x;
-      })
-      .attr("y", function(d,i) {
-        var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-        return y;
-      });
+      .classed("neutral",function(d) { return d.valence == 0 })
+      .classed("plus",function(d) { return d.valence > 0 })
+      .classed("minus",function(d) { return d.valence < 0 })
+      .classed("type1", function(d) {return d.type == "type1"})
+      .classed("type3", function(d) {return d.type == "type3"})
+      .attr("width", config[group]["sqsize"] - 1)
+      .attr("height", config[group]["sqsize"] - 1)
+      // .on("mouseenter", mouseenterSquare)
+      // .on("mouseleave", mouseleaveSquare)
+      .on("click", mouseenterSquare)
+      .transition(tfast)
+        .attr("x",function(d,i) {
+          var x = calcx(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
+          return x;
+        })
+        .attr("y", function(d,i) {
+          var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
+          return y;
+        });
 
   // make new squares
   var sqenter = squares.enter()
@@ -627,9 +618,7 @@ function drawchart(data, container, tfast, group) {
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
       .classed("type1", function(d) {return d.type == "type1"})
-      .classed("type2", function(d) {return d.type == "type2"})
       .classed("type3", function(d) {return d.type == "type3"})
-      .classed("type4", function(d) {return d.type == "type4"})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
       // .on("mouseenter", mouseenterSquare)
@@ -701,6 +690,19 @@ function mouseleaveSquare(d) {
   // but do clear the selected circle from the map - only if the country isn't selected in a dropdown
   // if ($("select#country").val() == "") clearCircles();
 }
+
+
+// resize everything
+function resizePage() {
+  // recalc offets for all groups, then trigger a statechange
+  dispatch.call("statechange",this,rawdata);
+console.log('reezie')
+  // then, resize the containers
+  // only needed here if not included in "Statechange"
+  resizeContainers();
+
+}
+
 
 // resize all the containers listed below from config
 function resizeContainers() {
