@@ -33,6 +33,8 @@ div.subtitle-cell {font-family: 'Montserrat', sans-serif; text-transform: upperc
 div.btn-bottom-header div.icon-cell img {width:21px; margin: 2px 4px 0 5px;}
 div.btn-bottom-header div.icon-cell { width: 35px; }
 
+div.toggler {cursor:pointer;}
+
 div.table-div {
   display:table;
   table-layout: fixed;
@@ -41,6 +43,15 @@ div.table-div {
 div.table-cell {
   display:table-cell;
   vertical-align: middle;
+}
+
+div.text-cell {
+  text-align:center;
+  text-transform:uppercase;
+}
+
+div.icon-cell {
+  width: 40px;
 }
 
 div.nothing {
@@ -154,20 +165,19 @@ rect.type1   { fill-opacity: 1; }
 span.type2   { opacity: 1; }
 
 /* the legend */
+div.legend-container {margin: 10px auto 2em;}
 table#legend {table-layout: fixed;}
 table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
-div.legend-container {height: 100px; margin: 2em auto;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
 span.rect {display:inline-block; width: 20px; height: 20px;}
 span.legend-text {height: 20px; line-height:20px;}
 
 /* the description */
-div.description-container {
-  font-size: 13px;
-  margin: 1em auto;
+table.description-container {
+  height: 100%;
+}
+table.description-container td {
   vertical-align: middle;
-  min-height: 163px;
-
 }
 
 /* the map */
@@ -331,22 +341,37 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div.btn-header {
     min-height: 80px;
   }
+  div.title-cell {
+    font-size:18px;
+    width:55%;
+  }
+}
+
+@media (max-width: 1300px) {
+  div.title-cell {
+    font-size:17px;
+    width:58%;
+  }
 }
 
 
 @media (max-width: 1200px) {
   div.title-cell {
-    font-size:20px;
-    width:62%;
+    font-size:15px;
+    width:50%;
   }
 
+  div.text-cell {
+    width:auto;
+    font-size:11px;
+  }
 
+  div.icon-cell {
+    width: 40px;
+  }
 }
 
 @media (max-width: 992px) {
-  div.legend-container {
-    float: right;
-  }
 
   div.button-wrapper {
     /*max-height:50px;*/
@@ -372,8 +397,17 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
     font-size:26px;
     width:50%;
   }
+  div.text-cell {
+    width:auto;
+    font-size:14px;
+  }
+
   div.col-md-4:not(:last-child) {
     margin-bottom:1em;
+  }
+
+  div.legend-container table#legend {
+    margin: 0 auto;
   }
 
 }
@@ -383,7 +417,7 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div.clearall-container {
     text-align: center;
     position:static;
-    margin-bottom:2em;
+    margin-bottom:1em;
   }
 
   div#select-container div.row {
@@ -398,6 +432,14 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
     top:8px;
   }
 
+  div.description-container {
+    min-height:0;
+  }
+
+  div.text-cell {
+    font-size:12px;
+  }
+
 }
 
 @media (max-width: 600px) {
@@ -409,6 +451,29 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
 }
 
-@media (max-width: 360px) {
+@media (max-width: 400px) {
+  div.title-cell {
+    font-size:16px;
+    width:55%;
+  }
+
+  div.text-cell {
+    font-size:11px;
+  }
+
+
 }
+
+@media (max-width: 350px) {
+  div.title-cell {
+    font-size:14px;
+    width:55%;
+  }
+
+  div.text-cell {
+    font-size:10px;
+  }
+
+}
+
 

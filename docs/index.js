@@ -43,9 +43,8 @@ function drag(d) {
 tooltip.select("span.tooltip-close")
   .on("click", function() { clearSquares(); closeTooltip() });
 
-// close tooltips when hovering outside the chart
-// otherwise they get in the way of the selects and other controls at the top
-$("div#select-container").on("mouseover", function() { d3.select("div.tooltip").style("display","none") });
+// any select option change should clear squares and tooltips
+$('select').on("change", function() { clearSquares(); closeTooltip(); })
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
@@ -61,14 +60,7 @@ d3.queue()
     .await(main);
 
 // set a window resize callback
-$(window).on("resize", _.debounce(function () {
-  // recalc offets for all groups, then trigger a statechange
-  dispatch.call("statechange",this,rawdata);
-
-  // then, resize the containers
-  // only needed here if not included in "Statechange"
-  resizeContainers();
-}, 250));
+$(window).on("resize", _.debounce(resizePage, 350));
 
 // callback from d3.queue()
 function main(error, lookups, lookups_study, data) {
@@ -134,7 +126,7 @@ dispatch.on("load.descriptions", function(){
   });
 
   // adds the description/explanatory text next to the legend
-  $('div.description-container').html(description);
+  $('table.description-container td').html(description);
 
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text);
@@ -144,6 +136,10 @@ dispatch.on("load.descriptions", function(){
     .enter()
     .append("span")
     .text(function(d) {return d});
+
+  // resize cols to enable vertical centering
+  resizeMiddleCols();
+
 })
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -211,6 +207,7 @@ dispatch.on("statechange.charts", function(rawdata) {
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
+
   // apply a sort field, if there is one
   // only sort other_rows, to always keep toprow at the top
   var sortoption = d3.select("select#sort").node().value;
@@ -219,6 +216,7 @@ dispatch.on("statechange.charts", function(rawdata) {
   // then structure data into cols, by colgroup, keeping the top row for the overview data
   var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
   colgroups.forEach(function(col) {
+
     // add a first row from old "top" data
     toprow.forEach(function(row){
       if (row.key.toLowerCase() == col) {
@@ -240,7 +238,6 @@ dispatch.on("statechange.charts", function(rawdata) {
       }
     })
   })
-
   // send off data to the chart renderer, one col at a time
   config[groups.bottom]["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
@@ -252,14 +249,15 @@ dispatch.on("statechange.charts", function(rawdata) {
 
     // check if we are showing or hiding details
     // if hide, remove all but the top level summary chart
-    if ($('div.' + col.key + '-chart').data().details == 'hide' ) col.values = [col.values[0]];
+    if ($('div.toggler[data-col="' + col.key + '"]').data().details == 'hide' ) col.values = [col.values[0]];
 
     // - calculate total width and height of this groups chart
     // - select the container, and give it an explicit height
     // - draw
     var colheight = calcOffsets(col.values,groups.bottom);
+
     var fullheight = colheight + config[groups.bottom]["buttonheight"] + "px";
-    var container = d3.select("." + col.key + "-chart").style("height", fullheight).attr("data-fullheight", fullheight);
+    var container = d3.select("." + col.key + "-chart").style("height", fullheight);
     drawchart(col.values, container, tfast, groups.bottom);
   });
 
@@ -556,7 +554,7 @@ function drawchart(data, container, tfast, group) {
 
   // update
   chartcontainers
-    .attr("class","chartcontainer")
+    .classed("chartcontainer",true)
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px") 
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
@@ -569,7 +567,7 @@ function drawchart(data, container, tfast, group) {
   // enter
   chartcontainers.enter().append("svg")
     .attr("overflow","visible")
-    .attr("class","chartcontainer")
+    .classed("chartcontainer",true)
     .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
@@ -598,27 +596,23 @@ function drawchart(data, container, tfast, group) {
 
   // update existing squares, transition
   squares
-    .classed("neutral",function(d) { return d.valence == 0 })
-    .classed("plus",function(d) { return d.valence > 0 })
-    .classed("minus",function(d) { return d.valence < 0 })
-    .classed("type1", function(d) {return d.type == "type1"})
-    .classed("type2", function(d) {return d.type == "type2"})
-    .classed("type3", function(d) {return d.type == "type3"})
-    .classed("type4", function(d) {return d.type == "type4"})
-    .attr("height", config[group]["sqsize"] - 1)
-    .attr("width", config[group]["sqsize"] - 1)
-    // .on("mouseenter", mouseenterSquare)
-    // .on("mouseleave", mouseleaveSquare)
-    .on("click", mouseenterSquare)
-    .transition(tfast)
-      .attr("x",function(d,i) {
-        var x = calcx(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-        return x;
-      })
-      .attr("y", function(d,i) {
-        var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
-        return y;
-      });
+      .classed("neutral",function(d) { return d.valence == 0 })
+      .classed("plus",function(d) { return d.valence > 0 })
+      .classed("minus",function(d) { return d.valence < 0 })
+      .classed("type1", function(d) {return d.type == "type1"})
+      .classed("type3", function(d) {return d.type == "type3"})
+      .attr("width", config[group]["sqsize"] - 1)
+      .attr("height", config[group]["sqsize"] - 1)
+      .on("click", clickSquare)
+      .transition(tfast)
+        .attr("x",function(d,i) {
+          var x = calcx(i, config[group]["number_that_fit"], config[group]["sqsize"]);
+          return x;
+        })
+        .attr("y", function(d,i) {
+          var y = calcy(i, config[group]["number_that_fit"], config[group]["sqsize"]);
+          return y;
+        });
 
   // make new squares
   var sqenter = squares.enter()
@@ -627,21 +621,17 @@ function drawchart(data, container, tfast, group) {
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
       .classed("type1", function(d) {return d.type == "type1"})
-      .classed("type2", function(d) {return d.type == "type2"})
       .classed("type3", function(d) {return d.type == "type3"})
-      .classed("type4", function(d) {return d.type == "type4"})
       .attr("width", config[group]["sqsize"] - 1)
       .attr("height", config[group]["sqsize"] - 1)
-      // .on("mouseenter", mouseenterSquare)
-      // .on("mouseleave", mouseleaveSquare)
-      .on("click", mouseenterSquare)
+      .on("click", clickSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
-          var x = calcx(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
+          var x = calcx(i, config[group]["number_that_fit"], config[group]["sqsize"]);
           return x;
         })
         .attr("y", function(d,i) {
-          var y = calcy(i, config[group][d.variable]["number_that_fit"], config[group]["sqsize"]);
+          var y = calcy(i, config[group]["number_that_fit"], config[group]["sqsize"]);
           return y;
         });
 
@@ -659,7 +649,7 @@ function handleMarkerClick(markerdata) {
 }
 
 // define behavior on mouseenter square (now only triggered by click)
-function mouseenterSquare(d) {
+function clickSquare(d) {
   // first, clear any selected squares and circles
   clearCircles();
   clearSquares();
@@ -691,16 +681,31 @@ function mouseenterSquare(d) {
   selectCircle(d.fips);
 }
 
-// define behavior on mouseout square
-function mouseleaveSquare(d) {
-  // update styles
-  // second thought, do not clear - so we can see what we selected (until we select another square)
-  // d3.select(this).classed("selected", false);  
+// resize everything
+function resizePage() {
+  // recalc offets for all groups, then trigger a statechange
+  dispatch.call("statechange",this,rawdata);
 
-  // do not hide the tooltip itself, otherwise we can't click on the link inside
-  // but do clear the selected circle from the map - only if the country isn't selected in a dropdown
-  // if ($("select#country").val() == "") clearCircles();
+  // then, resize the containers
+  // only needed here if not included in "Statechange"
+  resizeContainers();
+
+  // then, make middle cols equal height
+  resizeMiddleCols();
+
 }
+
+// resize middle cols to same height, for vertical centering
+function resizeMiddleCols() {
+  var heights = $(".middle").map(function() {
+      return $(this).height();
+  }).get(),
+
+  // on mobile, just make height "auto", otherwise, apply the max height
+  maxHeight = isMobile() ? "auto" : Math.max.apply(null, heights);
+  $(".middle").css({height: maxHeight});
+}
+
 
 // resize all the containers listed below from config
 function resizeContainers() {
@@ -804,6 +809,7 @@ function calcOffsets(data, group) {
 
   // set some names for convenience
   var sqsize = config[group]["sqsize"];
+  var number_that_fit = 0;
 
   // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
@@ -826,8 +832,7 @@ function calcOffsets(data, group) {
     });
 
     // from these counts, figure out how many rows this takes
-    var number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / (sqsize + 1));
-    config[group][d.key]["number_that_fit"] = number_that_fit;
+    number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / (sqsize + 1));
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
     var neutralrows = Math.ceil(neutral / number_that_fit);
@@ -860,10 +865,11 @@ function calcOffsets(data, group) {
   });
 
   // all done, add some calcs based on the sums we've just done
-  var charts_height              = config[group]["chartrows"] * sqsize;
-  var pad_height                 = config[group]["rowpadding"] * config[group]["grouprows"];
-  var toppad                     = config[group]["toprowpad"];
-  var single_col_height          = (charts_height + pad_height + toppad);
+  config[group]["number_that_fit"] = number_that_fit
+  var charts_height                = config[group]["chartrows"] * sqsize;
+  var pad_height                   = config[group]["rowpadding"] * config[group]["grouprows"];
+  var toppad                       = config[group]["toprowpad"];
+  var single_col_height            = (charts_height + pad_height + toppad);
 
   // we'll use this to give an explicity height to the col-
   return single_col_height;
@@ -1011,14 +1017,13 @@ function closeTooltip() {
 
 // show or hide chart details below the top chart
 function toggledetails(e) {
-  // need to clear selected squares, otherwise the
-
   // hide or show this cols details
-  var col = e.target.parentElement.getAttribute("data-col");
+  var target = $(e.currentTarget);
+  var col = target.data().col;
 
-  var target = $('div.' + col + '-chart');
+  // toggle data-details
   var type = target.data('details') == 'show' ? 'hide' : 'show';
-  var type = target.data('details', type);
+  target.data('details', type);
 
   // toggle the message
   $('div.' + col + '-chart span.details-msg').toggle();
