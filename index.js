@@ -49,6 +49,11 @@ $('select').on("change", function() { clearSquares(); closeTooltip(); })
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
 
+// init the show/hide detail panels for mobile
+if ( isMobile() ) {
+  toggleDetails();
+}
+
 // set a window resize callback
 $(window).on("resize", _.debounce(resizePage, 350));
 
@@ -714,7 +719,7 @@ function resizeMiddleCols() {
 
 // resize all the containers listed below from config
 function resizeContainers() {
-  d3.select(".bottom").style("height", config[groups.bottom]["height"] + "px"); 
+  d3.select(".bottom").style("height", config["height"] + "px"); 
 }
 
 // nest our data on selected group, then either "plus" or "minus",
@@ -946,11 +951,6 @@ function clear_all() {
   $('select#sort').val('').trigger('change');  
 }
 
-// simple "mobile" detector
-function isMobile() {
-  return window.innerWidth < 768;
-}
-
 // select a country circle or circles, given a fips code or comma-separated list of fips
 function selectCircle(fips) {
   // fips could be a list of countries, or could be a single country, so first devolve
@@ -1021,9 +1021,10 @@ function closeTooltip() {
 }
 
 // show or hide chart details below the top chart
-function toggledetails(e) {
+function toggleColumnDetails(e) {
   // hide or show this cols details
-  var target = $(e.currentTarget);
+  var target = e.currentTarget || e.target;
+  target = $(target);
   var col = target.data().col;
 
   // toggle data-details
@@ -1036,4 +1037,11 @@ function toggledetails(e) {
   // dispatch to redraw the charts
   dispatch.call("statechange",this,rawdata);
 
+}
+
+function toggleDetails() {
+  $('div.toggler').each(function() { 
+    $(this).data().details = "hide"; 
+    $('span.details-msg').toggle();
+  });
 }

@@ -42,6 +42,8 @@
   <!-- font awesome -->
   <script src="https://use.fontawesome.com/234f271872.js"></script>
 
+  <script type="text/javascript">function isMobile() { return window.innerWidth < 768; }</script>
+
 </head>
 
 <body>
@@ -163,7 +165,7 @@
     <div class="chart-container container-fluid">
       <div class="row">
         <div class="col-md-4 chartcol env-chart">
-          <div class="toggler" data-col="env" data-details="show" onclick="event.stopPropagation(); toggledetails(event);">
+          <div class="toggler" data-col="env" data-details="show" onclick="event.stopPropagation(); toggleColumnDetails(event);">
             <div class="btn-bottom-header btn-green table-div">
               <div class="table-cell icon-cell"><img src="./icons/environmental_large.png" /></div>
               <div class="table-cell subtitle-cell">environmental
@@ -175,7 +177,7 @@
           </div>
         </div>
         <div class="col-md-4 chartcol soc-chart">
-          <div class="toggler" data-col="soc" data-details="show" onclick="toggledetails(event)">
+          <div class="toggler" data-col="soc" data-details="show" onclick="toggleColumnDetails(event)">
             <div class="btn-bottom-header btn-blue table-div">
               <div class="table-cell icon-cell"><img src="./icons/social_large.png" /></div>
               <div class="table-cell subtitle-cell">social<div class="details"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
@@ -186,7 +188,7 @@
           </div>
         </div>
         <div class="col-md-4 chartcol econ-chart">
-          <div class="toggler" data-col="econ" data-details="show" onclick="toggledetails(event)">
+          <div class="toggler" data-col="econ" data-details="show" onclick="toggleColumnDetails(event)">
             <div class="btn-bottom-header btn-orange table-div">
               <div class="table-cell icon-cell"><img src="./icons/economic_large.png" /></div>
               <div class="table-cell subtitle-cell">economic<div class="details"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
