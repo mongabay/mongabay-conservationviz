@@ -401,9 +401,14 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
     font-size:14px;
   }
 
-  div.col-md-4:not(:last-child) {
+  div.col-md-4 {
+    margin-bottom:5px;
+  }
+
+  div.col-md-4:not(:div.button-wrapper) {
     margin-bottom:2em;
   }
+
 
   div.legend-container table#legend {
     margin: 0 auto;
