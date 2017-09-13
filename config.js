@@ -17,9 +17,9 @@ colors[colgroups[2]] = "#757ECF";
 
 // descriptive summaries for the theme groups
 var words = {};
-words[colgroups[0]] = "some words about env";
-words[colgroups[1]] = "some words about soc";
-words[colgroups[2]] = "some words about econ";
+words[colgroups[0]] = "mostly positive";
+words[colgroups[1]] = "not enough evidence";
+words[colgroups[2]] = "mixed results (controversial)";
 
 var description = '<p>Each square represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>. The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. See <a href="" target="_blank">details on methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a></p>';
 

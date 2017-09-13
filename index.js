@@ -43,9 +43,8 @@ function drag(d) {
 tooltip.select("span.tooltip-close")
   .on("click", function() { clearSquares(); closeTooltip() });
 
-// close tooltips when hovering outside the chart
-// otherwise they get in the way of the selects and other controls at the top
-$("div#select-container").on("mouseover", function() { d3.select("div.tooltip").style("display","none") });
+// any select option change should clear squares and tooltips
+$('select').on("change", function() { clearSquares(); closeTooltip(); })
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
