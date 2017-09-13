@@ -241,7 +241,7 @@ dispatch.on("statechange.charts", function(rawdata) {
     })
   })
   // send off data to the chart renderer, one col at a time
-  config[groups.bottom]["colwidth"] = $(".chartcol").width();
+  config["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row:
     // clear out the data completely so we only show the "no data" div
@@ -253,14 +253,14 @@ dispatch.on("statechange.charts", function(rawdata) {
     // if hide, remove all but the top level summary chart
     if ($('div.toggler[data-col="' + col.key + '"]').data().details == 'hide' ) col.values = [col.values[0]];
 
-    // - calculate total width and height of this groups chart
+    // - calculate total width and height of the chart
     // - select the container, and give it an explicit height
     // - draw
-    var colheight = calcOffsets(col.values,groups.bottom);
+    var colheight = calcOffsets(col.values);
 
-    var fullheight = colheight + config[groups.bottom]["buttonheight"] + "px";
+    var fullheight = colheight + config["buttonheight"] + "px";
     var container = d3.select("." + col.key + "-chart").style("height", fullheight);
-    drawchart(col.values, container, tfast, groups.bottom);
+    drawchart(col.values, container);
   });
 
   // draw the map 
@@ -383,7 +383,7 @@ function drawmap(countries_keyed) {
 //
 // Main chart redraw function
 //
-function drawchart(data, container, tfast, group) {
+function drawchart(data, container) {
 
   console.log("statechange data: ", data);
 
@@ -403,8 +403,8 @@ function drawchart(data, container, tfast, group) {
 
   // define row functions
   var rowheight = function(d, i) {
-    var pad = i == 0 ? config[group]["toprowpad"] : 0;
-    return (config[group][d.key]["totalrows"] * config[group]["sqsize"]) + pad + "px";
+    var pad = i == 0 ? config["toprowpad"] : 0;
+    return (config[d.key]["totalrows"] * config["sqsize"]) + pad + "px";
   }
 
   // update existing ones left over
@@ -414,7 +414,7 @@ function drawchart(data, container, tfast, group) {
     .transition(tfast)
     .style("left", 15)
     .style("top", function(d) {
-      var y = config[group][d.key]["offset_y"]; // row offset
+      var y = config[d.key]["offset_y"]; // row offset
       return y + "px";
     })
     .style("height", rowheight)
@@ -427,7 +427,7 @@ function drawchart(data, container, tfast, group) {
     .transition(tfast)
     .style("left", 15)
     .style("top", function(d) {
-      var y = config[group][d.key]["offset_y"]; // row offset
+      var y = config[d.key]["offset_y"]; // row offset
       return y + "px";
     })
     .style("height", rowheight);
@@ -446,7 +446,7 @@ function drawchart(data, container, tfast, group) {
   textwrappers.enter().append("div")
     .attr("class","textwrapper")
     .attr("class", function(d) { return d3.select(this).attr("class") + " " + d.key.toLowerCase(); })
-    .style("width", (config[group]["textwidth"] - config[group]["textpadding"] ) + "px");
+    .style("width", (config["textwidth"] - config["textpadding"] ) + "px");
 
   //
   // TEXT LABELS THEMSELVES
@@ -468,7 +468,7 @@ function drawchart(data, container, tfast, group) {
       var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
       return text;
     })
-    .style("font-size", function() { return config[group]["labelsize"] + "px"; })
+    .style("font-size", function() { return config["labelsize"] + "px"; })
     .on("click", function(d) {
       // update the selected group details, so we can track this, and apply with other filters 
       // value is simply the data key of the clicked upon label
@@ -501,8 +501,8 @@ function drawchart(data, container, tfast, group) {
   // define chartgroup functions
   var charttopfunction = function(d,i) {
     var key = d3.select(this.parentNode).datum().key;
-    var offset = i == 1 ? config[group][key]["neutraloffset"] : i == 2 ? config[group][key]["minusoffset"] : 0;
-    var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config[group]["toprowpad"] / 2 : 0;
+    var offset = i == 1 ? config[key]["neutraloffset"] : i == 2 ? config[key]["minusoffset"] : 0;
+    var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config["toprowpad"] / 2 : 0;
     return offset + pad + "px";
   };   
 
@@ -521,8 +521,8 @@ function drawchart(data, container, tfast, group) {
     .style("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
-      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var height = (rows * config[group]["sqsize"]) + "px";
+      var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
+      var height = (rows * config["sqsize"]) + "px";
       return height;
     });
 
@@ -534,13 +534,13 @@ function drawchart(data, container, tfast, group) {
       var c = clist.contains("toprow") ? " toprow" : "";      
       return d3.select(this).attr("class") + c; 
     })
-    .style("left", config[group]["textwidth"] + "px")
+    .style("left", config["textwidth"] + "px")
     .style("top", charttopfunction) 
     .style("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
-      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var height = (rows * config[group]["sqsize"]) + "px";
+      var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
+      var height = (rows * config["sqsize"]) + "px";
       return height;
     });
 
@@ -560,12 +560,12 @@ function drawchart(data, container, tfast, group) {
   // update
   chartcontainers
     .classed("chartcontainer",true)
-    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px") 
+    .attr("width", (config["colwidth"] - config["textwidth"]) + "px") 
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
-      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var height = (rows * config[group]["sqsize"]) + "px";
+      var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
+      var height = (rows * config["sqsize"]) + "px";
       return height;
     });
 
@@ -573,12 +573,12 @@ function drawchart(data, container, tfast, group) {
   chartcontainers.enter().append("svg")
     .attr("overflow","visible")
     .classed("chartcontainer",true)
-    .attr("width", (config[group]["colwidth"] - config[group]["textwidth"]) + "px")
+    .attr("width", (config["colwidth"] - config["textwidth"]) + "px")
     .attr("height",function(d) {
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
-      var rows = toprow ? config[group][d.values[0].theme][valence] : config[group][d.values[0].variable][valence];
-      var height = (rows * config[group]["sqsize"]) + "px";
+      var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
+      var height = (rows * config["sqsize"]) + "px";
       return height;
     });
 
@@ -606,16 +606,16 @@ function drawchart(data, container, tfast, group) {
       .classed("minus",function(d) { return d.valence < 0 })
       .classed("type1", function(d) {return d.type == "type1"})
       .classed("type3", function(d) {return d.type == "type3"})
-      .attr("width", config[group]["sqsize"] - 1)
-      .attr("height", config[group]["sqsize"] - 1)
+      .attr("width", config["sqsize"] - 1)
+      .attr("height", config["sqsize"] - 1)
       .on("click", clickSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
-          var x = calcx(i, config[group]["number_that_fit"], config[group]["sqsize"]);
+          var x = calcx(i, config["number_that_fit"], config["sqsize"]);
           return x;
         })
         .attr("y", function(d,i) {
-          var y = calcy(i, config[group]["number_that_fit"], config[group]["sqsize"]);
+          var y = calcy(i, config["number_that_fit"], config["sqsize"]);
           return y;
         });
 
@@ -627,16 +627,16 @@ function drawchart(data, container, tfast, group) {
       .classed("minus",function(d) { return d.valence < 0 })
       .classed("type1", function(d) {return d.type == "type1"})
       .classed("type3", function(d) {return d.type == "type3"})
-      .attr("width", config[group]["sqsize"] - 1)
-      .attr("height", config[group]["sqsize"] - 1)
+      .attr("width", config["sqsize"] - 1)
+      .attr("height", config["sqsize"] - 1)
       .on("click", clickSquare)
       .transition(tfast)
         .attr("x",function(d,i) {
-          var x = calcx(i, config[group]["number_that_fit"], config[group]["sqsize"]);
+          var x = calcx(i, config["number_that_fit"], config["sqsize"]);
           return x;
         })
         .attr("y", function(d,i) {
-          var y = calcy(i, config[group]["number_that_fit"], config[group]["sqsize"]);
+          var y = calcy(i, config["number_that_fit"], config["sqsize"]);
           return y;
         });
 
@@ -804,26 +804,26 @@ function calcCountryKeys(data) {
 // - overall chart and column area width and height
 // - row offsets (spacing between rows)
 // - chart offset, for spacing between plus, neutral, minus rows
-function calcOffsets(data, group) {
+function calcOffsets(data) {
   // placeholder, for the data iteration, below
-  var nextoffset = config[group]["buttonheight"]; // start not a 0, but rather after the button header height 
+  var nextoffset = config["buttonheight"]; // start not a 0, but rather after the button header height 
 
   // some initial settings 
-  config[group]["chartrows"] = 0; // the actual chart rows (plus and minus)
-  config[group]["grouprows"] = data.length - 1; // the named theme rows for this group
+  config["chartrows"] = 0; // the actual chart rows (plus and minus)
+  config["grouprows"] = data.length - 1; // the named theme rows for this group
 
   // set some names for convenience
-  var sqsize = config[group]["sqsize"];
+  var sqsize = config["sqsize"];
   var number_that_fit = 0;
 
   // loop through the chart data to get an initial layout of chart rows,
   // and importantly, a total height in one column
   data.forEach(function(d,i) {
     // Add an empty object for this group, e.g. config.theme.ENV
-    config[group][d.key] = {};
+    config[d.key] = {};
 
     // Set the current "y" offset, will be zero when i = 0
-    config[group][d.key]["offset_y"] = nextoffset;
+    config[d.key]["offset_y"] = nextoffset;
 
     // Now calc the next one, for the next iteration
     // first look through values and get sums for plus and minus
@@ -837,43 +837,43 @@ function calcOffsets(data, group) {
     });
 
     // from these counts, figure out how many rows this takes
-    number_that_fit = Math.floor( (config[group]["colwidth"] - config[group]["textwidth"]) / (sqsize + 1));
+    number_that_fit = Math.floor( (config["colwidth"] - config["textwidth"]) / (sqsize + 1));
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
     var neutralrows = Math.ceil(neutral / number_that_fit);
     var totalrows = plusrows + minusrows + neutralrows;
 
     // save this for use when rendering
-    config[group][d.key]["totalrows"] = totalrows; 
-    config[group][d.key]["plusrows"]  = plusrows; 
-    config[group][d.key]["minusrows"] = minusrows; 
-    config[group][d.key]["neutralrows"] = neutralrows; 
+    config[d.key]["totalrows"] = totalrows; 
+    config[d.key]["plusrows"]  = plusrows; 
+    config[d.key]["minusrows"] = minusrows; 
+    config[d.key]["neutralrows"] = neutralrows; 
 
     // calc chart offsets for the minus chart, for this one row
     // this is based on the total count of plus rows, considering overflow
-    config[group][d.key]["neutraloffset"] = plusrows * sqsize;
-    config[group][d.key]["minusoffset"] = (plusrows * sqsize) + (neutralrows * sqsize);
+    config[d.key]["neutraloffset"] = plusrows * sqsize;
+    config[d.key]["minusoffset"] = (plusrows * sqsize) + (neutralrows * sqsize);
 
     // Next, calc the row offset: rows * the height of one square, plus the bottom margin
-    var pad = i == 0 ? config[group]["toprowpad"] : 0; // Top row (row 0) has some padding, so lets add that to row 1
-    nextoffset = nextoffset + (totalrows * sqsize) + config[group]["rowpadding"] + pad;
+    var pad = i == 0 ? config["toprowpad"] : 0; // Top row (row 0) has some padding, so lets add that to row 1
+    nextoffset = nextoffset + (totalrows * sqsize) + config["rowpadding"] + pad;
 
     // add plus/minus counts at this level (to facilitate sorting)
-    config[group][d.key]["pluscount"] = plus;
-    config[group][d.key]["minuscount"] = minus;
-    config[group][d.key]["neutralcount"] = neutral;
-    config[group][d.key]["totalcount"] = plus + minus + neutral;
+    config[d.key]["pluscount"] = plus;
+    config[d.key]["minuscount"] = minus;
+    config[d.key]["neutralcount"] = neutral;
+    config[d.key]["totalcount"] = plus + minus + neutral;
 
     // keep a count of rows, from which to calculate total height
-    config[group]["chartrows"] += totalrows; 
+    config["chartrows"] += totalrows; 
 
   });
 
   // all done, add some calcs based on the sums we've just done
-  config[group]["number_that_fit"] = number_that_fit
-  var charts_height                = config[group]["chartrows"] * sqsize;
-  var pad_height                   = config[group]["rowpadding"] * config[group]["grouprows"];
-  var toppad                       = config[group]["toprowpad"];
+  config["number_that_fit"] = number_that_fit
+  var charts_height                = config["chartrows"] * sqsize;
+  var pad_height                   = config["rowpadding"] * config["grouprows"];
+  var toppad                       = config["toprowpad"];
   var single_col_height            = (charts_height + pad_height + toppad);
 
   // we'll use this to give an explicity height to the col-
