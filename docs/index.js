@@ -25,7 +25,7 @@ var circlecolors = {
 defaultStyle  = {"fillColor": circlecolors["default"], "color": circlecolors["default"]};
 selectedStyle = {"fillColor": circlecolors["selected"], "color": circlecolors["selected"]};
 
-// define the tooltips
+// define a global ref to the tooltips
 var tooltip = d3.select("div.tooltip")
   .call(d3.drag().on("drag", drag)
 );
@@ -49,6 +49,13 @@ $('select').on("change", function() { clearSquares(); closeTooltip(); })
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
 
+// set a window resize callback
+$(window).on("resize", _.debounce(resizePage, 350));
+
+//
+// D3 initiation: data queue, dispatch events
+//
+
 // register events to emit & listen for via d3 dispatch
 var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
@@ -58,9 +65,6 @@ d3.queue()
     .defer(d3.csv, 'data/lookup_strategy.csv')
     .defer(d3.csv, 'data/data.csv')
     .await(main);
-
-// set a window resize callback
-$(window).on("resize", _.debounce(resizePage, 350));
 
 // callback from d3.queue()
 function main(error, lookups, lookups_study, data) {
@@ -116,7 +120,6 @@ function main(error, lookups, lookups_study, data) {
 
 // add a load listener to populate some of the markup for headers, descriptive text, etc. 
 dispatch.on("load.descriptions", function(){
-  
   // adds the descriptive words for each theme
   var keys = Object.keys(words);
   keys.forEach(function(key) {
@@ -139,7 +142,6 @@ dispatch.on("load.descriptions", function(){
 
   // resize cols to enable vertical centering
   resizeMiddleCols();
-
 })
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -351,7 +353,7 @@ function drawmap(countries_keyed) {
         clearCircles();
         clearSquares();
         this.openPopup();
-        handleMarkerClick(e.target.data); 
+        clickCircle(e.target.data); 
       });
       circle.bindPopup(country.name + ": " + country.count);
       circle.on('mouseover', function (e) {
@@ -408,6 +410,7 @@ function drawchart(data, container, tfast, group) {
   // update existing ones left over
   rows.attr("class", "chartrow")
     .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
+    .style("width",d3.select("div.toggler").style("width") )
     .transition(tfast)
     .style("left", 15)
     .style("top", function(d) {
@@ -420,6 +423,8 @@ function drawchart(data, container, tfast, group) {
   var rowenter = rows.enter().append("div")
     .attr("class", "chartrow")
     .attr("class", function(d,i) { var c = i == 0 ? " toprow" : ""; return d3.select(this).attr("class") + c; })
+    .style("width",d3.select("div.toggler").style("width") )
+    .transition(tfast)
     .style("left", 15)
     .style("top", function(d) {
       var y = config[group][d.key]["offset_y"]; // row offset
@@ -638,17 +643,18 @@ function drawchart(data, container, tfast, group) {
 } // update
 
 // NAMED FUNCTIONS
-function handleMarkerClick(markerdata) {
+// define behavior when clicking a map circle
+function clickCircle(markerdata) {
   // simply trigger change on the counry select, which offers some nice side benefits:
   // other filters are applied, and the dropdown state mirrors map state
   $("select#country").val(markerdata.fips).trigger("change");
 
   // then simply update the icons
-  $("div.country-icon").removeClass("selected");
+  $("div.country-circle").removeClass("selected");
   $(event.target).parent().addClass("selected");
 }
 
-// define behavior on mouseenter square (now only triggered by click)
+// define behavior when clicking a chart square
 function clickSquare(d) {
   // first, clear any selected squares and circles
   clearCircles();
@@ -705,7 +711,6 @@ function resizeMiddleCols() {
   maxHeight = isMobile() ? "auto" : Math.max.apply(null, heights);
   $(".middle").css({height: maxHeight});
 }
-
 
 // resize all the containers listed below from config
 function resizeContainers() {
