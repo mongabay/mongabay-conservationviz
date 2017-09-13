@@ -402,7 +402,7 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   }
 
   div.col-md-4:not(:last-child) {
-    margin-bottom:1em;
+    margin-bottom:2em;
   }
 
   div.legend-container table#legend {
