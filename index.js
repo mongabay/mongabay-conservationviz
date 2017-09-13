@@ -13,6 +13,7 @@ var circles;
 var circleScale;
 var minzoom= 2;
 var maxzoom= 18;
+var initBounds;
 
 // track whether we've dragged a tooltip or not
 var dragged = false;
@@ -119,7 +120,8 @@ function main(error, lookups, lookups_study, data) {
   dispatch.call("statechange", this, data);
   // finally, fit the map to bounds one time, this will always be the extent, despite state changes
   // cannot fit bounds to circles for some reason, so we fit to points instead
-  map.fitBounds(points.getBounds());
+  initBounds = points.getBounds();
+  map.fitBounds(initBounds);
 
 }
 
@@ -945,10 +947,14 @@ function clear_all() {
   // clear any group selection
   selectedgroup = {};
 
-  // then reset the selects
+  // reset the selects
   $('select#country').val('').trigger('change');  
   $('select#evidence').val('').trigger('change');  
   $('select#sort').val('').trigger('change');  
+
+  // reset the map view
+  map.fitBounds(initBounds);
+
 }
 
 // select a country circle or circles, given a fips code or comma-separated list of fips
