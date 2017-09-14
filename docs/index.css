@@ -165,10 +165,10 @@ rect.neutral { fill: #FACB57; }
 span.neutral { background: #FACB57; }
 rect.minus   { fill: #BC2A2A; }
 span.minus   { background: #BC2A2A; }
-rect.type3   { fill-opacity: 0.5; }
-span.type3   { opacity: 0.5; }
-rect.type1   { fill-opacity: 1; }
-span.type1   { opacity: 1; }
+rect.light   { fill-opacity: 0.5; }
+span.light   { opacity: 0.5; }
+rect.dark   { fill-opacity: 1; }
+span.dark   { opacity: 1; }
 
 /* the legend */
 div.legend-container {margin: 10px auto 2em;}

@@ -170,7 +170,7 @@ dispatch.on("load.dropdowns", function(options) {
       .text(function(d) { return d.name.trim(); });
 
   // EVIDENCE FILTER
-  var strengths = options["stengths"]
+  var strengths = options["stengths"].reverse();
   strengths.unshift("");
   var select = d3.select("select#evidence");
   // append strengthoptions to select dropdown
@@ -633,8 +633,8 @@ function drawchart(data, container) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("type1", function(d) {return d.type == "type1"})
-      .classed("type3", function(d) {return d.type == "type3"})
+      .classed("light", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "light"})
+      .classed("dark", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "dark"})
       .attr("width", config["sqsize"] - 1)
       .attr("height", config["sqsize"] - 1)
       .on("click", clickSquare)
@@ -654,8 +654,8 @@ function drawchart(data, container) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("type1", function(d) {return d.type == "type1"})
-      .classed("type3", function(d) {return d.type == "type3"})
+      .classed("light", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "light"})
+      .classed("dark", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "dark"})
       .attr("width", config["sqsize"] - 1)
       .attr("height", config["sqsize"] - 1)
       .on("click", clickSquare)
@@ -699,6 +699,7 @@ function clickSquare(d) {
   var link = tooltip.select("a.tooltip-author-link")
   link.text(lookup[id].author);
   link.attr("href", lookup[id].url);
+  link.attr("target", "_blank");
   var conclusion = lookup[id].conclusion == "" ? "" : ": " + d.conclusion;
   tooltip.select("span.tooltip-conclusion").html(conclusion);
   tooltip.style("display","block");
