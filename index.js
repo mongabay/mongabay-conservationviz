@@ -699,6 +699,7 @@ function clickSquare(d) {
   var link = tooltip.select("a.tooltip-author-link")
   link.text(lookup[id].author);
   link.attr("href", lookup[id].url);
+  link.attr("target", "_blank");
   var conclusion = lookup[id].conclusion == "" ? "" : ": " + d.conclusion;
   tooltip.select("span.tooltip-conclusion").html(conclusion);
   tooltip.style("display","block");
