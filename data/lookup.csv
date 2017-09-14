@@ -1,5 +1,5 @@
 key,name,latitude,longitude,parent
-alltext,All findings,,,
+alltext,All text,,,
 nodata,No data to show,,,
 ENV,Environmental,,,env
 ECON,Social,,,econ
@@ -12,42 +12,44 @@ southandcentralamerica,South and Central America,,,
 asia,Asia,,,
 global,Global,,,
 pantropical,Pan-tropical,,,
-canopylossgapsize,"Canopy loss, gap size",,,env
-carbonstockemissions,"Carbon stock, emissions",,,env
+accesstoland,Access to land,,,soc
+animaldiversity,Animal diversity,,,env
+awarenessempowermentparticipation,"Empowerment, participation",,,soc
+canopylossgapsize,Canopy loss,,,env
+carbonstockemissions,Carbon stock,,,env
 collateraldamage,Collateral damage,,,env
+communitywellbeingandlivelihoods,Community wellbeing,,,soc
+compliancewithharvestregulations,Compliance with harvest regulations,,,soc
+compliancewithlawsandregulations,Compliance with law,,,soc
+conflict,Conflict,,,soc
+costofprotection,Cost of protection,,,econ
+deforestationfragmentationanddegradation,Deforestation and degradation,,,env
+directeconomicbenefits,Economic benefits,,,econ
+equalityequitylessmarginalization,"Equality, equity",,,soc
 grounddisturbance,Ground disturbance,,,env
 harvestefficiency,Harvest efficiency,,,econ
-roadandskidtraildensity,Road and skid trail density,,,env
-timberstock(sustainabilityofincome),Timber stock (sustainability of income),,,econ
-treediversity,Tree diversity,,,env
-deforestationfragmentationanddegradation,"Deforestation, fragmentation and degradation",,,env
-animaldiversity,Animal diversity,,,env
-profit,Profit,,,econ
-preloggingcosts,Pre-logging costs,,,econ
-skiddingcost,Skidding cost,,,econ
-workerproductivity,Worker productivity,,,econ
-pricepremium,Price premium,,,econ
-totalcostofloggingoperations,Total cost of logging operations,,,econ
-accesstoland,Access to land,,,soc
-awarenessempowermentparticipation,"Awareness, empowerment, participation",,,soc
-compliancewithlawsandregulations,Compliance with laws and regulations,,,soc
-directeconomicbenefits,Direct economic benefits,,,econ
+humanwildlifeconflict,Human-wildlife conflict,,,soc
+illegalhuntingloggingmining,"Illegal hunting, logging",,,env
 infrastructureandinstitutions,Infrastructure and Institutions,,,soc
-livingandworkingconditionsofemployees,Living and working conditions of employees,,,soc
-illegalhuntingloggingmining,"Illegal hunting, logging, mining",,,env
-equalityequitylessmarginalization,"Equality, equity, less marginalization",,,soc
-communitywellbeingandlivelihoods,Community wellbeing and livelihoods,,,soc
-conflict,Conflict,,,soc
-managementandadministration,Management and administration,,,econ
-marketaccess,Market access,,,econ
-skiddingcosts,Skidding costs,,,econ
 jobs,Jobs,,,soc
-waterregulationerosionprevention,"Water regulation, erosion prevention",,,env
-compliancewithharvestregulations,Compliance with harvest regulations,,,soc
-setasidesandbufferzones,Set asides and buffer zones,,,env
-reforestation,Reforestation,,,env
+landgrabbingbetterlandtenure,Land tenure,,,soc
+livingandworkingconditionsofemployees,Employee wellbeing,,,soc
+managementandadministration,Management,,,econ
+marketaccess,Market access,,,econ
 opportunitycost,Opportunity Cost,,,econ
-landgrabbingbetterlandtenure,"Land grabbing, better land tenure",,,soc
+populationdisplacement,Population displacement,,,soc
+preloggingcosts,Pre-logging costs,,,econ
+pricepremium,Price premium,,,econ
+profit,Profit,,,econ
+reforestation,Reforestation,,,env
+roadandskidtraildensity,Road and trail density,,,env
+setasidesandbufferzones,Set asides and buffers,,,env
+skiddingcost,Skidding cost,,,econ
+timberstock(sustainabilityofincome),Timber stock,,,econ
+totalcostofloggingoperations,Total cost of logging,,,econ
+treediversity,Tree diversity,,,env
+waterregulationerosionprevention,Water and soil,,,env
+workerproductivity,Worker productivity,,,econ
 AF,Afghanistan,33.93911,67.709953,
 AX,Akrotiri,33.93911,67.709953,
 AL,Albania,41.153332,20.168331,
@@ -142,7 +144,6 @@ GG,Georgia,42.315407,43.356892,
 GM,Germany,51.165691,10.451526,
 GH,Ghana,7.946527,-1.023194,
 GI,Gibraltar,36.137741,-5.345374,
-GLOBE,Global,,,
 GO,Glorioso Islands,,,
 GR,Greece,39.074208,21.824312,
 GL,Greenland,71.706936,-42.604303,
