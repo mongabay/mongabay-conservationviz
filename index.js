@@ -495,16 +495,28 @@ function drawchart(data, container) {
     })
     .style("font-size", function() { return config["labelsize"] + "px"; })
     .on("click", function(d) {
-      // update the selected group details, so we can track this, and apply with other filters 
+      // on click, filter by this variable (or theme)
       // value is simply the data key of the clicked upon label
-      selectedgroup["value"] = d.key;
+      var value = d.key;
       // key is dependent on hierarchy, first get the first datum; every one of these should have at least one datum or it wouldn't be on the screen
       var datum = d.values[0].values[0]; 
       if (typeof datum == "undefined") return; 
       // if the theme (e.g. "ENV") is equal to the data label of the clicked item (e.g. ENV for "environmental"), then we are filtering by "theme"
       // if not, then we are filtering by "variable" 
       // a bit more hardcoding of these category names than I would like, but I am told that the use of theme and variable will be consistent across datasets
-      selectedgroup["key"] = datum["theme"] == selectedgroup["value"] ? "theme" : "variable"; 
+      var key = datum["theme"] == selectedgroup["value"] ? "theme" : "variable"; 
+      
+      // if we've already selected this row, clicking again serves to "unselect" it
+      var currentkey = selectedgroup["key"];
+      var currentvalue = selectedgroup["value"];
+      if (key == currentkey && value == currentvalue) {
+        // clear the selection
+        selectedgroup = {};
+      } else {
+        // new selection: update the "selectedgroup" key/value, so we can track this, and apply with other filters 
+        selectedgroup["key"]   = key;
+        selectedgroup["value"] = value;
+      }
       
       // all done, dispatch!
       dispatch.call("statechange",this,rawdata);
