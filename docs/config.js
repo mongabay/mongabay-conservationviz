@@ -6,7 +6,7 @@ var groups = {
 }
 
 // url to "full screen" version of app
-var fullscreen = "https://greeninfo-network.github.io/mongabay-conservationviz/"
+var fullscreen = "https://greeninfo-network.github.io/mongabay-conservationviz/fullscreen/"
 
 // keys to the column groups. These will be used below, and throughout to 
 // identify and organize groups from the data
