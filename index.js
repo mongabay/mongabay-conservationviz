@@ -468,8 +468,14 @@ function drawchart(data, container) {
   // update
   text
     .classed("nothing", function(d) { return d.key == "nodata" })
-    .text(function(d) {
-      var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+    .html(function(d) {
+      var text;
+      if (d.key == d.values[0].values[0].theme) {
+        // top row gets special treatment
+        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for more information</span>"
+      } else {
+        text = lookup[d.key]["name"];
+      } 
       return text;
   });
 
@@ -477,8 +483,14 @@ function drawchart(data, container) {
   text.enter().append("div")
     .classed("text", true)
     .classed("nothing", function(d) { return d.key == "nodata" })
-    .text(function(d) {
-      var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+    .html(function(d) {
+      var text;
+      if (d.key == d.values[0].values[0].theme) {
+        // top row gets special treatment
+        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for more information</span>"
+      } else {
+        text = lookup[d.key]["name"];
+      } 
       return text;
     })
     .style("font-size", function() { return config["labelsize"] + "px"; })

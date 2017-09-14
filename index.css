@@ -102,6 +102,13 @@ div.text {
   padding-left:10px;
 }
 
+span.hint {
+  color: #666;
+  display: inline-block;
+  font-style: italic;
+  margin-top: 6px;
+}
+
 div.chartrow.toprow div.text {
   font-weight: 500;
   padding-top: 10px;
