@@ -251,7 +251,8 @@ dispatch.on("statechange.charts", function(rawdata) {
   console.log(coldata);
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row:
-    // clear out the data completely so we only show the "no data" div
+    // clear out the data completely so we only show a "no data" row
+    // this works with the existing chart api, by creating a no data row, with theme == "nothing"
     if (col.values.length == 1) {
       col.values.push({key: "nodata", values:[{key: "nodata", values:[{nodatarows: 0, theme: "nothing"}]}]});
     } 
@@ -463,14 +464,17 @@ function drawchart(data, container) {
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  text.text(function(d) {
-    var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
-    return text;
+  text
+    .classed("nothing", function(d) { return d.key == "nodata" })
+    .text(function(d) {
+      var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+      return text;
   });
 
   // enter
   text.enter().append("div")
-    .attr("class","text")
+    .classed("text", true)
+    .classed("nothing", function(d) { return d.key == "nodata" })
     .text(function(d) {
       var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
       return text;
