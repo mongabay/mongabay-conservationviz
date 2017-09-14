@@ -743,11 +743,17 @@ function nest(data,group) {
 // Filter flat (not nested) data based on a key and a value
 function filter(data, key, value) {
   var filtered = data.filter(function(d) {
-    // country FIPS requires more permissive filtering:
+    // country FIPS requires more extensive filtering:
     // FIPS can be a list, or a single country 
     var match;
     if (key == "fips") {
-      match = d["fips"].indexOf(value) > -1; 
+      list = d["fips"].split(",");
+      list.forEach(function(item) {
+        if (item.trim() == value) {
+          match = true;
+          return;
+        }
+      });
     } else {
       match = (d[key] == value);
     }
