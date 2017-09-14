@@ -5,6 +5,9 @@ var groups = {
   bottom: "variable"
 }
 
+// url to "full screen" version of app
+var fullscreen = "https://greeninfo-network.github.io/mongabay-conservationviz/"
+
 // keys to the column groups. These will be used below, and throughout to 
 // identify and organize groups from the data
 var colgroups = ["env", "soc", "econ"];

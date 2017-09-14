@@ -125,8 +125,8 @@ function main(error, lookups, lookups_study, data) {
 
 }
 
-// add a load listener to populate some of the markup for headers, descriptive text, etc. 
-dispatch.on("load.descriptions", function(){
+// add a load listener to populate some of the markup for headers, descriptive text, fullscreen URL, etc. 
+dispatch.on("load.setup", function(){
   // adds the descriptive words for each theme
   var keys = Object.keys(words);
   keys.forEach(function(key) {
@@ -140,12 +140,14 @@ dispatch.on("load.descriptions", function(){
 
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text);
-
   legends.selectAll("span")
     .data(function(d) {return d})
     .enter()
     .append("span")
     .text(function(d) {return d});
+
+  // update "fullscreen" href
+  d3.select("a#fullscreen").attr("href",fullscreen);
 
   // resize cols to enable vertical centering
   resizeMiddleCols();
