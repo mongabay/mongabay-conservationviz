@@ -155,7 +155,7 @@ id,zb_id,valence,fips,strategy,theme,variable,type,conclusion
 154,1.43.9,0,ID,FSC,SOC,infrastructureandinstitutions,type1,FSC certification did not lead to a change in street lighting in villages associated with the concession.
 155,1.44.1,1,MY,FSC,ENV,collateraldamage,type3,"Under Reduced Impact Logging, 21% of original stems were damaged, compared to 44% under conventional logging."
 156,1.44.10,-1,MY,FSC,ECON,workerproductivity,type3,"Felling time was significantly higher under Reduced Impact Logging, compared to conventional logging."
-157,1.44.2,1,MY,FSC,SOC,compliancewithharvestregulations,type3,"Steep slopes not less often logged under Reduced Impact Logging, compared to conventional logging."
+157,1.44.2,1,MY,FSC,SOC,compliancewithlawsandregulations,type3,"Steep slopes not less often logged under Reduced Impact Logging, compared to conventional logging."
 158,1.44.3,-1,MY,FSC,ECON,preloggingcosts,type3,"Per cubic meter and per ha, pre-logging costs were higher under Reduced Impact Logging, compared to conventional logging."
 159,1.44.4,-1,MY,FSC,ECON,profit,type3,"Net Present Value was lower for Reduced Impact Logging, compared to conventional logging."
 160,1.44.5,-1,MY,FSC,ECON,profit,type3,"Per ha area logged, the profit was lower for Reduced Impact Logging, compared to conventional logging."
