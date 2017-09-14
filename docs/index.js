@@ -221,7 +221,7 @@ dispatch.on("statechange.charts", function(rawdata) {
   // apply a sort field, if there is one
   // only sort other_rows, to always keep toprow at the top
   var sortoption = d3.select("select#sort").node().value;
-  if (sortoption) nested = sort(other_rows, sortoption, groups.bottom);
+  if (sortoption) other_rows = sort(other_rows, sortoption);
 
   // then structure data into cols, by colgroup, keeping the top row for the overview data
   var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
@@ -789,13 +789,13 @@ function delegate_event(selected) {
 }
 
 // custom sort function, with optional order
-function sort(data, sortoption, group) {
+function sort(data, sortoption) {
   var sortoptions = sortoption.split("#");
   var sortfield = sortoptions[0]; 
   var reverse = sortoptions[1];
 
   var sorted = data.sort(function(a,b) {
-    var compare = config[group][a.key][sortfield] - config[group][b.key][sortfield];
+    var compare = config[a.key][sortfield] - config[b.key][sortfield];
     return compare;
   });
 

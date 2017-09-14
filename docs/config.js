@@ -24,7 +24,7 @@ words[colgroups[0]] = "mostly positive";
 words[colgroups[1]] = "not enough evidence";
 words[colgroups[2]] = "mixed results (controversial)";
 
-var description = '<p>Each square (try clicking on one) represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>. The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. See <a href="" target="_blank">details on methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a></p>';
+var description = '<p>Each square (try clicking on one) represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>, and the map shows its location (try hovering or clicking on a circle). The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. Below the map, all the evidence is divided into topics, such as Animal diversity, or Profit. See details on <a href="">methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a></p>';
 
 var legend_text = [
   "Certified better than conventional",
