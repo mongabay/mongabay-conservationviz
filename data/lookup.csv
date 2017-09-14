@@ -5,8 +5,8 @@ ENV,Environmental,,,env
 ECON,Social,,,econ
 SOC,Economic,,,soc
 strength0,Unknown,,,
-type1,Case Study,,,
-type3,Meta-analysis or Causal,,,
+type3,Case Study,,,
+type1,Meta-analysis or Causal,,,
 africa,Africa,,,
 southandcentralamerica,South and Central America,,,
 asia,Asia,,,
