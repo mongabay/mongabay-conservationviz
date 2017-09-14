@@ -216,7 +216,6 @@ dispatch.on("statechange.charts", function(rawdata) {
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
-
   // apply a sort field, if there is one
   // only sort other_rows, to always keep toprow at the top
   var sortoption = d3.select("select#sort").node().value;
@@ -249,11 +248,12 @@ dispatch.on("statechange.charts", function(rawdata) {
   })
   // send off data to the chart renderer, one col at a time
   config["colwidth"] = $(".chartcol").width();
+  console.log(coldata);
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row:
     // clear out the data completely so we only show the "no data" div
     if (col.values.length == 1) {
-      col.values = [];
+      col.values.push({key: "nodata", values:[{key: "nodata", values:[{nodatarows: 0, theme: "nothing"}]}]});
     } 
 
     // check if we are showing or hiding details
@@ -526,6 +526,7 @@ function drawchart(data, container) {
     })
     .style("top", charttopfunction) 
     .style("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -544,6 +545,7 @@ function drawchart(data, container) {
     .style("left", config["textwidth"] + "px")
     .style("top", charttopfunction) 
     .style("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -569,6 +571,7 @@ function drawchart(data, container) {
     .classed("chartcontainer",true)
     .attr("width", (config["colwidth"] - config["textwidth"]) + "px") 
     .attr("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -582,6 +585,7 @@ function drawchart(data, container) {
     .classed("chartcontainer",true)
     .attr("width", (config["colwidth"] - config["textwidth"]) + "px")
     .attr("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
