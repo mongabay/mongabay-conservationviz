@@ -102,6 +102,13 @@ div.text {
   padding-left:10px;
 }
 
+span.hint {
+  color: #666;
+  display: inline-block;
+  font-style: italic;
+  margin-top: 6px;
+}
+
 div.chartrow.toprow div.text {
   font-weight: 500;
   padding-top: 10px;
@@ -161,7 +168,7 @@ span.minus   { background: #BC2A2A; }
 rect.type3   { fill-opacity: 0.5; }
 span.type3   { opacity: 0.5; }
 rect.type1   { fill-opacity: 1; }
-span.type2   { opacity: 1; }
+span.type1   { opacity: 1; }
 
 /* the legend */
 div.legend-container {margin: 10px auto 2em;}
@@ -220,7 +227,7 @@ div.clearall-container {
   text-align: left;
 }
 
-a#clearall {
+a.btn-sm {
   text-decoration: none;
   display:inline-block;
   padding: 6px 8px;
@@ -228,11 +235,11 @@ a#clearall {
   border:1px solid #aaa;
   color: #999;
   position:relative;
-  /*top: 1px;*/
   cursor:pointer;
+  margin-right:0.7em;
 }
 
-a#clearall:hover {
+a.btn-sm:hover {
   border: 1px solid #888;
   color: #444;
   top:1px;

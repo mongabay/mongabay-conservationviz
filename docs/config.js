@@ -5,6 +5,9 @@ var groups = {
   bottom: "variable"
 }
 
+// url to "full screen" version of app
+var fullscreen = "https://greeninfo-network.github.io/mongabay-conservationviz/"
+
 // keys to the column groups. These will be used below, and throughout to 
 // identify and organize groups from the data
 var colgroups = ["env", "soc", "econ"];
@@ -21,7 +24,7 @@ words[colgroups[0]] = "mostly positive";
 words[colgroups[1]] = "not enough evidence";
 words[colgroups[2]] = "mixed results (controversial)";
 
-var description = '<p>Each square represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>. The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. See <a href="" target="_blank">details on methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a></p>';
+var description = '<p>Each square (try clicking on one) represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>. The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. See <a href="" target="_blank">details on methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a></p>';
 
 var legend_text = [
   "Certified better than conventional",

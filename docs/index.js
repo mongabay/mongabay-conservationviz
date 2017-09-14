@@ -125,8 +125,8 @@ function main(error, lookups, lookups_study, data) {
 
 }
 
-// add a load listener to populate some of the markup for headers, descriptive text, etc. 
-dispatch.on("load.descriptions", function(){
+// add a load listener to populate some of the markup for headers, descriptive text, fullscreen URL, etc. 
+dispatch.on("load.setup", function(){
   // adds the descriptive words for each theme
   var keys = Object.keys(words);
   keys.forEach(function(key) {
@@ -140,12 +140,14 @@ dispatch.on("load.descriptions", function(){
 
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text);
-
   legends.selectAll("span")
     .data(function(d) {return d})
     .enter()
     .append("span")
     .text(function(d) {return d});
+
+  // update "fullscreen" href
+  d3.select("a#fullscreen").attr("href",fullscreen);
 
   // resize cols to enable vertical centering
   resizeMiddleCols();
@@ -216,7 +218,6 @@ dispatch.on("statechange.charts", function(rawdata) {
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
-
   // apply a sort field, if there is one
   // only sort other_rows, to always keep toprow at the top
   var sortoption = d3.select("select#sort").node().value;
@@ -249,11 +250,13 @@ dispatch.on("statechange.charts", function(rawdata) {
   })
   // send off data to the chart renderer, one col at a time
   config["colwidth"] = $(".chartcol").width();
+  console.log(coldata);
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row:
-    // clear out the data completely so we only show the "no data" div
+    // clear out the data completely so we only show a "no data" row
+    // this works with the existing chart api, by creating a no data row, with theme == "nothing"
     if (col.values.length == 1) {
-      col.values = [];
+      col.values.push({key: "nodata", values:[{key: "nodata", values:[{nodatarows: 0, theme: "nothing"}]}]});
     } 
 
     // check if we are showing or hiding details
@@ -463,16 +466,31 @@ function drawchart(data, container) {
     .data(function(d) {return [d]}, function(d) {return d.key});
 
   // update
-  text.text(function(d) {
-    var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
-    return text;
+  text
+    .classed("nothing", function(d) { return d.key == "nodata" })
+    .html(function(d) {
+      var text;
+      if (d.key == d.values[0].values[0].theme) {
+        // top row gets special treatment
+        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for more information</span>"
+      } else {
+        text = lookup[d.key]["name"];
+      } 
+      return text;
   });
 
   // enter
   text.enter().append("div")
-    .attr("class","text")
-    .text(function(d) {
-      var text = d.key == d.values[0].values[0].theme ? lookup["alltext"]["name"] : lookup[d.key]["name"];
+    .classed("text", true)
+    .classed("nothing", function(d) { return d.key == "nodata" })
+    .html(function(d) {
+      var text;
+      if (d.key == d.values[0].values[0].theme) {
+        // top row gets special treatment
+        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for more information</span>"
+      } else {
+        text = lookup[d.key]["name"];
+      } 
       return text;
     })
     .style("font-size", function() { return config["labelsize"] + "px"; })
@@ -526,6 +544,7 @@ function drawchart(data, container) {
     })
     .style("top", charttopfunction) 
     .style("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -544,6 +563,7 @@ function drawchart(data, container) {
     .style("left", config["textwidth"] + "px")
     .style("top", charttopfunction) 
     .style("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -569,6 +589,7 @@ function drawchart(data, container) {
     .classed("chartcontainer",true)
     .attr("width", (config["colwidth"] - config["textwidth"]) + "px") 
     .attr("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -582,6 +603,7 @@ function drawchart(data, container) {
     .classed("chartcontainer",true)
     .attr("width", (config["colwidth"] - config["textwidth"]) + "px")
     .attr("height",function(d) {
+      if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
       var valence = d.key + "rows";
       var rows = toprow ? config[d.values[0].theme][valence] : config[d.values[0].variable][valence];
@@ -739,11 +761,17 @@ function nest(data,group) {
 // Filter flat (not nested) data based on a key and a value
 function filter(data, key, value) {
   var filtered = data.filter(function(d) {
-    // country FIPS requires more permissive filtering:
+    // country FIPS requires more extensive filtering:
     // FIPS can be a list, or a single country 
     var match;
     if (key == "fips") {
-      match = d["fips"].indexOf(value) > -1; 
+      list = d["fips"].split(",");
+      list.forEach(function(item) {
+        if (item.trim() == value) {
+          match = true;
+          return;
+        }
+      });
     } else {
       match = (d[key] == value);
     }
