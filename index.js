@@ -65,11 +65,19 @@ $(window).on("resize", _.debounce(resizePage, 350));
 // register events to emit & listen for via d3 dispatch
 var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
+// check URL for a query param representing a path to data
+// fallback is to use the data in data/ which represents a copy of same in fsc/ 
+var strategies = ['fsc','pes'];
+var strategy = window.location.href.split('?')[1];
+// if we get an invalide param, pretend like nothing happened
+if (strategies.indexOf(strategy) < 0) strategy = ''; 
+var dataroot = typeof strategy === 'undefined' ? 'data/' : 'data/' + strategy;
+
 // get data and a callback when download is complete
 d3.queue()
     .defer(d3.csv, 'data/lookup.csv')
-    .defer(d3.csv, 'data/lookup_strategy.csv')
-    .defer(d3.csv, 'data/data.csv')
+    .defer(d3.csv, dataroot + '/lookup_strategy.csv')
+    .defer(d3.csv, dataroot + '/data.csv')
     .await(main);
 
 // callback from d3.queue()
