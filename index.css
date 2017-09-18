@@ -9,7 +9,7 @@ body {
   overflow-x: hidden;
 }
 
-  /*to match Mongabay link styles*/
+/*to match Mongabay link styles*/
 a {
   color: #0275d8;
   text-decoration:none;
@@ -27,7 +27,7 @@ div.btn-bottom-header {height:30px; width: 100%; color: #fff;}
 div.btn-green {background: #307538;}
 div.btn-blue {background: #F28123}
 div.btn-orange {background: #42858C}
-div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:62%; text-align:center;}
+div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:60%; text-align:center;}
 div.subtitle-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:13px; text-align:left;}
 
 div.btn-bottom-header div.icon-cell img {width:21px; margin: 2px 4px 0 5px;}
@@ -102,16 +102,18 @@ div.text {
   padding-left:10px;
 }
 
+div.chartrow.toprow div.text {
+  font-weight: 500;
+  padding-top: 10px;
+  text-transform: uppercase;
+}
+
 span.hint {
   color: #666;
   display: inline-block;
   font-style: italic;
   margin-top: 6px;
-}
-
-div.chartrow.toprow div.text {
-  font-weight: 500;
-  padding-top: 10px;
+  text-transform:none;
 }
 
 div.chart {
@@ -119,8 +121,25 @@ div.chart {
   height: 100%;
 }
 
+i.fa.fa-info-circle {
+  font-size:15px;
+  cursor:pointer;
+  position:static;
+  color:#777;
+}
+
+i.fa.fa-info-circle:hover {
+  color:#222;
+  position:relative;
+  top:-1px;
+}
+
+i.fa.variable-info {
+  margin-left:3px;
+}
+
 /* D3 tooltips on the chart and legend headers */
-div.tooltip, div.legend-tooltip  {
+div.tooltip, div.legend-tooltip, div.variable-tooltip  {
   background: rgba(255,255,255,0.85);
   box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
   padding: 10px 16px 8px 10px;
@@ -131,7 +150,7 @@ div.tooltip, div.legend-tooltip  {
   cursor:all-scroll;
 }
 
-div.tooltip span.tooltip-close, div.legend-tooltip span.tooltip-close  {
+div.tooltip span.tooltip-close, div.legend-tooltip span.tooltip-close, div.variable-tooltip span.tooltip-close  {
   display:block;
   position:absolute;
   top:0px; right: 5px;
@@ -172,7 +191,7 @@ span.dark   { opacity: 1; }
 
 /* the legend */
 div.legend-container {margin: 10px auto 2em;}
-table#legend {table-layout: fixed;}
+table#legend {table-layout: fixed; color: #444;}
 table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
 table#legend td.legend-header {cursor:pointer;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
@@ -182,6 +201,7 @@ span.legend-text {height: 20px; line-height:20px;}
 /* the description */
 table.description-container {
   height: 100%;
+  color:#444;
 }
 table.description-container td {
   vertical-align: middle;
@@ -190,6 +210,8 @@ table.description-container td {
 /* the map */
 div#map {
   width: 100%;
+  max-width: 1100px;
+  margin:0 auto;
 }
 
 div.null-icon {
@@ -245,6 +267,16 @@ a.btn-sm:hover {
   color: #444;
   top:1px;
 }
+
+a.btn-sm#clearall-map {
+  position:absolute;
+  z-index:9999;
+  bottom:10px; left:10px; top: auto;
+}
+
+a.btn-sm#clearall-map:hover {
+  bottom:11px;
+} 
 
 /* SELECTS */
 

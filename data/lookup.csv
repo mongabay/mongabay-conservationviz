@@ -47,7 +47,7 @@ pricepremium,Price premium,,,econ
 profit,Profit,,,econ
 reforestation,Reforestation,,,env
 roadandskidtraildensity,Road and trail density,,,env
-setasidesandbufferzones,Set asides and buffers,,,env
+setasidesandbufferzones,Set-asides and buffers,,,env
 skiddingcost,Skidding cost,,,econ
 timberstock(sustainabilityofincome),Timber stock,,,econ
 totalcostofloggingoperations,Total cost of logging,,,econ

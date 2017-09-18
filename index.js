@@ -136,9 +136,9 @@ function main(error, lookups, lookups_study, data) {
 // add a load listener to populate some of the markup for headers, descriptive text, fullscreen URL, etc. 
 dispatch.on("load.setup", function(){
   // adds the descriptive words for each theme
-  var keys = Object.keys(words);
+  var keys = Object.keys(words[strategy]);
   keys.forEach(function(key) {
-    var text = words[key];
+    var text = words[strategy][key];
     var elem = "div.text-cell." + key;
     $(elem).text(text);
   });
@@ -227,10 +227,15 @@ dispatch.on("statechange.charts", function(rawdata) {
   var toprow = nest(rawdata, groups.top);
   var other_rows = nest(filtered,groups.bottom);
 
-  // apply a sort field, if there is one
+  // apply a sort field, if there is one. 
+  // if there is no sort option, sort alpha on variable
   // only sort other_rows, to always keep toprow at the top
-  var sortoption = d3.select("select#sort").node().value;
-  if (sortoption) other_rows = sort(other_rows, sortoption);
+  var sortoption = d3.select("select#sort").node().value
+  if (sortoption) { 
+    other_rows = sort(other_rows, sortoption);
+  } else {
+    other_rows = _.sortBy(other_rows, "key");
+  }
 
   // then structure data into cols, by colgroup, keeping the top row for the overview data
   var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
@@ -483,7 +488,7 @@ function drawchart(data, container) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
-        text = lookup[d.key]["name"];
+        text = lookup[d.key]["name"] + "<i onclick='infoClick(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
       } 
       return text;
   });
@@ -498,7 +503,7 @@ function drawchart(data, container) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
-        text = lookup[d.key]["name"];
+        text = lookup[d.key]["name"] + " <i onclick='infoClick(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
       } 
       return text;
     })
@@ -1114,11 +1119,31 @@ function toggleDetails() {
 // show and position tooltip given an id 
 function showTip(e, id) {
   $('div.legend-tooltip').hide();
-
   var tip = document.getElementById(id);
   var x = e.clientX,
       y = e.clientY;
   tip.style.top = (y - 140) + 'px';
   tip.style.left = (x - 220) + 'px';
   tip.style.display = 'block';
+}
+
+// handle info-icon clicks on variable names
+function infoClick(e) {
+  // make sure we don't propagate to underlying text element, which also has click behavior
+  e.stopPropagation();
+
+  // get the clicked upon variable key
+  var key = e.target.getAttribute('data-var');
+
+  // update content
+  d3.select("div.variable-tooltip-content")
+    .text("I'm a description for variable " + lookup[key]["name"]);
+
+  // update position
+  var tip = d3.select("div.variable-tooltip")
+    .style("display","none")
+    .style("top",e.clientY + "px")
+    .style("left",e.clientX + "px")
+    .style("display","block");
+
 }

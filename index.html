@@ -110,7 +110,9 @@
       </div><!-- row -->
     </div><!-- select-container -->
 
-    <div id="map"></div>
+    <div id="map">
+      <a class="btn-sm" id="clearall-map" onclick="clear_all()" title="Clear all selections">Clear</a>
+    </div>
 
     <div class="container-fluid">
       <div class="row">
@@ -127,8 +129,8 @@
               <tbody>
                 <tr>
                   <td></td>
-                  <td class="legend-header stronger" onclick="showTip(event,'tip-stronger')">Stronger evidence</td>
-                  <td class="legend-header weaker" onclick="showTip(event,'tip-weaker')">Weaker evidence</td>
+                  <td class="legend-header stronger" onclick="showTip(event,'tip-stronger')">Stronger evidence <i class="fa fa-info-circle"></i></td>
+                  <td class="legend-header weaker" onclick="showTip(event,'tip-weaker')">Weaker evidence <i class="fa fa-info-circle"></i></td>
                 </tr>
                   <td class="legend-text"></td>
                   <td>
@@ -199,6 +201,7 @@
 
   </div>
 
+  <!-- tooltips! -->
   <div class="tooltip">
     <span class="tooltip-close">×</span>
     <div class="tooltip-content">
@@ -219,6 +222,11 @@
       These studies include individual case studies that can only show correlation, not causation. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="" target="_blank">here</a>
     </div>
   </div>
+
+  <div class="variable-tooltip">
+    <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
+    <div class="variable-tooltip-content"></div>
+  </div>  
 
   <!-- Local javascript -->
   <script src="./config.js"></script>
