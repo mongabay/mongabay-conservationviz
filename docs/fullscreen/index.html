@@ -10,7 +10,7 @@
 
   <style>
     body {margin:0; padding:0;}
-    h1, h2, h3 {font-family: 'Lato'; color: #555; margin: 20px 15px 10px 20px;}
+    h1, h2, h3 {font-family: 'Lato'; color: #555; margin: 20px 15px 10px 20px; text-align:center;}
     h3 { color: #666; }
   </style>
 
@@ -24,7 +24,7 @@
     Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?
   </h3>
 
-	<iframe src="../index.html" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
+	<iframe src="" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
 
 
 	<!-- ================== iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) ==================== -->
@@ -35,6 +35,19 @@
 	</script>
 
 	<!-- ==================================================================================================== -->
+
+  <script>
+    // check URL for a query param representing a path to data
+    // fallback is to use the data in data/ which represents a copy of same in fsc/ 
+    var strategies = ['fsc','pes'];
+    var strategy = window.location.href.split('?')[1];
+    // if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
+    if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
+
+    // now set frame src
+    var frame = document.getElementById("consevidence").src = '../?' + strategy;
+
+  </script>
 
 
 </body></html>
