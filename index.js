@@ -165,6 +165,7 @@ dispatch.on("load.setup", function(){
 dispatch.on("load.dropdowns", function(options) {
   // get countries names from countries_keyed
   var countries = _.map(options["countries_keyed"], function(c) {return c});
+  countries = _.sortBy(countries,"name");
 
   // COUNTRY FILTER
   // hack in a placeholder 
@@ -366,14 +367,14 @@ function drawmap(countries_keyed) {
       var circle = L.circle([country.latitude, country.longitude], {radius: radius}).setStyle(defaultStyle).addTo(circles);
       // add interactivity
       circle.data = country;
+      var plural = country.count > 1 ? "s" : "";
+      circle.bindPopup(country.name + ": " + country.count + " data point" + plural);
       circle.on('click',function(e) { 
         map.closePopup();
         clearCircles();
         clearSquares();
-        this.openPopup();
-        clickCircle(e.target.data); 
+        clickCircle(e.target.data, this); 
       });
-      circle.bindPopup(country.name + ": " + country.count);
       circle.on('mouseover', function (e) {
         // first clear any selections selected by other means
         clearCircles();
@@ -480,7 +481,7 @@ function drawchart(data, container) {
       var text;
       if (d.key == d.values[0].values[0].theme) {
         // top row gets special treatment
-        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for more information</span>"
+        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
         text = lookup[d.key]["name"];
       } 
@@ -495,7 +496,7 @@ function drawchart(data, container) {
       var text;
       if (d.key == d.values[0].values[0].theme) {
         // top row gets special treatment
-        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for more information</span>"
+        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
         text = lookup[d.key]["name"];
       } 
@@ -693,7 +694,7 @@ function drawchart(data, container) {
 
 // NAMED FUNCTIONS
 // define behavior when clicking a map circle
-function clickCircle(markerdata) {
+function clickCircle(markerdata, clicked) {
   // simply trigger change on the counry select, which offers some nice side benefits:
   // other filters are applied, and the dropdown state mirrors map state
   $("select#country").val(markerdata.fips).trigger("change");
@@ -701,6 +702,15 @@ function clickCircle(markerdata) {
   // then simply update the icons
   $("div.country-circle").removeClass("selected");
   $(event.target).parent().addClass("selected");
+  
+  // openPopup() on the resulting layer
+  circles.eachLayer(function(layer) {
+    if (layer.data.fips == markerdata.fips) {
+      layer.openPopup();
+      return;
+    }
+  });
+
 }
 
 // define behavior when clicking a chart square
@@ -1099,4 +1109,16 @@ function toggleDetails() {
     $(this).data().details = "hide"; 
     $('span.details-msg').toggle();
   });
+}
+
+// show and position tooltip given an id 
+function showTip(e, id) {
+  $('div.legend-tooltip').hide();
+
+  var tip = document.getElementById(id);
+  var x = e.clientX,
+      y = e.clientY;
+  tip.style.top = (y - 140) + 'px';
+  tip.style.left = (x - 220) + 'px';
+  tip.style.display = 'block';
 }

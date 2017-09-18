@@ -20,11 +20,11 @@ colors[colgroups[2]] = "#757ECF";
 
 // descriptive summaries for the theme groups
 var words = {};
-words[colgroups[0]] = "mostly positive";
-words[colgroups[1]] = "not enough evidence";
-words[colgroups[2]] = "mixed results (controversial)";
+words[colgroups[0]] = "Mostly positive";
+words[colgroups[1]] = "Inconclusive (little evidence)";
+words[colgroups[2]] = "Inconclusive (mixed results)";
 
-var description = '<p>Each square (try clicking on one) represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>, and the map shows its location (try hovering or clicking on a circle). The colour of each square shows whether certified forestry, or careful logging practices called Reduced Impact Logging, performed better (green), about the same (yellow), or worse (red) than conventional tropical forestry. Below the map, all the evidence is divided into topics, such as Animal diversity, or Profit. See details on <a href="">methods</a>. Based on an updated version of an <a href="http://onlinelibrary.wiley.com/doi/10.1111/conl.12244/abstract" target="_blank">article in Conservation Letters.</a></p>';
+var description = '<h4>How to read this infographic</h4><p>The map shows countries where scientists have measured the effectiveness of FSC certification or Reduced Impact Logging. Try hovering or clicking on a circle &mdash; the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 
 var legend_text = [
   "Certified better than conventional",

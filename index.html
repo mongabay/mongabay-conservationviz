@@ -127,8 +127,8 @@
               <tbody>
                 <tr>
                   <td></td>
-                  <td>Meta-analysis, Causal</td>
-                  <td>Case<br>Study</td>
+                  <td class="legend-header stronger" onclick="showTip(event,'tip-stronger')">Stronger evidence</td>
+                  <td class="legend-header weaker" onclick="showTip(event,'tip-weaker')">Weaker evidence</td>
                 </tr>
                   <td class="legend-text"></td>
                   <td>
@@ -199,10 +199,24 @@
 
   </div>
 
-  <div class="tooltip" draggable="true">
+  <div class="tooltip">
     <span class="tooltip-close">×</span>
     <div class="tooltip-content">
       <a class="tooltip-author-link"></a><span class="tooltip-conclusion"></span>
+    </div>
+  </div>
+
+  <div class="legend-tooltip" id="tip-stronger">
+    <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
+    <div class="legend-tooltip-content">
+      These studies include meta-analyses, systematic reviews, and rigorously designed studies that can show causality. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="" target="_blank">here</a>
+    </div>
+  </div>
+
+  <div class="legend-tooltip" id="tip-weaker">
+    <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
+    <div class="legend-tooltip-content">
+      These studies include individual case studies that can only show correlation, not causation. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="" target="_blank">here</a>
     </div>
   </div>
 

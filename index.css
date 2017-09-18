@@ -27,7 +27,7 @@ div.btn-bottom-header {height:30px; width: 100%; color: #fff;}
 div.btn-green {background: #307538;}
 div.btn-blue {background: #F28123}
 div.btn-orange {background: #42858C}
-div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:65%; text-align:center;}
+div.title-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:22px; width:62%; text-align:center;}
 div.subtitle-cell {font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size:13px; text-align:left;}
 
 div.btn-bottom-header div.icon-cell img {width:21px; margin: 2px 4px 0 5px;}
@@ -119,8 +119,8 @@ div.chart {
   height: 100%;
 }
 
-/* D3 tooltips on the chart */
-div.tooltip {
+/* D3 tooltips on the chart and legend headers */
+div.tooltip, div.legend-tooltip  {
   background: rgba(255,255,255,0.85);
   box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
   padding: 10px 16px 8px 10px;
@@ -131,7 +131,7 @@ div.tooltip {
   cursor:all-scroll;
 }
 
-div.tooltip span.tooltip-close {
+div.tooltip span.tooltip-close, div.legend-tooltip span.tooltip-close  {
   display:block;
   position:absolute;
   top:0px; right: 5px;
@@ -174,6 +174,7 @@ span.dark   { opacity: 1; }
 div.legend-container {margin: 10px auto 2em;}
 table#legend {table-layout: fixed;}
 table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
+table#legend td.legend-header {cursor:pointer;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
 span.rect {display:inline-block; width: 20px; height: 20px;}
 span.legend-text {height: 20px; line-height:20px;}
