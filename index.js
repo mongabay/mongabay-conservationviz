@@ -69,9 +69,9 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 // fallback is to use the data in data/ which represents a copy of same in fsc/ 
 var strategies = ['fsc','pes'];
 var strategy = window.location.href.split('?')[1];
-// if we get an invalide param, pretend like nothing happened
-if (strategies.indexOf(strategy) < 0) strategy = ''; 
-var dataroot = typeof strategy === 'undefined' ? 'data/' : 'data/' + strategy;
+// if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
+if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
+var dataroot = 'data/' + strategy;
 
 // get data and a callback when download is complete
 d3.queue()
@@ -144,10 +144,10 @@ dispatch.on("load.setup", function(){
   });
 
   // adds the description/explanatory text next to the legend
-  $('table.description-container td').html(description);
+  $('table.description-container td').html(description[strategy]);
 
   // adds text to the legend
-  var legends = d3.selectAll("td.legend-text").data(legend_text);
+  var legends = d3.selectAll("td.legend-text").data(legend_text[strategy]);
   legends.selectAll("span")
     .data(function(d) {return d})
     .enter()
@@ -155,7 +155,7 @@ dispatch.on("load.setup", function(){
     .text(function(d) {return d});
 
   // update "fullscreen" href
-  d3.select("a#fullscreen").attr("href",fullscreen);
+  d3.select("a#fullscreen").attr("href",fullscreen[strategy]);
 
   // resize cols to enable vertical centering
   resizeMiddleCols();
