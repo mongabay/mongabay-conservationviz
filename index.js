@@ -58,7 +58,7 @@ if ( isMobile() ) {
 // set a window resize callback
 $(window).on("resize", _.debounce(resizePage, 350));
 
-// listen for scroll, and close legend tooltips (on mobile)
+// listen for scroll, and close legend tooltips (only mobile)
 $(document).on("scroll", function() {
   if (isMobile()) setTimeout(function() { closeLegendTooltip(); closeVariableInfoTip(); },500);
 } )
@@ -970,12 +970,6 @@ function scale_count_per_range(i, number) {
   return i;
 }
 
-// do we need a scrollbar for this height? 
-function scrollbar(height) {
-  var windowHeight = window.innerHeight;
-  return height > windowHeight ? true : false;
-}
-
 // apply these options to filter the flat (not nested) data, in sequence
 function apply_options(data) { 
   // apply country filter, if there is one
@@ -1115,10 +1109,14 @@ function showLegendTip(e, id) {
   var tip = $('#' + id);
   if (! isMobile() ) {
     tip.css({
-      "top": e.clientY,
-      "left": e.clientX + 15
-    })
+      "top": e.pageY - 100,
+      "left": e.pageX + 25
+    });
   } else {
+    tip.css({
+      "top": "",
+      "left": ""
+    });
     tip.addClass("fixed");
   }
   tip.show();
@@ -1143,10 +1141,14 @@ function showVariableInfoTip(e) {
   // update position
   if (! isMobile() ) {
     tip.css({
-      "top": e.clientY,
-      "left": e.clientX + 15
-    })
+      "top": e.pageY - 80,
+      "left": e.pageX + 25
+    });
   } else {
+    tip.css({
+      "top": "",
+      "left": ""
+    });
     tip.addClass("fixed")
   }
   tip.show();
