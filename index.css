@@ -144,7 +144,7 @@ div.tooltip, div.legend-tooltip, div.variable-tooltip  {
   box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
   padding: 10px 16px 8px 10px;
   position: absolute;
-  z-index: 1000;
+  z-index: 10000;
   max-width:183px;
   display:none;
   cursor:all-scroll;
@@ -160,7 +160,14 @@ div.tooltip span.tooltip-close, div.legend-tooltip span.tooltip-close, div.varia
   color: #000;
   text-shadow: 0 1px 0 #fff;
   cursor:pointer;
-  opacity:0.3;
+  opacity:0.2;
+}
+
+div.legend-tooltip.fixed, div.variable-tooltip.fixed {
+  position:fixed;
+  width: 200px; height: auto;
+  margin-left: -100px; margin-top: -50px;
+  top: 50%; left: 50%;
 }
 
 /* chart rects */
@@ -199,12 +206,22 @@ span.rect {display:inline-block; width: 20px; height: 20px;}
 span.legend-text {height: 20px; line-height:20px;}
 
 /* the description */
-table.description-container {
+div.description-container {
   height: 100%;
   color:#444;
+  margin-bottom:5px;
+
+  display:inline-flex; 
+  align-items: center
+
 }
-table.description-container td {
-  vertical-align: middle;
+
+div.description-container h3 {
+  margin-top:10px;
+}
+
+div.middle {
+  height:auto;
 }
 
 /* the map */

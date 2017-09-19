@@ -58,6 +58,11 @@ if ( isMobile() ) {
 // set a window resize callback
 $(window).on("resize", _.debounce(resizePage, 350));
 
+// listen for scroll, and close legend tooltips (on mobile)
+$(document).on("scroll", function() {
+  if (isMobile()) setTimeout(function() { closeLegendTooltip(); closeVariableInfoTip(); },500);
+} )
+
 //
 // D3 initiation: data queue, dispatch events
 //
@@ -144,7 +149,7 @@ dispatch.on("load.setup", function(){
   });
 
   // adds the description/explanatory text next to the legend
-  $('table.description-container td').html(description[strategy]);
+  $('.description-container div').html(description[strategy]);
 
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text[strategy]);
@@ -156,9 +161,6 @@ dispatch.on("load.setup", function(){
 
   // update "fullscreen" href
   d3.select("a#fullscreen").attr("href",fullscreen[strategy]);
-
-  // resize cols to enable vertical centering
-  resizeMiddleCols();
 })
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -757,27 +759,13 @@ function clickSquare(d) {
 
 // resize everything
 function resizePage() {
-  // recalc offets for all groups, then trigger a statechange
+  // first, recalc offets for all groups, and trigger a statechange
   dispatch.call("statechange",this,rawdata);
 
-  // then, resize the containers
+  // then, resize the chart containers
   // only needed here if not included in "Statechange"
   resizeContainers();
 
-  // then, make middle cols equal height
-  resizeMiddleCols();
-
-}
-
-// resize middle cols to same height, for vertical centering
-function resizeMiddleCols() {
-  var heights = $(".middle").map(function() {
-      return $(this).height();
-  }).get(),
-
-  // on mobile, just make height "auto", otherwise, apply the max height
-  maxHeight = isMobile() ? "auto" : Math.max.apply(null, heights);
-  $(".middle").css({height: maxHeight});
 }
 
 // resize all the containers listed below from config
@@ -1123,33 +1111,45 @@ function toggleDetails() {
 
 // show and position legend header tooltip given an id 
 function showLegendTip(e, id) {
+  $('div.legend-tooltip').hide().removeClass("fixed");
+  var tip = $('#' + id);
+  if (! isMobile() ) {
+    tip.css({
+      "top": e.clientY,
+      "left": e.clientX + 15
+    })
+  } else {
+    tip.addClass("fixed");
+  }
+  tip.show();
+}
+
+function closeLegendTooltip() {
   $('div.legend-tooltip').hide();
-  var tip = document.getElementById(id);
-  var x = e.clientX,
-      y = e.clientY;
-  tip.style.top = (y - 140) + 'px';
-  tip.style.left = (x - 220) + 'px';
-  tip.style.display = 'block';
 }
 
 // handle info-icon clicks on variable names to display a tooltip about that variable
 function showVariableInfoTip(e) {
   // make sure we don't propagate to the underlying text element, which also has click behavior
   e.stopPropagation();
-
-  // get the clicked upon variable key
+  
+  // get the tooltip and the clicked-upon variable key
+  var tip = $("div.variable-tooltip").hide().removeClass("fixed");
   var key = e.target.getAttribute('data-var');
 
   // update content
-  d3.select("div.variable-tooltip-content")
-    .text(lookup[key]["tooltip"]);
+  $("div.variable-tooltip-content").text(lookup[key]["tooltip"]);
 
   // update position
-  var tip = d3.select("div.variable-tooltip")
-    .style("display","none")
-    .style("top",e.clientY + "px")
-    .style("left",e.clientX + "px")
-    .style("display","block");
+  if (! isMobile() ) {
+    tip.css({
+      "top": e.clientY,
+      "left": e.clientX + 15
+    })
+  } else {
+    tip.addClass("fixed")
+  }
+  tip.show();
 
 }
 
