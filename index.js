@@ -154,7 +154,7 @@ dispatch.on("load.setup", function(){
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text[strategy]);
   legends.selectAll("span")
-    .data(function(d) {return d})
+    .data(function(d) {return [d]})
     .enter()
     .append("span")
     .text(function(d) {return d});
@@ -492,7 +492,7 @@ function drawchart(data, container) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
-        text = lookup[d.key]["name"] + "<i onclick='showVariableInfoTip(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
+        text = lookup[d.key]["name"] + "<span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
       } 
       return text;
   });
@@ -507,7 +507,7 @@ function drawchart(data, container) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
-        text = lookup[d.key]["name"] + " <i onclick='showVariableInfoTip(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
+        text = lookup[d.key]["name"] + " <span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
       } 
       return text;
     })
