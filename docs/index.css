@@ -20,6 +20,7 @@ a:hover {
   text-decoration:underline;
 }
 
+
 /* button/headers at the top of the page, and above the charts */
 div#button-container {margin-bottom: 1em;}
 div.btn-header {height:60px; width: 100%; color: #fff; padding:1em;}
@@ -85,7 +86,7 @@ div.chartrow {
 }
 
 div.chartrow.toprow {
-  background: #EAEAEA;
+  background: #efefef;
 }
 
 svg.chartcontainer {
@@ -100,6 +101,7 @@ div.text {
   display:table-cell;
   vertical-align: middle;
   padding-left:10px;
+  color: #444;
 }
 
 div.chartrow.toprow div.text {
@@ -121,21 +123,23 @@ div.chart {
   height: 100%;
 }
 
-i.fa.fa-info-circle {
-  font-size:15px;
+span.icon-info {
+  font-size:17px;
   cursor:pointer;
   position:static;
-  color:#777;
+  color:#c1c1c1;
 }
 
-i.fa.fa-info-circle:hover {
+span.icon-info:hover {
   color:#222;
   position:relative;
   top:-1px;
 }
 
-i.fa.variable-info {
+span.icon-info.variable-info {
   margin-left:3px;
+  position:relative;
+  top:3px;
 }
 
 /* D3 tooltips on the chart and legend headers */
@@ -197,13 +201,13 @@ rect.dark   { fill-opacity: 1; }
 span.dark   { opacity: 1; }
 
 /* the legend */
-div.legend-container {margin: 10px auto 2em;}
-table#legend {table-layout: fixed; color: #444;}
+div.legend-container {}
+table#legend {table-layout: fixed; color: #444; margin-top:1em;}
 table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
 table#legend td.legend-header {cursor:pointer;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
 span.rect {display:inline-block; width: 20px; height: 20px;}
-span.legend-text {height: 20px; line-height:20px;}
+span.legend-text {height: 20px;}
 
 /* the description */
 div.description-container {
@@ -212,7 +216,11 @@ div.description-container {
   margin-bottom:5px;
 
   display:inline-flex; 
-  align-items: center
+  align-items: center;
+
+  background: #efefef;
+  padding: 1em;
+  border: 1px solid #ccc;
 
 }
 
@@ -221,7 +229,7 @@ div.description-container h3 {
 }
 
 div.middle {
-  height:auto;
+  padding:1em;
 }
 
 /* the map */
@@ -445,7 +453,6 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   }
 
   div#select-container select, div#select-container .select2-container {
-    /*max-width: 350px;*/
     margin:0 auto;
     text-align:left;
   }
@@ -466,9 +473,8 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
     margin-bottom:2em;
   }
 
-
-  div.legend-container table#legend {
-    margin: 0 auto;
+  div.middle:last-of-type {
+    padding-top:0;
   }
 
 }
@@ -499,6 +505,10 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
 
   div.text-cell {
     font-size:12px;
+  }
+
+  div.legend-container table#legend {
+    margin: 0 auto;
   }
 
 }

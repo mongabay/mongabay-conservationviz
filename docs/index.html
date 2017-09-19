@@ -35,9 +35,10 @@
   <!-- local source updated based on https://github.com/select2/select2/issues/3472 -->
   <script type="text/javascript" src="./libs/select2.min.js"></script>
 
-  <!-- fonts/ -->
+  <!-- fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500" rel="stylesheet">
+  <link href="./icons/icomon/style.css" rel="stylesheet">
 
   <!-- font awesome -->
   <script src="https://use.fontawesome.com/234f271872.js"></script>
@@ -105,7 +106,7 @@
         <div class="col-sm-2 col-md-2 clearall-container">
           <a class="btn-sm" id="clearall" onclick="clear_all()" title="Clear all selections">Clear</a>
           <!-- full screen version: href updated at runtime, see config.js -->
-          <a target="_blank" class="btn-sm hidden-xs" id="fullscreen" title="Click for fullscreen version"><i class="fa fa-arrows-alt"></i></a>
+          <a target="_blank" class="btn-sm hidden-xs" id="fullscreen" title="Click for fullscreen version"><span class="icon-enlarge2"></span></a>
         </div>
       </div><!-- row -->
     </div><!-- select-container -->
@@ -129,9 +130,9 @@
             <table id="legend">
               <tbody>
                 <tr>
-                  <td></td>
-                  <td class="legend-header stronger" onclick="showLegendTip(event,'tip-stronger')">Stronger evidence <i class="fa fa-info-circle"></i></td>
-                  <td class="legend-header weaker" onclick="showLegendTip(event,'tip-weaker')">Weaker evidence <i class="fa fa-info-circle"></i></td>
+                  <td><h3>Legend</h3></td>
+                  <td class="legend-header stronger" onclick="showLegendTip(event,'tip-stronger')">Stronger evidence <span class="icon-info"></span></td>
+                  <td class="legend-header weaker" onclick="showLegendTip(event,'tip-weaker')">Weaker evidence <span class="icon-info"></span></td>
                 </tr>
                   <td class="legend-text"></td>
                   <td>
@@ -213,14 +214,14 @@
   <div class="legend-tooltip" id="tip-stronger">
     <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
     <div class="legend-tooltip-content">
-      These studies include meta-analyses, systematic reviews, and rigorously designed studies that can show causality. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="" target="_blank">here</a>
+      These studies include meta-analyses, systematic reviews, and rigorously designed studies that can show causality. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="https://news.mongabay.com/conservation-effectiveness/review-methodology/" target="_blank">here</a>
     </div>
   </div>
 
   <div class="legend-tooltip" id="tip-weaker">
     <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
     <div class="legend-tooltip-content">
-      These studies include individual case studies that can only show correlation, not causation. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="" target="_blank">here</a>
+      These studies include individual case studies that can only show correlation, not causation. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="https://news.mongabay.com/conservation-effectiveness/review-methodology/" target="_blank">here</a>
     </div>
   </div>
 
