@@ -42,10 +42,10 @@ function drag(d) {
 }
 // and tooltip close button
 tooltip.select("span.tooltip-close")
-  .on("click", function() { clearSquares(); closeTooltip() });
+  .on("click", function() { clearSquares(); closeSquareTooltip() });
 
 // any select option change should clear squares and tooltips
-$('select').on("change", function() { clearSquares(); closeTooltip(); })
+$('select').on("change", function() { clearSquares(); closeSquareTooltip(); })
 
 // define a transition in milliseconds
 var tfast = d3.transition().duration(750);
@@ -57,6 +57,11 @@ if ( isMobile() ) {
 
 // set a window resize callback
 $(window).on("resize", _.debounce(resizePage, 350));
+
+// listen for scroll, and close legend tooltips (only mobile)
+$(document).on("scroll", function() {
+  if (isMobile()) setTimeout(function() { closeLegendTooltip(); closeVariableInfoTip(); },500);
+} )
 
 //
 // D3 initiation: data queue, dispatch events
@@ -144,7 +149,7 @@ dispatch.on("load.setup", function(){
   });
 
   // adds the description/explanatory text next to the legend
-  $('table.description-container td').html(description[strategy]);
+  $('.description-container div').html(description[strategy]);
 
   // adds text to the legend
   var legends = d3.selectAll("td.legend-text").data(legend_text[strategy]);
@@ -156,9 +161,6 @@ dispatch.on("load.setup", function(){
 
   // update "fullscreen" href
   d3.select("a#fullscreen").attr("href",fullscreen[strategy]);
-
-  // resize cols to enable vertical centering
-  resizeMiddleCols();
 })
 
 // register a listener for "load" and create dropdowns for various fiters
@@ -217,7 +219,9 @@ dispatch.on("load.dropdowns", function(options) {
 // by their nature these filters have to be applied at different points in the function, which is a bit messy
 dispatch.on("statechange.charts", function(rawdata) {
   // turn off any open tooltips, as the position will no longer correspond to a square
-  d3.select("div.tooltip").style("display", "none");
+  closeVariableInfoTip();
+  closeSquareTooltip();
+  clearSquares();
 
   // filter the raw data given current selections
   filtered = apply_options(rawdata);
@@ -264,7 +268,6 @@ dispatch.on("statechange.charts", function(rawdata) {
   })
   // send off data to the chart renderer, one col at a time
   config["colwidth"] = $(".chartcol").width();
-  console.log(coldata);
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row:
     // clear out the data completely so we only show a "no data" row
@@ -381,9 +384,10 @@ function drawmap(countries_keyed) {
         clickCircle(e.target.data, this); 
       });
       circle.on('mouseover', function (e) {
-        // first clear any selections selected by other means
+        // first clear any selections selected by other means, and other open stuff
         clearCircles();
         clearSquares();
+        closeVariableInfoTip();
         this.openPopup();
         this.setStyle(selectedStyle);
         selectSquares({key: "fips", value: e.target.data.fips});
@@ -394,7 +398,7 @@ function drawmap(countries_keyed) {
         // clear style, clear squares, close tooltip
         this.setStyle(defaultStyle);
         clearSquares();
-        closeTooltip();
+        closeSquareTooltip();
       });
     }
 
@@ -488,7 +492,7 @@ function drawchart(data, container) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
-        text = lookup[d.key]["name"] + "<i onclick='infoClick(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
+        text = lookup[d.key]["name"] + "<i onclick='showVariableInfoTip(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
       } 
       return text;
   });
@@ -503,7 +507,7 @@ function drawchart(data, container) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
       } else {
-        text = lookup[d.key]["name"] + " <i onclick='infoClick(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
+        text = lookup[d.key]["name"] + " <i onclick='showVariableInfoTip(event)' class='variable-info fa fa-info-circle' data-var='" + d.key + "'></i>";
       } 
       return text;
     })
@@ -723,6 +727,7 @@ function clickSquare(d) {
   // first, clear any selected squares and circles
   clearCircles();
   clearSquares();
+  closeVariableInfoTip();
 
   // add selected style to this square, and the ones in adjacent charts
   // d3.select(this).classed("selected", true);  
@@ -754,27 +759,13 @@ function clickSquare(d) {
 
 // resize everything
 function resizePage() {
-  // recalc offets for all groups, then trigger a statechange
+  // first, recalc offets for all groups, and trigger a statechange
   dispatch.call("statechange",this,rawdata);
 
-  // then, resize the containers
+  // then, resize the chart containers
   // only needed here if not included in "Statechange"
   resizeContainers();
 
-  // then, make middle cols equal height
-  resizeMiddleCols();
-
-}
-
-// resize middle cols to same height, for vertical centering
-function resizeMiddleCols() {
-  var heights = $(".middle").map(function() {
-      return $(this).height();
-  }).get(),
-
-  // on mobile, just make height "auto", otherwise, apply the max height
-  maxHeight = isMobile() ? "auto" : Math.max.apply(null, heights);
-  $(".middle").css({height: maxHeight});
 }
 
 // resize all the containers listed below from config
@@ -979,12 +970,6 @@ function scale_count_per_range(i, number) {
   return i;
 }
 
-// do we need a scrollbar for this height? 
-function scrollbar(height) {
-  var windowHeight = window.innerHeight;
-  return height > windowHeight ? true : false;
-}
-
 // apply these options to filter the flat (not nested) data, in sequence
 function apply_options(data) { 
   // apply country filter, if there is one
@@ -1007,6 +992,8 @@ function apply_options(data) {
 function clear_all() {
   // clear the vis (map will clear with change, below)
   clearSquares();
+  closeSquareTooltip();
+  closeVariableInfoTip();
 
   // clear any group selection
   selectedgroup = {};
@@ -1085,8 +1072,8 @@ function clearSquares() {
   d3.selectAll("div.selected").remove();
 }
 
-// close any open tooltip (not on the map, this refers to the squares tooltip)
-function closeTooltip() {
+// close any open "square" tooltip (not on the map, this refers only to the squares tooltips)
+function closeSquareTooltip() {
   d3.selectAll("div.tooltip").style("display","none");
 }
 
@@ -1116,34 +1103,60 @@ function toggleDetails() {
   });
 }
 
-// show and position tooltip given an id 
-function showTip(e, id) {
-  $('div.legend-tooltip').hide();
-  var tip = document.getElementById(id);
-  var x = e.clientX,
-      y = e.clientY;
-  tip.style.top = (y - 140) + 'px';
-  tip.style.left = (x - 220) + 'px';
-  tip.style.display = 'block';
+// show and position legend header tooltip given an id 
+function showLegendTip(e, id) {
+  $('div.legend-tooltip').hide().removeClass("fixed");
+  var tip = $('#' + id);
+  if (! isMobile() ) {
+    tip.css({
+      "top": e.pageY - 100,
+      "left": e.pageX + 25
+    });
+  } else {
+    tip.css({
+      "top": "",
+      "left": ""
+    });
+    tip.addClass("fixed");
+  }
+  tip.show();
 }
 
-// handle info-icon clicks on variable names
-function infoClick(e) {
-  // make sure we don't propagate to underlying text element, which also has click behavior
-  e.stopPropagation();
+function closeLegendTooltip() {
+  $('div.legend-tooltip').hide();
+}
 
-  // get the clicked upon variable key
+// handle info-icon clicks on variable names to display a tooltip about that variable
+function showVariableInfoTip(e) {
+  // make sure we don't propagate to the underlying text element, which also has click behavior
+  e.stopPropagation();
+  
+  // get the tooltip and the clicked-upon variable key
+  var tip = $("div.variable-tooltip").hide().removeClass("fixed");
   var key = e.target.getAttribute('data-var');
 
   // update content
-  d3.select("div.variable-tooltip-content")
-    .text("I'm a description for variable " + lookup[key]["name"]);
+  $("div.variable-tooltip-content").text(lookup[key]["tooltip"]);
 
   // update position
+  if (! isMobile() ) {
+    tip.css({
+      "top": e.pageY - 80,
+      "left": e.pageX + 25
+    });
+  } else {
+    tip.css({
+      "top": "",
+      "left": ""
+    });
+    tip.addClass("fixed")
+  }
+  tip.show();
+
+}
+
+// close all variable info-icon tooltips
+function closeVariableInfoTip() {
   var tip = d3.select("div.variable-tooltip")
     .style("display","none")
-    .style("top",e.clientY + "px")
-    .style("left",e.clientX + "px")
-    .style("display","block");
-
 }

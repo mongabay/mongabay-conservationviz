@@ -117,9 +117,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-3 col-lg-offset-3 col-md-5 col-md-offset-1 col-sm-7 col-sm-offset-0 middle">
-          <table class="description-container">
-            <tr><td></td></tr>
-          </table>
+          <div class="description-container">
+            <!-- will be added at run-time -->
+            <div></div>
+          </div>
         </div>
 
         <div class="col-lg-6 col-md-6 col-sm-5 middle">
@@ -129,8 +130,8 @@
               <tbody>
                 <tr>
                   <td></td>
-                  <td class="legend-header stronger" onclick="showTip(event,'tip-stronger')">Stronger evidence <i class="fa fa-info-circle"></i></td>
-                  <td class="legend-header weaker" onclick="showTip(event,'tip-weaker')">Weaker evidence <i class="fa fa-info-circle"></i></td>
+                  <td class="legend-header stronger" onclick="showLegendTip(event,'tip-stronger')">Stronger evidence <i class="fa fa-info-circle"></i></td>
+                  <td class="legend-header weaker" onclick="showLegendTip(event,'tip-weaker')">Weaker evidence <i class="fa fa-info-circle"></i></td>
                 </tr>
                   <td class="legend-text"></td>
                   <td>
