@@ -14,12 +14,6 @@ fullscreen["pes"] = "https://greeninfo-network.github.io/mongabay-conservationvi
 // identify and organize groups from the data
 var colgroups = ["env", "soc", "econ"];
 
-// colors for the theme groups
-var colors = {};
-colors[colgroups[0]] = "#1B9E77";
-colors[colgroups[1]] = "#E16802";
-colors[colgroups[2]] = "#757ECF";
-
 // descriptive summaries for the theme groups
 var words = { fsc: [], pes: [] };
 words["fsc"][colgroups[0]] = "Mostly positive";

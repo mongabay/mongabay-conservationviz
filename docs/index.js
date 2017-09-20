@@ -491,8 +491,11 @@ function drawchart(data, container) {
       if (d.key == d.values[0].values[0].theme) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
+      } else if (d.key == "nodata") {
+        // no data gets no info icon
+        text = lookup[d.key]["name"];
       } else {
-        text = lookup[d.key]["name"] + "<span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
+        text = lookup[d.key]["name"] + " <span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
       } 
       return text;
   });
@@ -506,6 +509,9 @@ function drawchart(data, container) {
       if (d.key == d.values[0].values[0].theme) {
         // top row gets special treatment
         text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
+      } else if (d.key == "nodata") {
+        // no data gets no info icon
+        text = lookup[d.key]["name"];
       } else {
         text = lookup[d.key]["name"] + " <span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
       } 
