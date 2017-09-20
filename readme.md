@@ -11,17 +11,20 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 * Flattened data that drives the app as `data/{STRATEGY}/data.csv` is located in sheets named flattened_data_strategy (e.g. flattened_data_FSC)
 * Strategy lookups (`data/{STRATEGY}/lookup_strategy.csv`) are located in sheets named lookup_strategy (e.g. lookup_strategy)
 
-### Switching between strategies and data sources
+### Changing strategy and related data sources
 * The app parses a strategy key from the URL, e.g. `https://greeninfo-network.github.io/mongabay-conservationviz/?fsc`
 * Current strategies are keyed as `?fsc` for Forest Certification and `?pes` for Payments for Ecosystem Services
 * This key is used to switch to the correct sub-directory in `data/`, e.g. `data/pes`
 * If the URL is missing a valid strategy param, then the app defaults to whatever data is at the top of `data/`
+* iframe `src` needs to include a valid strategy to work. If not, it will default to FSC
+* important to update the `strategies[]` variable in `index.js`, `fullscreen\index.html` to include the new key
 
-### When the client provides a raw data sheet:
+### When the client provides a raw data sheet for a new strategy:
 - import it into a new raw data sheet
 - create sheets for flattened_data_strategy and lookup_strategy
 - use the formulas present in existing flattened and lookup sheets to create new flattened data and lookups
 - download flattened data as `data.csv` and lookup as `lookup_strategy.csv` and place into the data sub-directory for this strategy, or create a new one if this is a new strategy (and add this key as a valid strategy, see the global Javascript var `strategies`)
+- important to update the `strategies[]` variable in `index.js`, `fullscreen\index.html` to include the new key
 
 ### S3 Hosting
 Mongabay manages an S3 bucket that hosts the app. To recursively copy files: 
@@ -41,22 +44,22 @@ region = us-west-1
 user=someuser
 aws_access_key_id=ACCESSKEY
 aws_secret_access_key=SECRETKEY
-
 ```
 ### S3 CLI commands
 ```
 // List the contents of my-bucket
-$ aws s3 ls s3://mongabayviz
+$ aws s3 ls s3://mongabay-imgs/vis/
 ```
 
 ```
-// copy a file
-$ aws s3 cp readme.doc s3://mongabayviz
+// copy a single file
+$ aws s3 cp readme.doc s3://mongabay-imgs/vis/
 ```
 
 
 ```
 // sync and delete remote files no longer on localhost, append --dryrun to test
-$ aws s3 sync .s3://mongabayviz  --delete --exclude ".git/*" --dryrun 
-$ aws s3 sync . s3://mongabayviz --delete --exclude ".git/*"
+$ aws s3 sync . s3://mongabay-imgs/vis/  --delete --exclude ".git/*" --dryrun 
+$ aws s3 sync . s3://mongabay-imgs/vis/ --delete --exclude ".git/*"
+$ aws s3 sync . s3://mongabay-imgs/vis/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" 
 ```
