@@ -7,8 +7,8 @@ var groups = {
 
 // url to "full screen" version of app
 var fullscreen = { fsc: '', pes: '' };
-fullscreen["fsc"] = "https://greeninfo-network.github.io/mongabay-conservationviz/fullscreen/?fsc"
-fullscreen["pes"] = "https://greeninfo-network.github.io/mongabay-conservationviz/fullscreen/?pes"
+fullscreen["fsc"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?fsc"
+fullscreen["pes"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?pes"
 
 // keys to the column groups. These will be used below, and throughout to 
 // identify and organize groups from the data

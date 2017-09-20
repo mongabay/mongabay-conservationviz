@@ -61,7 +61,10 @@ $(window).on("resize", _.debounce(resizePage, 350));
 // listen for scroll, and close legend tooltips (only mobile)
 $(document).on("scroll", function() {
   if (isMobile()) setTimeout(function() { closeLegendTooltip(); closeVariableInfoTip(); },500);
-} )
+} );
+
+// hide fullscreen button if we are already fullscreen
+toggleFullscreen();
 
 //
 // D3 initiation: data queue, dispatch events
@@ -1163,4 +1166,9 @@ function showVariableInfoTip(e) {
 function closeVariableInfoTip() {
   var tip = d3.select("div.variable-tooltip")
     .style("display","none")
+}
+
+// toggle fullscreen button, conditional on if we are fullscreen
+function toggleFullscreen() {
+  if (window.location.href.indexOf('fullscreen') > -1) $('a#fullscreen').hide();
 }
