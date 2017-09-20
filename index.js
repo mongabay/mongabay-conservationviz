@@ -413,8 +413,6 @@ function drawmap(countries_keyed) {
 //
 function drawchart(data, container) {
 
-  console.log("statechange data: ", data);
-
   // bind our new piece of data to our container element
   // could also do `container.data([data.values]);`
   container.datum(data);  
