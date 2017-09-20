@@ -24,24 +24,26 @@
     Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?
   </h3>
 
-	<iframe src="" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
+
+	<!-- ================== the iframe to the viz itself: src will be updated below on load  ==================== -->
+  <iframe src="" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
 
 
-	<!-- ================== iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) ==================== -->
+  <!-- ================== iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) ==================== -->
 	 
-	<script type="text/javascript" src="./iframeResizer.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.14/iframeResizer.min.js"></script>
 	<script>
 		iFrameResize({log:false, heightCalculationMethod:"taggedElement"}, '#consevidence')
 	</script>
 
-	<!-- ==================================================================================================== -->
+	<!-- ===================== script to update src in the iframe depending on selected strategy =========================== -->
 
   <script>
     // check URL for a query param representing a path to data
     // fallback is to use the data in data/ which represents a copy of same in fsc/ 
     var strategies = ['fsc','pes'];
     var strategy = window.location.href.split('?')[1];
-    // if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
+    // if we get an invalide param, force it to show FSC: we need a valid key to show certain things, like the description
     if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
 
     // now set frame src
