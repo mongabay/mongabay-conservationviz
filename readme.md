@@ -57,6 +57,6 @@ $ aws s3 cp readme.doc s3://mongabayviz
 
 ```
 // sync and delete remote files no longer on localhost, append --dryrun to test
-$ aws s3 sync .s3://mongabayviz  --delete --dryrun 
-$ aws s3 sync . s3://mongabayviz --delete 
+$ aws s3 sync .s3://mongabayviz  --delete --exclude ".git/*" --dryrun 
+$ aws s3 sync . s3://mongabayviz --delete --exclude ".git/*"
 ```
