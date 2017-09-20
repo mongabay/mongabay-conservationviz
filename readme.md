@@ -22,3 +22,19 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 - create sheets for flattened_data_strategy and lookup_strategy
 - use the formulas present in existing flattened and lookup sheets to create new flattened data and lookups
 - download flattened data as `data.csv` and lookup as `lookup_strategy.csv` and place into the data sub-directory for this strategy, or create a new one if this is a new strategy (and add this key as a valid strategy, see the global Javascript var `strategies`)
+
+### S3 Hosting
+Mongabay manages an S3 bucket that hosts the app. To recursively copy files: 
+This requires the setup of s3 CLI tools on the localhost (via pip)
+`pip install awscli --upgrade --user`
+
+### S3 CLI commands
+```
+// List the contents of my-bucket
+$ aws s3 ls s3://mongabayviz
+```
+
+```
+// copy a file
+$ aws s3 cp readme.doc s3://mongabayviz
+```
