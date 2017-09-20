@@ -48,18 +48,17 @@ aws_secret_access_key=SECRETKEY
 ### S3 CLI commands
 ```
 // List the contents of my-bucket
-$ aws s3 ls s3://mongabay-imgs/vis/
+$ aws s3 ls s3://mongabay-imgs/vz/
 ```
 
 ```
 // copy a single file
-$ aws s3 cp readme.doc s3://mongabay-imgs/vis/
+$ aws s3 cp readme.doc s3://mongabay-imgs/vz/
 ```
 
 
 ```
 // sync and delete remote files no longer on localhost, append --dryrun to test
-$ aws s3 sync . s3://mongabay-imgs/vis/  --delete --exclude ".git/*" --dryrun 
-$ aws s3 sync . s3://mongabay-imgs/vis/ --delete --exclude ".git/*"
-$ aws s3 sync . s3://mongabay-imgs/vis/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" 
+$ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --dryrun 
+$ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" 
 ```
