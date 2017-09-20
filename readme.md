@@ -28,6 +28,21 @@ Mongabay manages an S3 bucket that hosts the app. To recursively copy files:
 This requires the setup of s3 CLI tools on the localhost (via pip)
 `pip install awscli --upgrade --user`
 
+### S3 Config
+See details for latest version of AWS CLI. Current setup requires the following in the users home directory:
+```
+# ~/.aws/config
+[default]
+region = us-west-1
+```
+```
+# ~/.aws/creadentials
+[default]
+user=someuser
+aws_access_key_id=ACCESSKEY
+aws_secret_access_key=SECRETKEY
+
+```
 ### S3 CLI commands
 ```
 // List the contents of my-bucket
