@@ -742,7 +742,7 @@ function clickSquare(d) {
   // add tooltip content and display it
   var split = d.zb_id.toString().split(".");
   var id = (split[0] + "." + split[1]);
-  var link = tooltip.select("a.tooltip-author-link")
+  var link = tooltip.select("a.tooltip-author-link");
   link.text(lookup[id].author);
   link.attr("href", lookup[id].url);
   link.attr("target", "_blank");
