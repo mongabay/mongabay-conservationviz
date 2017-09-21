@@ -625,6 +625,7 @@ function drawchart(data, container) {
   chartcontainers
     .classed("chartcontainer",true)
     .attr("width", (config["colwidth"] - config["textwidth"]) + "px") 
+    .attr("visibility", function(d) { return d.values[0].theme == "nothing" ? "hidden" : "visible" })
     .attr("height",function(d) {
       if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
@@ -639,6 +640,7 @@ function drawchart(data, container) {
     .attr("overflow","visible")
     .classed("chartcontainer",true)
     .attr("width", (config["colwidth"] - config["textwidth"]) + "px")
+    .attr("visibility", function(d) { return d.values[0].theme == "nothing" ? "hidden" : "visible" })
     .attr("height",function(d) {
       if (d.values[0].theme == "nothing") return 0;
       var toprow = d3.select(this).node().parentNode.classList.contains("toprow");
