@@ -1170,5 +1170,8 @@ function closeVariableInfoTip() {
 
 // toggle fullscreen button, conditional on if we are fullscreen
 function toggleFullscreen() {
-  if (window.location.href.indexOf('fullscreen') > -1) $('a#fullscreen').hide();
+  var url = (window.location != window.parent.location)
+              ? document.referrer
+              : document.location.href;
+  if (url.indexOf('fullscreen') > -1) $('a#fullscreen').hide();
 }
