@@ -107,28 +107,30 @@
     </div><!-- select-container -->
 
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-3 col-sm-12 hidden-xs visible-sm visible-md visible-lg">
-          <div class="description-container">
-            <!-- will be added at run-time -->
-            <div></div>
+      <div class="row vertical-align">
+        <div class="col-lg-3 col-md-4 col-sm-12 hidden-xs visible-sm visible-md visible-lg">
+          <div class="description-wrapper">
+            <div class="description-container">
+              <!-- will be added at run-time, always shows except xs -->
+              <div></div>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-6 col-sm-8">
+        <div class="col-lg-6 col-md-4 col-sm-8">
           <div id="map">
             <a class="btn-sm" id="clearall-map" onclick="clear_all()" title="Clear all selections">Clear</a>
           </div>
         </div>
 
-        <div class="col-md-3 col-sm-12 visible-xs hidden-sm hidden-md hidden-lg">
+        <div class="col-xs-12 visible-xs hidden-sm hidden-md hidden-lg">
           <div class="description-container">
-            <!-- will be added at run-time -->
+            <!-- will be added at run-time, only shows xs -->
             <div></div>
           </div>
         </div>
 
-        <div class="col-md-3 col-sm-4">
+        <div class="col-lg-3 col-md-4 col-sm-4">
           <div class="legend-container">
             <table id="legend">
               <tbody>
@@ -239,7 +241,7 @@
   <script type="text/javascript" src="./config.js"></script>
   <script type="text/javascript" src="./index.js"></script>
 
-  
+
 </body>
 
 </html>
