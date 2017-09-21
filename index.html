@@ -13,11 +13,11 @@
 
   <!-- leaflet extensions -->
   <link rel="stylesheet" href="./libs/leaflet-control-credits.css" />
-  <script src="./libs/leaflet-control-credits.js"></script>  
+  <script src="./libs/leaflet-control-credits.js"></script>
 
   <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
   <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
-  
+
   <!-- D3, jQuery, lodash -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/d3-drag.v1.min.js"></script>
@@ -26,7 +26,7 @@
 
   <!-- bootstrap grid only -->
   <link rel="stylesheet" href="libs/bootstrap.css" type="text/css" media="all" />
-  
+
   <!-- Local styles -->
   <link rel="stylesheet" href="index.css" type="text/css" media="all" />
 
@@ -111,22 +111,30 @@
       </div><!-- row -->
     </div><!-- select-container -->
 
-    <div id="map">
-      <a class="btn-sm" id="clearall-map" onclick="clear_all()" title="Clear all selections">Clear</a>
-    </div>
-
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-3 col-lg-offset-3 col-md-5 col-md-offset-1 col-sm-7 col-sm-offset-0 middle">
+        <div class="col-md-3 col-sm-12 hidden-xs visible-sm visible-md visible-lg">
           <div class="description-container">
             <!-- will be added at run-time -->
             <div></div>
           </div>
         </div>
 
-        <div class="col-lg-6 col-md-6 col-sm-5 middle">
-          <div class="legend-container">
+        <div class="col-md-6 col-sm-8">
+          <div id="map">
+            <a class="btn-sm" id="clearall-map" onclick="clear_all()" title="Clear all selections">Clear</a>
+          </div>
+        </div>
 
+        <div class="col-md-3 col-sm-12 visible-xs hidden-sm hidden-md hidden-lg">
+          <div class="description-container">
+            <!-- will be added at run-time -->
+            <div></div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-4">
+          <div class="legend-container">
             <table id="legend">
               <tbody>
                 <tr>
@@ -165,6 +173,7 @@
 
           </div><!-- legend-container -->
         </div><!-- col -->
+
       </div><!-- row -->
     </div><!-- container -->
 
@@ -185,7 +194,7 @@
             <div class="btn-bottom-header btn-center table-div">
               <div class="table-cell icon-cell"><img src="./icons/social_large.png" /></div>
               <div class="table-cell subtitle-cell">social<div class="details"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
-            </div>          
+            </div>
           </div>
           <div class="soc-chart"></div>
         </div>
@@ -228,7 +237,7 @@
   <div class="variable-tooltip">
     <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
     <div class="variable-tooltip-content"></div>
-  </div>  
+  </div>
 
   <!-- Local javascript -->
   <script src="./config.js"></script>
