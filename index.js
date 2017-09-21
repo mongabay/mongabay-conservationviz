@@ -563,11 +563,13 @@ function drawchart(data, container) {
   // define chartgroup functions
   var charttopfunction = function(d,i) {
     var key = d3.select(this.parentNode).datum().key;
-    var offset = i == 1 ? config[key]["neutraloffset"] : i == 2 ? config[key]["minusoffset"] : 0;
+    var offset = 0;
+    if (d.key == "neutral") offset = config[key]["neutraloffset"];
+    if (d.key == "minus") offset = config[key]["minusoffset"];
+    // top row only gets additional padding
     var pad = d3.select(this).node().parentNode.classList.contains("toprow") ? config["toprowpad"] / 2 : 0;
     return offset + pad + "px";
   };   
-
 
   // get rid of the old ones we don't need when doing an update
   charts.exit().remove();
