@@ -20,6 +20,14 @@ a:hover {
   text-decoration:underline;
 }
 
+/* utility classes */
+.vertical-align {
+  display: flex;
+  align-items: center;
+}
+
+.center { text-align:center; }
+
 
 /* button/headers at the top of the page, and above the charts */
 div#button-container {margin-bottom: 1em;}
@@ -71,6 +79,10 @@ div.details {
 
 div.main {
   margin:10px;
+}
+
+div.chart-container {
+  margin-top:1em;
 }
 
 div.chartcol {
@@ -203,7 +215,7 @@ span.dark   { opacity: 1; }
 
 /* the legend */
 div.legend-container {}
-table#legend {table-layout: fixed; color: #444; margin-top:1em;}
+table#legend {table-layout: fixed; color: #444;}
 table#legend td:not(:first-child) {padding: 4px 10px; text-align:center; max-width:78px;}
 table#legend td.legend-header {cursor:pointer;}
 span.legend-title {display:inline-block; max-width:84px; text-align: center;}
@@ -211,6 +223,12 @@ span.rect {display:inline-block; width: 20px; height: 20px;}
 span.legend-text {height: 20px;}
 
 /* the description */
+
+div.description-wrapper {
+  padding:1em;
+  margin-right:-10px;
+}
+
 div.description-container {
   height: 100%;
   color:#444;
@@ -227,10 +245,6 @@ div.description-container {
 
 div.description-container h3 {
   margin-top:10px;
-}
-
-div.middle {
-  padding:1em;
 }
 
 /* the map */
@@ -467,21 +481,31 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   }
 
   div.col-md-4 {
-    margin-bottom:5px;
+    margin-bottom:8px;
   }
 
   div.col-md-4:not(:div.button-wrapper) {
     margin-bottom:2em;
   }
 
-  div.middle:last-of-type {
-    padding-top:0;
+  div.row.vertical-align {
+    /* Turn off the flexible box layout */
+    display: block; 
+  }
+
+  div.description-wrapper {
+    padding:0;
+    margin-right:0;
+  }
+
+  div.chart-container {
+    margin-top:0.5em;
   }
 
 }
 
 /* iPad portrait */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   div.clearall-container {
     text-align: center;
     position:static;
@@ -511,6 +535,7 @@ div.leaflet-control-attribution {padding:2px 4px 3px !important;}
   div.legend-container table#legend {
     margin: 0 auto;
   }
+
 
 }
 

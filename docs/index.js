@@ -1117,7 +1117,7 @@ function showLegendTip(e, id) {
   if (! isMobile() ) {
     tip.css({
       "top": e.pageY - 100,
-      "left": e.pageX + 25
+      "left": e.pageX - 200
     });
   } else {
     tip.css({
