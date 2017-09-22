@@ -10,8 +10,11 @@
 
   <style>
     body {margin:0; padding:0;}
-    h1, h2, h3 {font-family: 'Lato'; color: #555; margin: 20px 15px 10px 20px; text-align:center;}
+    h1, h2, h3, h4, h5 {font-family: 'Lato'; color: #555; margin: 20px 15px 10px 20px; text-align:center;}
     h3 { color: #666; }
+    h5 a { color:#45aae8; text-decoration: none;}
+    h5 a:hover {color: #014c8c;
+    text-decoration: underline;}
   </style>
 
 </head>
@@ -24,28 +27,32 @@
     Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?
   </h3>
 
-	<iframe src="" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
+  <h5 style="text-transform: uppercase; color:#888;">Read the full article on <a href="https://news.mongabay.com/2017/09/does-forest-certification-really-work/" target="_blank">Mongabay.com</a>&nbsp;</h5>
 
 
-	<!-- ================== iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) ==================== -->
+	<!-- ================== the iframe to the viz itself: src will be updated below on load  ==================== -->
+  <iframe src="" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
+
+
+  <!-- ================== iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) ==================== -->
 	 
-	<script type="text/javascript" src="./iframeResizer.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.14/iframeResizer.min.js"></script>
 	<script>
 		iFrameResize({log:false, heightCalculationMethod:"taggedElement"}, '#consevidence')
 	</script>
 
-	<!-- ==================================================================================================== -->
+	<!-- ===================== script to update src in the iframe depending on selected strategy =========================== -->
 
   <script>
     // check URL for a query param representing a path to data
     // fallback is to use the data in data/ which represents a copy of same in fsc/ 
     var strategies = ['fsc','pes'];
     var strategy = window.location.href.split('?')[1];
-    // if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
+    // if we get an invalide param, force it to show FSC: we need a valid key to show certain things, like the description
     if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
 
     // now set frame src
-    var frame = document.getElementById("consevidence").src = '../?' + strategy;
+    var frame = document.getElementById("consevidence").src = '../index.html?' + strategy;
 
   </script>
 
