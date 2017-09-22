@@ -32,6 +32,7 @@ var tooltip = d3.select("div.tooltip")
 );
 // and tooltip drag behavior
 function drag(d) {
+  if (isMobile()) return;
   dragged = true;
   var tip = d3.select(this);
   var top = parseInt(tip.style("top"));
@@ -761,7 +762,7 @@ function clickSquare(d) {
     var ypos = isMobile() ? 20 : -30;
     tooltip
       .style("left",xpos + "px")
-      .style("top", d3.event.pageY+ypos + "px");
+      .style("top", d3.event.clientY+ypos + "px");
   }
 
   // update the map marker that contains this study
