@@ -18,6 +18,11 @@ var initBounds;
 // track whether we've dragged a tooltip or not
 var dragged = false;
 
+
+// keep track of our width, see resizeContainers()
+var cachedwidth;
+$(document).ready(function($) { cachedwidth = $(window).width() });
+
 // circle colors on map, for selected and unselected
 var circlecolors = {
   "default": "#64b0e0",
@@ -771,6 +776,11 @@ function clickSquare(d) {
 
 // resize everything
 function resizePage() {
+  // seems iOs scroll is triggering a resize for some reason
+  // so only continue if the window has in fact changed size
+  var newsize = $(window).width();
+  if (newsize == cachedwidth) return;
+
   // first, recalc offets for all groups, and trigger a statechange
   dispatch.call("statechange",this,rawdata);
 
