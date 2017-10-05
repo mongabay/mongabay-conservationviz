@@ -1,3 +1,8 @@
+// imports
+
+import './index.css';
+
+
 //
 // Global declarations
 //
