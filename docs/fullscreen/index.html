@@ -20,12 +20,9 @@
 </head>
 <body>
 	
-	<h1>
-    The scientific evidence on tropical forest certification
-  </h1>
-	<h3>
-    Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?
-  </h3>
+  <!-- set dynamically, see below -->
+	<h1 id='title'></h1>
+	<h3 id='subtitle'></h3>
 
   <h5 style="text-transform: uppercase; color:#888;">Read the full article on <a href="https://news.mongabay.com/2017/09/does-forest-certification-really-work/" target="_blank">Mongabay.com</a>&nbsp;</h5>
 
@@ -41,6 +38,10 @@
 		iFrameResize({log:false, heightCalculationMethod:"taggedElement"}, '#consevidence')
 	</script>
 
+
+  <!-- config file -->
+  <script type="text/javascript" src="../config.js"></script>
+
 	<!-- ===================== script to update src in the iframe depending on selected strategy =========================== -->
 
   <script>
@@ -53,6 +54,10 @@
 
     // now set frame src
     var frame = document.getElementById("consevidence").src = '../index.html?' + strategy;
+
+    // and set title, subtitle
+    document.getElementById("title").innerText = fullscreentitle[strategy];
+    document.getElementById("subtitle").innerText = fullscreensubtitle[strategy];
 
   </script>
 
