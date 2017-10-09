@@ -62,3 +62,7 @@ $ aws s3 cp readme.doc s3://mongabay-imgs/vz/
 $ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --dryrun 
 $ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" 
 ```
+
+``` copy all files from remote to local
+aws s3 cp s3://mongabay-imgs/vz/ ./ --recursive 
+```
