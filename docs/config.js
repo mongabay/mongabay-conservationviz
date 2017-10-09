@@ -19,7 +19,7 @@ var words = { fsc: [], pes: [] };
 words["fsc"][colgroups[0]] = "Mostly positive";
 words["fsc"][colgroups[1]] = "More evidence needed";
 words["fsc"][colgroups[2]] = "Inconclusive (mixed results)";
-words["pes"][colgroups[0]] = "Mostly positive, some red flags";
+words["pes"][colgroups[0]] = "Moderately positive, some red flags";
 words["pes"][colgroups[1]] = "Mostly little change, some red flags";
 words["pes"][colgroups[2]] = "More evidence needed";
 
