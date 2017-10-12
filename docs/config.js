@@ -10,6 +10,11 @@ var fullscreen = { fsc: '', pes: '' };
 fullscreen["fsc"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?fsc"
 fullscreen["pes"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?pes"
 
+// the link back to the article on mb.com
+var articlelink = { fsc: '', pes: '' };
+articlelink["fsc"] = "https://news.mongabay.com/2017/09/does-forest-certification-really-work/";
+articlelink["pes"] = "https://news.mongabay.com/2017/10/cash-for-conservation-do-payments-for-ecosystem-services-work/";
+
 // keys to the column groups. These will be used below, and throughout to 
 // identify and organize groups from the data
 var colgroups = ["env", "soc", "econ"];

@@ -4,245 +4,66 @@
 <title>Mongabay Conservation Evidence</title>
 
 <head>
-  <!-- iframe resize helper, see https://github.com/davidjbradshaw/iframe-resizer -->
-  <script src="./libs/iframeResizer.contentWindow.min.js"></script>
+	
+  <!-- fonts/ -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet">
 
-  <!-- Leaflet local as unpkg is giving 503 -->
-  <link rel="stylesheet" href="./libs/leaflet.css" />
-  <script src="./libs/leaflet.js"></script>
-
-  <!-- leaflet extensions -->
-  <link rel="stylesheet" href="./libs/leaflet-control-credits.css" />
-  <script src="./libs/leaflet-control-credits.js"></script>
-
-  <!-- TopoJSON for loading polygon data more efficiently than GeoJSON -->
-  <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
-
-  <!-- D3, jQuery, lodash -->
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script src="https://d3js.org/d3-drag.v1.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
-
-  <!-- bootstrap grid only -->
-  <link rel="stylesheet" href="libs/bootstrap.css" type="text/css" media="all" />
-
-  <!-- Local styles -->
-  <link rel="stylesheet" href="index.css" type="text/css" media="all" />
-
-  <!-- select2, a select box enhancer for jquery -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-  <!-- local source updated based on https://github.com/select2/select2/issues/3472 -->
-  <script type="text/javascript" src="./libs/select2.min.js"></script>
-
-  <!-- fonts and icons -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500" rel="stylesheet">
-  <script src="https://use.fontawesome.com/234f271872.js"></script>
-  <link href="./icons/icomon/style.css" rel="stylesheet">
+  <style>
+    body {margin:0; padding:0;}
+    h1, h2, h3, h4, h5 {font-family: 'Lato'; color: #555; margin: 20px 15px 10px 20px; text-align:center;}
+    h3 { color: #666; }
+    h5 a { color:#45aae8; text-decoration: none;}
+    h5 a:hover {color: #014c8c;
+    text-decoration: underline;}
+  </style>
 
 </head>
-
 <body>
-  <div class="main" id="main-container" data-iframe-height>
+	
+  <!-- set dynamically, see below -->
+	<h1 id='title'></h1>
+	<h3 id='subtitle'></h3>
 
-    <!-- top buttons -->
-    <div id="button-container" class="container-fluid">
-      <div class="row">
-        <div class="col-md-4 button-wrapper">
-          <div class="btn-header btn-left table-div">
-            <div class="table-cell title-cell">environmental</div>
-            <div class="table-cell icon-cell"><img class="img-responsive" src="./icons/environmental_large.png" /></div>
-            <div class="table-cell text-cell env"></div>
-          </div>
-        </div>
-        <div class="col-md-4 button-wrapper">
-          <div class="btn-header btn-center table-div">
-            <div class="table-cell title-cell">social</div>
-            <div class="table-cell icon-cell"><img class="img-responsive" src="./icons/social_large.png" /></div>
-            <div class="table-cell text-cell soc"></div>
-          </div>
-        </div>
-        <div class="col-md-4 button-wrapper">
-          <div class="btn-header btn-right table-div">
-            <div class="table-cell title-cell">economic</div>
-            <div class="table-cell icon-cell"><img class="img-responsive" src="./icons/economic_large.png" /></div>
-            <div class="table-cell text-cell econ"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- filters -->
-    <div id="select-container" class="container-fluid">
-      <div class="row">
-        <!-- country filter -->
-        <div class="filter-wrapper col-sm-3 col-sm-offset-1 col-md-offset-1 col-md-3">
-          <select id="country" placeholder="Select a country" style="width:100%;"></select>
-        </div>
-
-        <!-- strength filter -->
-        <div class="filter-wrapper col-sm-3 col-md-3">
-          <select id="evidence" placeholder="Select type of evidence" style="width:100%;"></select>
-        </div>
-
-        <!-- sort options -->
-        <div class="filter-wrapper col-sm-3 col-md-3">
-          <select id="sort" placeholder="Sort by evidence" style="width:100%;">
-            <option></option>
-            <option value="pluscount#reverse">Most positive evidence</option>
-            <option value="pluscount">Least positive evidence</option>
-            <option value="neutralcount#reverse">Most neutral evidence</option>
-            <option value="neutralcount">Least neutral evidence</option>
-            <option value="minuscount#reverse">Most negative evidence</option>
-            <option value="minuscount">Least negative evidence</option>
-          </select>
-        </div>
-
-        <div class="col-sm-2 col-md-2 clearall-container">
-          <a class="btn-sm" id="clearall" onclick="clear_all()" title="Clear all selections">Clear</a>
-          <!-- full screen version: href updated at runtime, see config.js -->
-          <a target="_blank" class="btn-sm hidden-xs" id="fullscreen" title="Click for fullscreen version"><span class="icon-enlarge2"></span></a>
-        </div>
-      </div><!-- row -->
-    </div><!-- select-container -->
-
-    <div class="container-fluid">
-      <div class="row vertical-align">
-        <div class="col-lg-3 col-md-4 col-sm-12 hidden-xs visible-sm visible-md visible-lg">
-          <div class="description-wrapper">
-            <div class="description-container">
-              <!-- will be added at run-time, always shows except xs -->
-              <div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-6 col-md-4 col-sm-8">
-          <div id="map">
-            <a class="btn-sm" id="clearall-map" onclick="clear_all()" title="Clear all selections">Clear</a>
-          </div>
-        </div>
-
-        <div class="col-xs-12 visible-xs hidden-sm hidden-md hidden-lg">
-          <div class="description-container">
-            <!-- will be added at run-time, only shows xs -->
-            <div></div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-4">
-          <div class="legend-container">
-            <table id="legend">
-              <tbody>
-                <tr>
-                  <td><h3>Legend</h3></td>
-                  <td class="legend-header stronger" onclick="showLegendTip(event,'tip-stronger')">Stronger evidence <span class="icon-info"></span></td>
-                  <td class="legend-header weaker" onclick="showLegendTip(event,'tip-weaker')">Weaker evidence <span class="icon-info"></span></td>
-                </tr>
-                  <td class="legend-text"></td>
-                  <td>
-                    <span class="rect dark plus"></span>
-                  </td>
-                  <td>
-                    <span class="rect light plus"></span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="legend-text"></td>
-                  <td>
-                    <span class="rect dark neutral"></span>
-                  </td>
-                  <td>
-                    <span class="rect light neutral"></span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="legend-text"></td>
-                  <td>
-                    <span class="rect dark minus"></span>
-                  </td>
-                  <td>
-                    <span class="rect light minus"></span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-          </div><!-- legend-container -->
-        </div><!-- col -->
-
-      </div><!-- row -->
-    </div><!-- container -->
-
-    <div class="chart-container container-fluid">
-      <div class="row">
-        <div class="col-md-4 chartcol env-chart">
-          <div class="toggler" data-col="env" data-details="show" onclick="event.stopPropagation(); toggleColumnDetails(event);">
-            <div class="btn-bottom-header btn-left table-div">
-              <div class="table-cell icon-cell"><img src="./icons/environmental_large.png" /></div>
-              <div class="table-cell subtitle-cell">environmental
-                <div class="details"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
-            </div>
-          </div>
-          <div class="env-chart"></div>
-        </div>
-        <div class="col-md-4 chartcol soc-chart">
-          <div class="toggler" data-col="soc" data-details="show" onclick="toggleColumnDetails(event)">
-            <div class="btn-bottom-header btn-center table-div">
-              <div class="table-cell icon-cell"><img src="./icons/social_large.png" /></div>
-              <div class="table-cell subtitle-cell">social<div class="details"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
-            </div>
-          </div>
-          <div class="soc-chart"></div>
-        </div>
-        <div class="col-md-4 chartcol econ-chart">
-          <div class="toggler" data-col="econ" data-details="show" onclick="toggleColumnDetails(event)">
-            <div class="btn-bottom-header btn-right table-div">
-              <div class="table-cell icon-cell"><img src="./icons/economic_large.png" /></div>
-              <div class="table-cell subtitle-cell">economic<div class="details"><span class="details-msg">less detail <i class="fa fa-chevron-up"></i></span><span class="details-msg" style="display:none;">more detail <i class="fa fa-chevron-down"></i></span></div></div>
-            </div>
-          </div>
-          <div class="econ-chart"></div>
-        </div>
-      </div><!-- row -->
-    </div><!-- chart-container -->
-
-  </div>
-
-  <!-- tooltips! -->
-  <div class="tooltip">
-    <span class="tooltip-close">×</span>
-    <div class="tooltip-content">
-      <a class="tooltip-author-link"></a><span class="tooltip-conclusion"></span>
-    </div>
-  </div>
-
-  <div class="legend-tooltip" id="tip-stronger">
-    <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
-    <div class="legend-tooltip-content">
-      These studies include meta-analyses, systematic reviews, and rigorously designed studies that can show causality. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">here</a>
-    </div>
-  </div>
-
-  <div class="legend-tooltip" id="tip-weaker">
-    <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
-    <div class="legend-tooltip-content">
-      These studies include individual case studies that can only show correlation, not causation. Try using the drop-down menu "Select type of evidence" or read about different types of evidence <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">here</a>
-    </div>
-  </div>
-
-  <div class="variable-tooltip">
-    <span class="tooltip-close" onclick="event.target.parentNode.style.display = 'none'">×</span>
-    <div class="variable-tooltip-content"></div>
-  </div>
-
-  <!-- Local javascript -->
-  <script type="text/javascript">function isMobile() { return window.innerWidth < 768; }</script>
-  <script type="text/javascript" src="./config.js"></script>
-  <script type="text/javascript" src="./index.js"></script>
+  <!-- href to full article set at runtime, see below -->
+  <h5 style="text-transform: uppercase; color:#888;">Read the full article on <a id="article-link" href="" target="_blank">Mongabay.com</a>&nbsp;</h5>
 
 
-</body>
+	<!-- ================== the iframe to the viz itself: src will be updated below on load  ==================== -->
+  <iframe src="" width="100%" id="consevidence" frameBorder="0" scrolling="no"></iframe>
 
-</html>
+
+  <!-- ================== iframe resizing (https://github.com/davidjbradshaw/iframe-resizer) ==================== -->
+	 
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.14/iframeResizer.min.js"></script>
+	<script>
+		iFrameResize({log:false, heightCalculationMethod:"taggedElement"}, '#consevidence')
+	</script>
+
+
+  <!-- config file -->
+  <script type="text/javascript" src="../config.js"></script>
+
+	<!-- ===================== script to update src in the iframe depending on selected strategy =========================== -->
+
+  <script>
+    // check URL for a query param representing a path to data
+    // fallback is to use the data in data/ which represents a copy of same in fsc/ 
+    var strategies = ['fsc','pes'];
+    var strategy = window.location.href.split('?')[1];
+    // if we get an invalide param, force it to show FSC: we need a valid key to show certain things, like the description
+    if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
+
+    // now set frame src
+    var frame = document.getElementById("consevidence").src = '../index.html?' + strategy;
+
+    // and set title, subtitle
+    document.getElementById("title").innerText = fullscreentitle[strategy];
+    document.getElementById("subtitle").innerText = fullscreensubtitle[strategy];
+
+    // set the proper URL back to the full article:
+    document.getElementById("article-link").href = articlelink[strategy];
+
+  </script>
+
+
+</body></html>
