@@ -81,7 +81,7 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
 // check URL for a query param representing a path to data
 // fallback is to use the data in data/ which represents a copy of same in fsc/ 
-var strategies = ['fsc','pes'];
+var strategies = ['fsc','pes','cfm'];
 var strategy = window.location.href.split('?')[1];
 // if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
 if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
