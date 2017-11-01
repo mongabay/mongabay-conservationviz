@@ -24,7 +24,8 @@
 	<h1 id='title'></h1>
 	<h3 id='subtitle'></h3>
 
-  <h5 style="text-transform: uppercase; color:#888;">Read the full article on <a href="https://news.mongabay.com/2017/09/does-forest-certification-really-work/" target="_blank">Mongabay.com</a>&nbsp;</h5>
+  <!-- href to full article set at runtime, see below -->
+  <h5 style="text-transform: uppercase; color:#888;">Read the full article on <a id="article-link" href="" target="_blank">Mongabay.com</a>&nbsp;</h5>
 
 
 	<!-- ================== the iframe to the viz itself: src will be updated below on load  ==================== -->
@@ -47,7 +48,7 @@
   <script>
     // check URL for a query param representing a path to data
     // fallback is to use the data in data/ which represents a copy of same in fsc/ 
-    var strategies = ['fsc','pes'];
+    var strategies = ['fsc','pes','cfm'];
     var strategy = window.location.href.split('?')[1];
     // if we get an invalide param, force it to show FSC: we need a valid key to show certain things, like the description
     if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
@@ -58,6 +59,9 @@
     // and set title, subtitle
     document.getElementById("title").innerText = fullscreentitle[strategy];
     document.getElementById("subtitle").innerText = fullscreensubtitle[strategy];
+
+    // set the proper URL back to the full article:
+    document.getElementById("article-link").href = articlelink[strategy];
 
   </script>
 
