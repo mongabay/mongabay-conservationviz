@@ -59,7 +59,7 @@ $ aws s3 cp readme.doc s3://mongabay-imgs/vz/
 ```
 // sync and delete remote files no longer on localhost, append --dryrun to test
 $ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --dryrun 
-$ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" 
+$ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" --exclude "readme.md"
 ```
 
 ``` copy all files from remote to local
