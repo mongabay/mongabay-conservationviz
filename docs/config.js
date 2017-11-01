@@ -29,9 +29,9 @@ words["fsc"][colgroups[2]] = "Inconclusive (mixed results)";
 words["pes"][colgroups[0]] = "Moderately positive, some red flags";
 words["pes"][colgroups[1]] = "Mostly little change, some red flags";
 words["pes"][colgroups[2]] = "More evidence needed";
-words["cfm"][colgroups[0]] = "Moderately positive, some red flags";
-words["cfm"][colgroups[1]] = "Mostly little change, some red flags";
-words["cfm"][colgroups[2]] = "More evidence needed";
+words["cfm"][colgroups[0]] = "Mostly no or positive changes";
+words["cfm"][colgroups[1]] = "Inconclusive (mixed results)";
+words["cfm"][colgroups[2]] = "Inconclusive (insufficient evidence)";
 
 // fullscreen titles, subtitles
 var fullscreentitle = { fsc: '', pes: '', cfm: '' };
@@ -46,7 +46,7 @@ fullscreensubtitle['cfm'] = 'Is paying landowners in the tropics for providing e
 var description = { fsc: '', pes: '', cfm: '' };
 description["fsc"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of FSC certification or Reduced Impact Logging. Try hovering or clicking on a circle &mdash; the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-forest-certification/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 description["pes"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of Payments for Ecosystem Services (PES). Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-PES/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
-description["cfm"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of Payments for Ecosystem Services (PES). Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-PES/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
+description["cfm"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of community forest management initiatives. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-CFM/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 
 // horizontal legend text
 var legend_text = { fsc: [], pes: [], cfm: [] };
