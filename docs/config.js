@@ -37,10 +37,11 @@ words["cfm"][colgroups[2]] = "Inconclusive (insufficient evidence)";
 var fullscreentitle = { fsc: '', pes: '', cfm: '' };
 fullscreentitle['fsc'] = 'The scientific evidence on tropical forest certification';
 fullscreentitle['pes'] = 'The scientific evidence on Payments for Ecosystem Services';
+fullscreentitle['cfm'] = 'The scientific evidence on community-based forest management';
 var fullscreensubtitle = { fsc: '', pes: '', cfm: '' };
 fullscreensubtitle['fsc'] = 'Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?';
 fullscreensubtitle['pes'] = 'Is paying landowners in the tropics for providing ecosystem services better for the environment and the landowners than doing nothing?';
-fullscreensubtitle['cfm'] = 'Is paying landowners in the tropics for providing ecosystem services better for the environment and the landowners than doing nothing?';
+fullscreensubtitle['cfm'] = 'Is community-based forest management good for forests in countries that lie in the tropics, and the people who live near those forests?';
 
 // the description, below the map, to the left of the legend
 var description = { fsc: '', pes: '', cfm: '' };
