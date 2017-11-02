@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Total Forest Area, CFM area, CFM Percentage</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <style>
+      html, body, #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
+    <!-- style hacks, to get Carto to do what we want -->
+    <style>
+      /* make layer picker much wider, so complete labels display */
+      div.cartodb-layer-selector-box div.cartodb-dropdown {
+        width:360px !important;
+        left: 220px !important;
+      }
+      div.cartodb-layer-selector-box div.cartodb-dropdown ul li a.layer {
+        width: 225px;
+      }
+
+      /* make legend bullets bigger */
+      div.bullet {
+        position: relative;
+        top: -4px;
+        left: -3px;
+        width: 8px !important; height: 8px !important;
+      }
+    </style>
+
+
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <!-- include cartodb.js library -->
+    <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+
+    <script>
+
+      // some globals for the URL to the viz, the full description, etc. 
+      var viz = "https://mongabay.carto.com/api/v2/viz/562d32a7-9794-48a9-8bc3-94a426afa635/viz.json";
+      var description = "In light green, this map shows the total area of forest in the world’s most forested countries, and in dark green the area of forest that is either designated for or owned by Indigenous Peoples (IPs) and Local Communities (LC), in 2013. The percentage of each country’s forest that is designated for or owned by IPs and LCs is shown in blue. This map does not show where community forest management is actually implemented. Based on data from <a href='http://rightsandresources.org/en/work-impact/tenure-data-tool/#.WfojhIZrzyI]' target='_blank'>Rights + Resources Tenure Data & Tool.</a>";
+      function main() {
+        cartodb.createVis('map', viz, {
+            // shareable: true,
+            title: true,
+            description: true,
+            // search: true,
+            tiles_loader: true,
+            center_lat: 35,
+            center_lon: 0,
+            zoom: 2
+        })
+        .done(function(vis, layers) {
+          // layer 0 is the base layer, layer 1 is cartodb layer
+          // setInteraction is disabled by default
+          // layers[1].setInteraction(true);
+
+          // you can get the native map to work with it
+          // var map = vis.getNativeMap();
+
+          // now, perform any operations you need
+          // map.setZoom(3);
+          // map.panTo([50.5, 30.5]);
+
+          // now some hacks for the things we couldn't do through the Carto console
+          // show the layer picker
+          $('a.layers').click();
+
+          // add the full description, without the character/word limits
+          $('div.description').html(description);
+
+        })
+        .error(function(err) {
+          console.log(err);
+        });
+      }
+
+      window.onload = main;
+    </script>
+  </body>
+</html>
