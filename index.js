@@ -18,7 +18,6 @@ var initBounds;
 // track whether we've dragged a tooltip or not
 var dragged = false;
 
-
 // keep track of our width, see resizeContainers()
 var cachedwidth;
 $(document).ready(function($) { cachedwidth = $(window).width() });
@@ -141,9 +140,21 @@ function main(error, lookups, lookups_study, data) {
   dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed, data: data}); 
   dispatch.call("statechange", this, data);
   // finally, fit the map to bounds one time, this will always be the extent, despite state changes
-  // cannot fit bounds to circles for some reason, so we fit to points instead
+  // note: cannot fit bounds to circles for some reason, so we fit to points instead
   initBounds = points.getBounds();
   map.fitBounds(initBounds);
+
+  // On CFM only (so far), for some reason, width calc's in top row are _sometimes_ wrong (due to pres/abs of scroll bar perhaps?)
+  // the following seems to fix it 
+  setTimeout(function() {
+    // compare the two offending elements
+    var togglewidth = d3.select("div.toggler").node().getBoundingClientRect().width;
+    var toprowwidth = d3.select("div.toprow").node().getBoundingClientRect().width;
+    // because of sub-pixel measures, see if the abs difference is greater than 1
+    // and if so, give em a resize
+    // this will likely throw a "too late" error because of transition collision, but that's less offensive than misaligned elements
+    if ( Math.abs(togglewidth - toprowwidth) > 1 ) resizePage(); 
+  }, 250);
 
 }
 
