@@ -80,7 +80,6 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
 // check URL for a query param representing a path to data
 // fallback is to use the data in data/ which represents a copy of same in fsc/ 
-var strategies = ['fsc','pes','cfm'];
 var strategy = window.location.href.split('?')[1];
 // if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
 if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
@@ -261,10 +260,10 @@ dispatch.on("statechange.charts", function(rawdata) {
     other_rows = _.sortBy(other_rows, "key");
   }
 
-  // then structure data into cols, by colgroup, keeping the top row for the overview data
-  var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
-  colgroups.forEach(function(col) {
-
+  // colgroups are defined in config
+  // set up a data structure we will use to put data into cols, by colgroup
+  var coldata = colgroups[strategy].map(function(col) { return {key: col, values: []} });
+  colgroups[strategy].forEach(function(col) {
     // add a first row from old "top" data
     toprow.forEach(function(row){
       if (row.key.toLowerCase() == col) {

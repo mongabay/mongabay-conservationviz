@@ -5,28 +5,38 @@ D3 based app for visualizing evidence for and against conservation themes
 The app is designed to load data from arbitrary "strategies" simply by switching two data sources (`data/data.csv` and `data/lookup_strategy.csv`). Currently we have data for two themes (Forest Certification [FSC] and Payments for Ecosystem Services [PES]). See below for details on updating. 
 
 ### Data general
-* Data spreadsheet: https://github.com/GreenInfo-Network/mongabay-conservationviz/issues/46
+* Data spreadsheet: https://docs.google.com/spreadsheets/d/1OP_i8qOqFPdiO9_f-oXQJN3DIU4Fmvm6T5j8WnwrQR4/edit#gid=198979559
 * Raw data is located in sheets named Data_strategy (e.g. Data_FSC, etc.)
 * Main lookup, common to all strategies (`data/lookup.csv`), is located in sheet named Lookup
 * Flattened data that drives the app as `data/{STRATEGY}/data.csv` is located in sheets named flattened_data_strategy (e.g. flattened_data_FSC)
 * Strategy lookups (`data/{STRATEGY}/lookup_strategy.csv`) are located in sheets named lookup_strategy (e.g. lookup_strategy)
 
-### Changing strategy and related data sources
+### Data update: Changing strategy and related data sources
 * The app parses a strategy key from the URL, e.g. `https://greeninfo-network.github.io/mongabay-conservationviz/?fsc`
 * Current strategies are keyed as `?fsc` for Forest Certification and `?pes` for Payments for Ecosystem Services
 * This key is used to switch to the correct sub-directory in `data/`, e.g. `data/pes`
-* If the URL is missing a valid strategy param, then the app defaults to whatever data is at the top of `data/`
+* If the URL is missing a valid strategy param, then the app defaults to whatever data is at the top level of `data/`
 * iframe `src` needs to include a valid strategy to work. If not, it will default to FSC
-* important to update the `strategies[]` variable in `index.js`, `fullscreen\index.html` to include the new key
+* also important to update the `strategies[]` variable in `index.js`, `fullscreen\index.html` to include the new key
+* a more detailed explanation follows
 
-### When the client provides a raw data sheet for a new strategy:
-- import it into a new raw data sheet
-- create sheets for flattened_data_strategy and lookup_strategy
-- use the formulas present in existing flattened and lookup sheets to create new flattened data and lookups
-- download flattened data as `data.csv` and lookup as `lookup_strategy.csv` and place into the data sub-directory for this strategy, or create a new one if this is a new strategy (and add this key as a valid strategy, see the global Javascript var `strategies`)
-- important to update the `strategies[]` variable in `index.js`, `fullscreen\index.html` to include the new key
+### Detailed steps for a data update/new strategy
 
-### S3 Hosting
+#### Data updates
+1. Come up with an acronym for the new strategy. There are no rules here, but to date we have been using 3-letter acronymns, e.g. `fsc`, `pes`, etc.
+2. Use the Google sheet described above to create a new data sheet with the same structure and column names as an existing data sheet (see Data general section above). There are forumlas in the Google sheet that can help copy from a raw data sheet to a flattened data sheet. Save this locally as `data.csv`
+3. Use the Google sheet to create a strategy-specific lookup to hold lookup values and details for this strategie's studies. Save this locally as `lookup_strategy.csv` 
+4. Create a subdirectory in `data` using the new strategy acronym, and copy `data.csv` and `lookup_strategy.csv` into it
+
+#### Config updates
+1. Edit the file named `config.js`, adding entries everywhere you see strategy specific values. There are probably 10-15 of these in a section demarcated " Strategy-specific variables", with names like `fullscreen["cfm"]` and `articlelink['cfm']`. 
+2. Add your strategy specific content and links in those new entries. 
+
+#### Final steps
+1. The next step is to sync the project with S3 (see below) so that the new data and edited config file are available on the server. 
+2. From there, the project can be viewed directly on EC2 at https://mongabay-imgs.s3.amazonaws.com/vz/index.html?pes, just change the part after the `?` to whatever your new acronym is 
+
+## S3 Hosting
 Mongabay manages an S3 bucket that hosts the app. To recursively copy files: 
 This requires the setup of s3 CLI tools on the localhost (via pip)
 `pip install awscli --upgrade --user`
