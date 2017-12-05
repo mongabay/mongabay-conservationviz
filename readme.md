@@ -22,11 +22,18 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 
 ### Detailed steps for a data update/new strategy
 
-#### Data updates
-1. Come up with an acronym for the new strategy. There are no rules here, but to date we have been using 3-letter acronymns, e.g. `fsc`, `pes`, etc.
-2. Use the Google sheet described above to create a new data sheet with the same structure and column names as an existing data sheet (see Data general section above). There are forumlas in the Google sheet that can help copy from a raw data sheet to a flattened data sheet. Save this locally as `data.csv`
-3. Use the Google sheet to create a strategy-specific lookup to hold lookup values and details for this strategie's studies. Save this locally as `lookup_strategy.csv` 
-4. Create a subdirectory in `data` using the new strategy acronym, and copy `data.csv` and `lookup_strategy.csv` into it
+#### Import raw data
+1. Come up with an acronym for the new strategy. There are no rules here, but to date we have been using 3-letter acronymns, e.g. `fsc`, `pes`, etc. We'll call the new strategy `new` for the examples here.
+2. Create three new tabs in the Google data sheet (see URL above): a raw data sheet (Data_NEW), a lookup (lookup_new), and a flattened data sheet (flattened_data_new)
+3. Typically Mongabay will provide raw data in .ods format. Open this (Libre office, Open Office), and copy/paste or otherwise import into the raw data into Data_NEW, and the publications list into lookup_new
+4. Check this new data against the raw data and lookup tabs for older strategies, adding keys and matching column order where necessary
+5. Make sure countries are spelled consistently and listed in the main lookup; add new countries (and lat-lng values) where needed
+
+#### Create flattened data in the Google Sheet
+2. Use forumlas from previous strategies in the Google sheet that to help copy from the raw data tab (Data_NEW) to the flattened data tabl (flattened_data_new). Save this locally as `data.csv`
+3. Using previous strategies as an example, format the strategy-specific lookup to hold lookup values and details. Save this locally as `lookup_strategy.csv` 
+4. Open the project in your favorite text editor, and in the project files, create a subdirectory in `data` using the new strategy acronym
+5. copy `data.csv` and `lookup_strategy.csv` into the new subdirectory
 
 #### Config updates
 1. Edit the file named `config.js`, adding entries everywhere you see strategy specific values. There are probably 10-15 of these in a section demarcated " Strategy-specific variables", with names like `fullscreen["cfm"]` and `articlelink['cfm']`. 
