@@ -2,7 +2,11 @@
 
 D3 based app for visualizing evidence for and against conservation themes
 
-The app is designed to load data from arbitrary "strategies" simply by switching two data sources (`data/data.csv` and `data/lookup_strategy.csv`). Currently we have data for two themes (Forest Certification [FSC] and Payments for Ecosystem Services [PES]). See below for details on updating. 
+The app is designed to load data from arbitrary "strategies" simply by switching two data sources (`data/data.csv` and `data/lookup_strategy.csv`). 
+
+### Servers
+Staging from GitHub pages (served from [docs/ folder](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/#publishing-your-github-pages-site-from-a-docs-folder-on-your-master-branch)): https://mongabay.github.io/mongabay-conservationviz/?fsc
+Production: Amazon EC2 (see below)
 
 ### Data general
 * Data spreadsheet: https://docs.google.com/spreadsheets/d/1OP_i8qOqFPdiO9_f-oXQJN3DIU4Fmvm6T5j8WnwrQR4/edit#gid=198979559
@@ -12,7 +16,7 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 * Strategy lookups (`data/{STRATEGY}/lookup_strategy.csv`) are located in sheets named lookup_strategy (e.g. lookup_strategy)
 
 ### Data update: Changing strategy and related data sources
-* The app parses a strategy key from the URL, e.g. `https://greeninfo-network.github.io/mongabay-conservationviz/?fsc`
+* The app parses a strategy key from the URL, e.g. `https://mongabay.github.io/mongabay-conservationviz/?fsc`
 * Current strategies are keyed as `?fsc` for Forest Certification and `?pes` for Payments for Ecosystem Services
 * This key is used to switch to the correct sub-directory in `data/`, e.g. `data/pes`
 * If the URL is missing a valid strategy param, then the app defaults to whatever data is at the top level of `data/`
