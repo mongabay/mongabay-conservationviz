@@ -30,20 +30,20 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 ### Detailed steps for a data update/new strategy
 
 #### Import raw data
-1. Come up with an acronym for the new strategy. There are no rules here, but to date we have been using 3-letter acronymns, e.g. `fsc`, `pes`, etc. We'll call the new strategy `new` for the examples here.
-2. Create three new tabs in the Google data sheet (see URL above): a raw data sheet (Data_NEW), a lookup (lookup_new), and a flattened data sheet (flattened_data_new)
-3. Typically Mongabay will provide raw data in .ods format. Open this (Libre office, Open Office), and copy/paste or otherwise import into the raw data into Data_NEW, and the publications list into lookup_new
+1. Come up with an acronym for the new strategy. There are no rules here, but to date we have been using 3-letter acronymns, e.g. `fsc`, `pes`, etc. We'll call the new strategy `new` for the examples below
+2. Create three new tabs in the Google data sheet (see URL above): a raw data sheet (`Data_NEW`), a lookup (`lookup_new`), and a flattened data sheet (`flattened_data_new`)
+3. Typically Mongabay will provide raw data in .ods format. Open this (Libre office, Open Office), and copy/paste or otherwise import into the raw data into `Data_NEW`, and the publications list into `lookup_new`
 4. Check this new data against the raw data and lookup tabs for older strategies, adding keys and matching column order where necessary
 5. Make sure countries are spelled consistently and listed in the main lookup; add new countries (and lat-lng values) where needed
 
 #### Create flattened data in the Google Sheet
-2. Use forumlas from previous strategies in the Google sheet that to help copy from the raw data tab (Data_NEW) to the flattened data tabl (flattened_data_new). Save this locally as `data.csv`
-3. Using previous strategies as an example, format the strategy-specific lookup to hold lookup values and details. Save this locally as `lookup_strategy.csv` 
-4. Open the project in your favorite text editor, and in the project files, create a subdirectory in `data` using the new strategy acronym
-5. copy `data.csv` and `lookup_strategy.csv` into the new subdirectory
+1. Use forumlas from previous strategies in the Google sheet that to help copy from the raw data tab (Data_NEW) to the flattened data tabl (flattened_data_new). Save this locally as `data.csv`
+2. Using previous strategies as an example, format the strategy-specific lookup to hold lookup values and details. Save this locally as `lookup_strategy.csv` 
+3. Open the project in your favorite text editor, and in the project files, create a subdirectory in `data` using the new strategy acronym
+4. copy `data.csv` and `lookup_strategy.csv` into the new subdirectory
 
 #### Config updates
-1. Edit the file named `config.js`, adding entries everywhere you see strategy specific values. There are probably 10-15 of these in a section demarcated " Strategy-specific variables", with names like `fullscreen["cfm"]` and `articlelink['cfm']`. 
+1. Edit the file named `config.js`, adding entries everywhere you see strategy specific values. There are probably 10-15 of these in a section demarcated "Strategy-specific variables", with names like `fullscreen["cfm"]` and `articlelink['cfm']`. 
 2. Add your strategy specific content and links in those new entries. 
 
 #### Final steps
@@ -51,13 +51,13 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 2. From there, the project can be viewed directly on EC2 at https://mongabay-imgs.s3.amazonaws.com/vz/index.html?pes, just change the part after the `?` to whatever your new acronym is 
 
 ## S3 Hosting
-Mongabay manages an S3 bucket that hosts the app. S3 CLI can be used to sync project files 
+Mongabay manages an S3 bucket that hosts the app. Although there are a variety of ways to manage data on S3, examples here use the excellent [Amazon AWS CLI](https://aws.amazon.com/cli/) to sync project files 
 
-### S3 CLI installation via pip  
+### AWS CLI installation via pip  
 `pip install awscli --upgrade --user`
 
 ### S3 Config
-See details for latest version of AWS CLI. Current setup requires the following in the users home directory:
+There are a variety of ways to [configure the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) on different operating systems. On Unix systems, you may include the following in the users home directory:
 ```
 # ~/.aws/config
 [default]
@@ -70,9 +70,10 @@ user=someuser
 aws_access_key_id=ACCESSKEY
 aws_secret_access_key=SECRETKEY
 ```
-### S3 CLI commands
+### AWS CLI commands
 
-* See AWS CLI documentation for a full description of available CLI commands 
+* The AWS SLI uses a Unix-like command-line syntax for listing, copying, moving and deleting files 
+* See the AWS CLI [command reference](http://docs.aws.amazon.com/cli/latest/reference/) for a full description of available CLI commands 
 
 ```
 // List the contents of the bucket
