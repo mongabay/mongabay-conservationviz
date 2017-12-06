@@ -12,7 +12,7 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 ### URLs and Servers
 * **Staging**: GitHub pages (served from [docs/ folder](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/#publishing-your-github-pages-site-from-a-docs-folder-on-your-master-branch)), e.g.: https://mongabay.github.io/mongabay-conservationviz/?fsc
 * **Production**: Amazon EC2 (see below)
-* To switch between strategies
+* To switch between strategies, append a URL param representing the strategy acronym to the end of the root URL, e.g. `/?fsc`, `/?pes`, `/?cfm`, etc. 
 
 ### Data general
 * Data spreadsheet: https://docs.google.com/spreadsheets/d/1OP_i8qOqFPdiO9_f-oXQJN3DIU4Fmvm6T5j8WnwrQR4/edit#gid=198979559
