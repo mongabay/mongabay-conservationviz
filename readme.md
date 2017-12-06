@@ -7,7 +7,7 @@ Articles:
 * [Does community-based forest management work in the tropics?](https://news.mongabay.com/2017/11/does-community-based-forest-management-work-in-the-tropics/)
 * [Cash for conservation: Do payments for ecosystem services work?](https://news.mongabay.com/2017/10/cash-for-conservation-do-payments-for-ecosystem-services-work/)
 
-The app is designed to load data from arbitrary "strategies" simply by switching two data sources (`data/data.csv` and `data/lookup_strategy.csv`). 
+The app is designed to load data from arbitrary "strategies" simply by switching two data sources (`data/data.csv` and `data/lookup_strategy.csv`). Strategy-specific content is loaded from `config.js`, which also provides variables to control sizing and spacing of visualization elements (map size, map circle dimensions, size and spacing of chart squares, chart labels, chart rows, etc.).
 
 ### URLs and Servers
 * **Staging**: GitHub pages (served from [docs/ folder](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/#publishing-your-github-pages-site-from-a-docs-folder-on-your-master-branch)), e.g.: https://mongabay.github.io/mongabay-conservationviz/?fsc
@@ -16,7 +16,7 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 
 ### Data general
 * Data spreadsheet: https://docs.google.com/spreadsheets/d/1OP_i8qOqFPdiO9_f-oXQJN3DIU4Fmvm6T5j8WnwrQR4/edit#gid=198979559
-* Raw data is located in sheets named Data_strategy (e.g. Data_FSC, etc.)
+* Raw data is located in sheets named `Data_{strategy}` (e.g. `Data_FSC`, etc.)
 * Main lookup, common to all strategies (`data/lookup.csv`), is located in sheet named Lookup
 * Flattened data that drives the app as `data/{STRATEGY}/data.csv` is located in sheets named flattened_data_strategy (e.g. flattened_data_FSC)
 * Strategy lookups (`data/{STRATEGY}/lookup_strategy.csv`) are located in sheets named lookup_strategy (e.g. lookup_strategy)
