@@ -23,11 +23,8 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 
 ### Data update: Changing strategy and related data sources
 * The app parses a strategy key from the URL, e.g. `https://mongabay.github.io/mongabay-conservationviz/?fsc`
-* Current strategies are keyed as `?fsc` for Forest Certification and `?pes` for Payments for Ecosystem Services
-* This key is used to switch to the correct sub-directory in `data/`, e.g. `data/pes`
-* If the URL is missing a valid strategy param, then the app defaults to whatever data is at the top level of `data/`
-* iframe `src` needs to include a valid strategy to work. If not, it will default to FSC
-* also important to update the `strategies[]` variable in `index.js`, `fullscreen\index.html` to include the new key
+* This key is used to switch to the correct data sub-directory in `data/`, e.g. `data/pes`, and to pull content from `config.js`
+* If the URL is missing a valid strategy param, then the app defaults to whatever data is at the top level of `data/` (currently FSC)
 * a more detailed explanation follows
 
 ### Detailed steps for a data update/new strategy
@@ -54,8 +51,9 @@ The app is designed to load data from arbitrary "strategies" simply by switching
 2. From there, the project can be viewed directly on EC2 at https://mongabay-imgs.s3.amazonaws.com/vz/index.html?pes, just change the part after the `?` to whatever your new acronym is 
 
 ## S3 Hosting
-Mongabay manages an S3 bucket that hosts the app. To recursively copy files: 
-This requires the setup of s3 CLI tools on the localhost (via pip)
+Mongabay manages an S3 bucket that hosts the app. S3 CLI can be used to sync project files 
+
+### S3 CLI installation via pip  
 `pip install awscli --upgrade --user`
 
 ### S3 Config
@@ -73,8 +71,11 @@ aws_access_key_id=ACCESSKEY
 aws_secret_access_key=SECRETKEY
 ```
 ### S3 CLI commands
+
+* See AWS CLI documentation for a full description of available CLI commands 
+
 ```
-// List the contents of my-bucket
+// List the contents of the bucket
 $ aws s3 ls s3://mongabay-imgs/vz/
 ```
 
@@ -85,10 +86,11 @@ $ aws s3 cp readme.doc s3://mongabay-imgs/vz/
 
 ```
 // sync and delete remote files no longer on localhost, append --dryrun to test
-$ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --dryrun 
-$ aws s3 sync . s3://mongabay-imgs/vz/  --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" --exclude "readme.md"
+$ aws s3 sync . s3://mongabay-imgs/vz/ --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" --exclude "readme.md" --dryrun 
+$ aws s3 sync . s3://mongabay-imgs/vz/ --delete --exclude ".git/*" --exclude "docs/*" --exclude "frame/*" --exclude ".gitignore" --exclude "readme.md"
 ```
 
-``` copy all files from remote to local
+``` 
+// copy all files from remote to local
 aws s3 cp s3://mongabay-imgs/vz/ ./ --recursive 
 ```
