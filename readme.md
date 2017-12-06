@@ -1,12 +1,18 @@
 ## Mongabay Conservation Visualization
 
-D3 based app for visualizing evidence for and against conservation themes
+D3 based app for visualizing evidence for and against conservation strategies (e.g. Forest Certification, Payments for Ecosystem Services, etc.), to accompany articles on [Mongabay.com](mongabay.com).
+
+Articles: 
+* [Does forest conservation really work?](https://news.mongabay.com/2017/09/does-forest-certification-really-work/)
+* [Does community-based forest management work in the tropics?](https://news.mongabay.com/2017/11/does-community-based-forest-management-work-in-the-tropics/)
+* [Cash for conservation: Do payments for ecosystem services work?](https://news.mongabay.com/2017/10/cash-for-conservation-do-payments-for-ecosystem-services-work/)
 
 The app is designed to load data from arbitrary "strategies" simply by switching two data sources (`data/data.csv` and `data/lookup_strategy.csv`). 
 
-### Servers
-Staging from GitHub pages (served from [docs/ folder](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/#publishing-your-github-pages-site-from-a-docs-folder-on-your-master-branch)): https://mongabay.github.io/mongabay-conservationviz/?fsc
-Production: Amazon EC2 (see below)
+### URLs and Servers
+* **Staging**: GitHub pages (served from [docs/ folder](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/#publishing-your-github-pages-site-from-a-docs-folder-on-your-master-branch)), e.g.: https://mongabay.github.io/mongabay-conservationviz/?fsc
+* **Production**: Amazon EC2 (see below)
+* To switch between strategies
 
 ### Data general
 * Data spreadsheet: https://docs.google.com/spreadsheets/d/1OP_i8qOqFPdiO9_f-oXQJN3DIU4Fmvm6T5j8WnwrQR4/edit#gid=198979559
