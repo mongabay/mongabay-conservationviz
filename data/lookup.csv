@@ -1,5 +1,6 @@
 key,name,latitude,longitude,type,tooltip
 alltext,All findings,,,,
+nodata,No data to show,,,,
 strategy1,Environmental,,,,
 strategy2,Social,,,,
 strategy3,Economic,,,,
