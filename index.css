@@ -100,7 +100,7 @@ div.chartrow {
 
 div.chartrow.toprow {
   background: #efefef;
-  min-height:80px;
+  /*min-height:80px;*/
 }
 
 svg.chartcontainer {
