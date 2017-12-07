@@ -100,6 +100,7 @@ div.chartrow {
 
 div.chartrow.toprow {
   background: #efefef;
+  min-height:80px;
 }
 
 svg.chartcontainer {
@@ -121,6 +122,10 @@ div.chartrow.toprow div.text {
   font-weight: 500;
   padding-top: 10px;
   text-transform: uppercase;
+}
+
+div.chartrow.toprow div.text, div.chartrow.toprow div.text span.hint {
+  cursor:default;
 }
 
 span.hint {
