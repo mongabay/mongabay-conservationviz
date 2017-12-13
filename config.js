@@ -41,29 +41,29 @@ words["cfm"][colgroups["cfm"][0]] = "Mostly no or positive changes";
 words["cfm"][colgroups["cfm"][1]] = "Inconclusive (mixed results)";
 words["cfm"][colgroups["cfm"][2]] = "Inconclusive (insufficient evidence)";
 words["pas"] = [];
-words["pas"][colgroups["pas"][0]] = "First conclusion";
-words["pas"][colgroups["pas"][1]] = "Second conclusion";
-words["pas"][colgroups["pas"][2]] = "Third conclusion";
+words["pas"][colgroups["pas"][0]] = "Mostly positive change";
+words["pas"][colgroups["pas"][1]] = "Inconclusive (insufficient evidence)";
+words["pas"][colgroups["pas"][2]] = "Inconclusive (insufficient evidence)";
 
 // fullscreen titles, subtitles
 var fullscreentitle = {};
 fullscreentitle["fsc"] = "The scientific evidence on tropical forest certification";
 fullscreentitle["pes"] = "The scientific evidence on Payments for Ecosystem Services";
 fullscreentitle["cfm"] = "The scientific evidence on community-based forest management";
-fullscreentitle["pas"] = "The scientific evidence on community-based forest management";
+fullscreentitle["pas"] = "The scientific evidence on protected areas";
 var fullscreensubtitle = {};
 fullscreensubtitle["fsc"] = "Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?";
 fullscreensubtitle["pes"] = "Is paying landowners in the tropics for providing ecosystem services better for the environment and the landowners than doing nothing?";
 fullscreensubtitle["cfm"] = "Is community-based forest management good for forests in countries that lie in the tropics, and the people who live near those forests?";
-fullscreensubtitle["pas"] = "Is community-based forest management good for forests in countries that lie in the tropics, and the people who live near those forests?";
+fullscreensubtitle["pas"] = "Are protected areas good for forests in the tropics and the people who live near them?";
 
 // the description, below the map, to the left of the legend
 // Note: enter this as HTML. Also: use single quotes outside, and double-quotes inside (e.g. target="_blank")
 var description = {};
 description["fsc"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of FSC certification or Reduced Impact Logging. Try hovering or clicking on a circle &mdash; the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-forest-certification/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 description["pes"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of Payments for Ecosystem Services (PES). Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-PES/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
-description["cfm"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of community forest management initiatives. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-does-community-based-forest-management-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
-description["pas"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of community forest management initiatives. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-does-community-based-forest-management-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
+description["cfm"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of community forest management initiatives. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-does-community-based-forest-management-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
+description["pas"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of strict protected areas. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/2017/12/do-protected-areas-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 
 // horizontal legend text
 var legend_text = {};
@@ -83,9 +83,9 @@ legend_text["cfm"] = [
   "CFM worse than no CFM"
 ];
 legend_text["pas"] = [
-  "CFM better than no CFM",
-  "CFM same as no CFM",
-  "CFM worse than no CFM"
+  "PA better than no PA",
+  "PA same as no PA",
+  "PA worse than no PA"
 ];
 
 //////////////////////////////////////////////////////////
