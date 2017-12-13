@@ -18,7 +18,6 @@ var initBounds;
 // track whether we've dragged a tooltip or not
 var dragged = false;
 
-
 // keep track of our width, see resizeContainers()
 var cachedwidth;
 $(document).ready(function($) { cachedwidth = $(window).width() });
@@ -81,7 +80,6 @@ var dispatch = d3.dispatch("load", "leaflet", "statechange");
 
 // check URL for a query param representing a path to data
 // fallback is to use the data in data/ which represents a copy of same in fsc/ 
-var strategies = ['fsc','pes','cfm'];
 var strategy = window.location.href.split('?')[1];
 // if we get an invalide param, pretend like nothing happened: we need a valid key to show certain things, like the description
 if ( (strategies.indexOf(strategy) < 0) || typeof strategy === 'undefined' ) strategy = 'fsc'; 
@@ -141,7 +139,7 @@ function main(error, lookups, lookups_study, data) {
   dispatch.call("load", this, {stengths: strengthlist, countries_keyed: countries_keyed, data: data}); 
   dispatch.call("statechange", this, data);
   // finally, fit the map to bounds one time, this will always be the extent, despite state changes
-  // cannot fit bounds to circles for some reason, so we fit to points instead
+  // note: cannot fit bounds to circles for some reason, so we fit to points instead
   initBounds = points.getBounds();
   map.fitBounds(initBounds);
 
@@ -250,10 +248,10 @@ dispatch.on("statechange.charts", function(rawdata) {
     other_rows = _.sortBy(other_rows, "key");
   }
 
-  // then structure data into cols, by colgroup, keeping the top row for the overview data
-  var coldata = [{key: "env", values: []},{key: "soc", values: []},{key: "econ", values: []}];
-  colgroups.forEach(function(col) {
-
+  // colgroups are defined in config
+  // set up a data structure we will use to put data into cols, by colgroup
+  var coldata = colgroups[strategy].map(function(col) { return {key: col, values: []} });
+  colgroups[strategy].forEach(function(col) {
     // add a first row from old "top" data
     toprow.forEach(function(row){
       if (row.key.toLowerCase() == col) {
@@ -276,6 +274,7 @@ dispatch.on("statechange.charts", function(rawdata) {
     })
   })
   // send off data to the chart renderer, one col at a time
+  // initial column width
   config["colwidth"] = $(".chartcol").width();
   coldata.forEach(function(col, i){
     // check for nodata condition: col.values.len == 1 means there is only one row:
@@ -287,7 +286,7 @@ dispatch.on("statechange.charts", function(rawdata) {
 
     // check if we are showing or hiding details
     // if hide, remove all but the top level summary chart
-    if ($('div.toggler[data-col="' + col.key + '"]').data().details == 'hide' ) col.values = [col.values[0]];
+    if ( $('div.toggler[data-col="' + col.key + '"]').data().details == 'hide' ) col.values = [col.values[0]];
 
     // - calculate total width and height of the chart
     // - select the container, and give it an explicit height
@@ -298,6 +297,12 @@ dispatch.on("statechange.charts", function(rawdata) {
     var container = d3.select("." + col.key + "-chart").style("height", fullheight);
     drawchart(col.values, container);
   });
+
+  // in the current setup, where we calcOffsets() one at a time for cols, there is no easy a-priori way
+  // to guage pixel perfect width of the colored top-row, as the cols themselves are percents, and will adjust
+  // width slighly, and automatically, if/when there is a vertical scroll-bar present
+  // to work around this, check at the end, and adjust as needed
+  resizeTopRow();
 
   // draw the map 
   var countries_keyed = calcCountryKeys(filtered);
@@ -493,15 +498,17 @@ function drawchart(data, container) {
   // update
   text
     .classed("nothing", function(d) { return d.key == "nodata" })
+    .classed("toptext", function(d) { return d.key == d.values[0].values[0].theme })
     .html(function(d) {
       var text;
       if (d.key == d.values[0].values[0].theme) {
         // top row gets special treatment
-        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
+        text = lookup["alltext"]["name"] + "<span class='hint toptext'> Click a square for detailed results</span>";
       } else if (d.key == "nodata") {
-        // no data gets no info icon
+        // no data in rows after the top row, gets no info icon
         text = lookup[d.key]["name"];
       } else {
+        // a normal chart row: name plus info icon
         text = lookup[d.key]["name"] + " <span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
       } 
       return text;
@@ -511,22 +518,28 @@ function drawchart(data, container) {
   text.enter().append("div")
     .classed("text", true)
     .classed("nothing", function(d) { return d.key == "nodata" })
+    .classed("toptext", function(d) { return d.key == d.values[0].values[0].theme })
     .html(function(d) {
       var text;
       if (d.key == d.values[0].values[0].theme) {
         // top row gets special treatment
-        text = lookup["alltext"]["name"] + "<span class='hint'> Click a square for detailed results</span>"
+        text = lookup["alltext"]["name"] + "<span class='hint toptext'> Click a square for detailed results</span>";
       } else if (d.key == "nodata") {
-        // no data gets no info icon
+        // no data, in rows after the top row, gets no info icon
         text = lookup[d.key]["name"];
       } else {
+        // a normal chart row: name plus info icon
         text = lookup[d.key]["name"] + " <span onclick='showVariableInfoTip(event)' class='variable-info icon-info' data-var='" + d.key + "'></span>";
       } 
       return text;
     })
     .style("font-size", function() { return config["labelsize"] + "px"; })
     .on("click", function(d) {
-      // on click, filter by this variable (or theme)
+      // no click behavior for the top row
+      var target = d3.event.target;
+      if ( target.classList.contains("toptext") ) return;
+
+      // for the rest of the rows, filter by this variable (or theme)
       // value is simply the data key of the clicked upon label
       var value = d.key;
       // key is dependent on hierarchy, first get the first datum; every one of these should have at least one datum or it wouldn't be on the screen
@@ -680,8 +693,8 @@ function drawchart(data, container) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("light", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "light"})
-      .classed("dark", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "dark"})
+      .classed("light", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["type"] == "light"})
+      .classed("dark", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["type"] == "dark"})
       .attr("width", config["sqsize"] - 1)
       .attr("height", config["sqsize"] - 1)
       .on("click", clickSquare)
@@ -701,8 +714,8 @@ function drawchart(data, container) {
       .classed("neutral",function(d) { return d.valence == 0 })
       .classed("plus",function(d) { return d.valence > 0 })
       .classed("minus",function(d) { return d.valence < 0 })
-      .classed("light", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "light"})
-      .classed("dark", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["parent"] == "dark"})
+      .classed("light", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["type"] == "light"})
+      .classed("dark", function(d) { return typeof d.type === "undefined" ? false : lookup[d.type]["type"] == "dark"})
       .attr("width", config["sqsize"] - 1)
       .attr("height", config["sqsize"] - 1)
       .on("click", clickSquare)
@@ -793,6 +806,23 @@ function resizePage() {
 // resize all the containers listed below from config
 function resizeContainers() {
   d3.select(".bottom").style("height", config["height"] + "px"); 
+}
+
+function resizeTopRow() {
+  // Occassionally, width calc's in top row are out of sync with toggler bar above 
+  // (due to pres/abs of scroll bar, to which the % width cols adjust, but our absolutely sized chart rows)
+  // the following seems to fix it 
+  setTimeout(function() {
+    // compare the two offending elements
+    var toprow = d3.selectAll("div.toprow");
+    var togglewidth = d3.selectAll("div.toggler").node().getBoundingClientRect().width;
+    var toprowwidth = toprow.node().getBoundingClientRect().width;
+    // because of sub-pixel measures, see if the abs difference is greater than 1
+    // and if so, give em a resize
+    // this will likely throw a "too late" error because of transition collision, but that's less offensive than misaligned elements
+    var diff = Math.abs(togglewidth - toprowwidth);
+    if ( diff > 1 ) $("div.toprow").width(togglewidth); 
+  }, 150);
 }
 
 // nest our data on selected group, then either "plus" or "minus",
@@ -921,7 +951,7 @@ function calcOffsets(data) {
     });
 
     // from these counts, figure out how many rows this takes
-    number_that_fit = Math.floor( (config["colwidth"] - config["textwidth"]) / (sqsize + 1));
+    number_that_fit = Math.floor( (config["colwidth"] - config["textwidth"]) / (sqsize + 1) );
     var plusrows = Math.ceil(plus / number_that_fit);
     var minusrows = Math.ceil(minus / number_that_fit);
     var neutralrows = Math.ceil(neutral / number_that_fit);

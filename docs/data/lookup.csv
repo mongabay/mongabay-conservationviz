@@ -1,9 +1,9 @@
-key,name,latitude,longitude,parent,tooltip
+key,name,latitude,longitude,type,tooltip
 alltext,All findings,,,,
 nodata,No data to show,,,,
-ENV,Environmental,,,env,
-ECON,Social,,,econ,
-SOC,Economic,,,soc,
+strategy1,Environmental,,,,
+strategy2,Social,,,,
+strategy3,Economic,,,,
 strength0,Unknown,,,,
 type7,Case report,,,light,
 type6,Study I (case-control),,,light,
@@ -17,43 +17,43 @@ southandcentralamerica,South and Central America,,,,
 asia,Asia,,,,
 global,Global,,,,
 pantropical,Pan-tropical,,,,
-accesstoland,Access to land,,,soc,"Has the community or household experienced a change in its legal access to forest, land, or forest resources, such as non-timber forest products or game animals?"
-animaldiversity,Animal diversity,,,env,"Is there a difference in animal diversity in terms of number of species, number of threatened or endangered species, or species abundance (population size)?"
-awarenessempowermentparticipation,"Empowerment, participation",,,soc,"Do community members participate in making decisions about conservation and resource management, and do they feel empowered?"
-canopylossgapsize,Canopy loss,,,env,Loss of individual trees from the forest leads to canopy loss and large gaps in the canopy. This can lead to forest degradation.
-carbonstockemissions,Carbon stock,,,env,"Forests store a lot of carbon, which helps combat climate change. Forests that are healthy store more carbon than degraded forests or agricultural land."
-collateraldamage,Collateral damage,,,env,"In selective logging, not every tree is extracted, but felling individual trees can still cause a lot of collateral damage to neighbouring trees, which should be avoided."
-communitywellbeingandlivelihoods,Community wellbeing,,,soc,"There are many ways to measure wellbeing – from availability of drinking water, food security, lack of diseases and poverty, to having alternative livelihoods to fall back on."
-compliancewithlawsandregulations,Compliance with law,,,soc,"Most countries have laws and regulations pertaining to logging or other resource use, for example harvest quotas, or labour laws, and these are not always complied with."
-conflict,Conflict,,,soc,"There can be conflict within a community, between a community and a company, or between a community and government or NGOs."
-costofprotection,Cost of protection,,,econ,"For two alternative conservation strategies, which one is cheaper to implement?"
-deforestationfragmentationanddegradation,Deforestation and degradation,,,env,"One of the main goals of conservation is to stop the conversion of forest (deforestation) to other types of land, such as agricultural fields. Degraded forests have not yet been converted, but they are in some ways altered. For example, they can have many gaps in the canopy, all the animals may be hunted out, soil might be eroded."
-directeconomicbenefits,Economic benefits,,,econ,"Is the community receiving direct financial benefits, for example fees paid by companies for extracting resources, or conservation payments?"
-equalityequitylessmarginalization,"Equality, equity",,,soc,"Are men and women affected and involved equally, do they share decision-making power? Are the poorer members of society further marginalized and made poorer, or does the inequality gap close?"
-grounddisturbance,Ground disturbance,,,env,"In selective logging, trees are usually hauled out of the forest by skidding, which causes ground disturbance. A disturbed forest may become a degraded, less resilient forest."
-harvestefficiency,Harvest efficiency,,,econ,How many trees are extracted per unit of time that the logging crew is working in the forest?
-humanwildlifeconflict,Human-wildlife conflict,,,soc,"Where people live close to nature, there is often some conflict between people and wildlife: elephants sometimes raid crops, predators sometimes kill livestock or people."
-illegalhuntingloggingmining,"Illegal hunting, logging",,,env,"Illegal logging can happened both within a legal logging concession (for example more timber is extracted than allowed) or outside, in set-asides where logging is not allowed. Hunting is done sometimes for subsistence, cash income, as well as a leisure activity. Both have negative consequences for biodiversity."
-infrastructureandinstitutions,Infrastructure and Institutions,,,soc,"This includes building new schools, roads, or water treatment plants, as well as institutions such as unions or community enterprises."
-jobs,Jobs,,,soc,Is the logging company or a conservation project employing local people?
-landgrabbingbetterlandtenure,Land tenure,,,soc,"In some countries, many traditional land owners do not have a legal document stating that the land belongs to them. Clarifying the legal status of each parcel of forest is a vital step towards protecting the forest."
-livingandworkingconditionsofemployees,Employee wellbeing,,,soc,"Do the employees in a logging company or conservation project have permanent contracts, health insurance, are they provided with sufficient housing?"
-managementandadministration,Management,,,econ,Is the management of the company or project efficient? Have administration costs increased?
-marketaccess,Market access,,,econ,"Can the company sell its products at international markets that are more likely to be environmentally aware, and pay more for products?"
-opportunitycosts,Opportunity Cost,,,econ,Do the payments received make up for profit lost as a result of not carrying out a default (environmentally harmful) activity?
-populationdisplacement,Population displacement,,,soc,"Has a community been displaced due to a conservation project, and if so, was this voluntary and appropriately compensated?"
-preloggingcosts,Pre-logging costs,,,econ,"When selective logging is carried out carefully, all trees are mapped out and identified and trails designed before the logging operation begins, which may cost additional money."
-pricepremium,Price premium,,,econ,Are companies or enterprises that sell certified products able to sell them at a higher price – get a premium for responsible management?
-profit,Profit,,,econ,Were the gains higher than costs?
-reforestation,Reforestation,,,env,"Planting new trees through reforestation is an important way to increase carbon stock, and provide other important ecosystem services, as well as timber or fuel wood."
-roadandskidtraildensity,Road and trail density,,,env,"Ideally, the length and width of roads and trails in a logged forest would be minimized, in order to decrease forest disturbance. Disturbed forest may become degraded and less resilient forest."
-setasidesandbufferzones,Set-asides and buffers,,,env,Has the company or community set aside areas where no human activity is allowed? Such set-asides and buffer zones are particularly important around streams and on steep slopes.
-skiddingcost,Skidding cost,,,econ,How expensive has it been to get felled trees out of the forest?
-timberstock(sustainabilityofincome),Timber stock,,,econ,How many commercially interesting or useful trees are left in the forest for future harvest?
-totalcostofloggingoperations,Total cost of logging,,,econ,"The total costs of logging include everything from planning the logging operation, paying the logging crew, and transporting logs out of forest."
-treediversity,Tree diversity,,,env,"Is there a difference in tree or plant diversity in terms of number of species, number of threatened or endangered species, or species abundance (population size)?"
-waterregulationerosionprevention,Water and soil,,,env,"Forests are important in terms of regulating the water quality or quantity downstream, and in preventing erosion."
-workerproductivity,Worker productivity,,,econ,How many trees was the logging crew able to extract from the forest in a given day?
+accesstoland,Access to land,,,,"Has the community or household experienced a change in its legal access to forest, land, or forest resources, such as non-timber forest products or game animals?"
+animaldiversity,Animal diversity,,,,"Is there a difference in animal diversity in terms of number of species, number of threatened or endangered species, or species abundance (population size)?"
+awarenessempowermentparticipation,"Empowerment, participation",,,,"Do community members participate in making decisions about conservation and resource management, and do they feel empowered?"
+canopylossgapsize,Canopy loss,,,,Loss of individual trees from the forest leads to canopy loss and large gaps in the canopy. This can lead to forest degradation.
+carbonstockemissions,Carbon stock,,,,"Forests store a lot of carbon, which helps combat climate change. Forests that are healthy store more carbon than degraded forests or agricultural land."
+collateraldamage,Collateral damage,,,,"In selective logging, not every tree is extracted, but felling individual trees can still cause a lot of collateral damage to neighbouring trees, which should be avoided."
+communitywellbeingandlivelihoods,Community wellbeing,,,,"There are many ways to measure wellbeing – from availability of drinking water, food security, lack of diseases and poverty, to having alternative livelihoods to fall back on."
+compliancewithlawsandregulations,Compliance with law,,,,"Most countries have laws and regulations pertaining to logging or other resource use, for example harvest quotas, or labour laws, and these are not always complied with."
+conflict,Conflict,,,,"There can be conflict within a community, between a community and a company, or between a community and government or NGOs."
+costofprotection,Cost of protection,,,,"For two alternative conservation strategies, which one is cheaper to implement?"
+deforestationfragmentationanddegradation,Deforestation and degradation,,,,"One of the main goals of conservation is to stop the conversion of forest (deforestation) to other types of land, such as agricultural fields. Degraded forests have not yet been converted, but they are in some ways altered. For example, they can have many gaps in the canopy, all the animals may be hunted out, soil might be eroded."
+directeconomicbenefits,Economic benefits,,,,"Is the community receiving direct financial benefits, for example fees paid by companies for extracting resources, or conservation payments?"
+equalityequitylessmarginalization,"Equality, equity",,,,"Are men and women affected and involved equally, do they share decision-making power? Are the poorer members of society further marginalized and made poorer, or does the inequality gap close?"
+grounddisturbance,Ground disturbance,,,,"In selective logging, trees are usually hauled out of the forest by skidding, which causes ground disturbance. A disturbed forest may become a degraded, less resilient forest."
+harvestefficiency,Harvest efficiency,,,,How many trees are extracted per unit of time that the logging crew is working in the forest?
+humanwildlifeconflict,Human-wildlife conflict,,,,"Where people live close to nature, there is often some conflict between people and wildlife: elephants sometimes raid crops, predators sometimes kill livestock or people."
+illegalhuntingloggingmining,"Illegal hunting, logging",,,,"Illegal logging can happened both within a legal logging concession (for example more timber is extracted than allowed) or outside, in set-asides where logging is not allowed. Hunting is done sometimes for subsistence, cash income, as well as a leisure activity. Both have negative consequences for biodiversity."
+infrastructureandinstitutions,Infrastructure and Institutions,,,,"This includes building new schools, roads, or water treatment plants, as well as institutions such as unions or community enterprises."
+jobs,Jobs,,,,Is the logging company or a conservation project employing local people?
+landgrabbingbetterlandtenure,Land tenure,,,,"In some countries, many traditional land owners do not have a legal document stating that the land belongs to them. Clarifying the legal status of each parcel of forest is a vital step towards protecting the forest."
+livingandworkingconditionsofemployees,Employee wellbeing,,,,"Do the employees in a logging company or conservation project have permanent contracts, health insurance, are they provided with sufficient housing?"
+managementandadministration,Management,,,,Is the management of the company or project efficient? Have administration costs increased?
+marketaccess,Market access,,,,"Can the company sell its products at international markets that are more likely to be environmentally aware, and pay more for products?"
+opportunitycosts,Opportunity Cost,,,,Do the payments received make up for profit lost as a result of not carrying out a default (environmentally harmful) activity?
+populationdisplacement,Population displacement,,,,"Has a community been displaced due to a conservation project, and if so, was this voluntary and appropriately compensated?"
+preloggingcosts,Pre-logging costs,,,,"When selective logging is carried out carefully, all trees are mapped out and identified and trails designed before the logging operation begins, which may cost additional money."
+pricepremium,Price premium,,,,Are companies or enterprises that sell certified products able to sell them at a higher price – get a premium for responsible management?
+profit,Profit,,,,Were the gains higher than costs?
+reforestation,Reforestation,,,,"Planting new trees through reforestation is an important way to increase carbon stock, and provide other important ecosystem services, as well as timber or fuel wood."
+roadandskidtraildensity,Road and trail density,,,,"Ideally, the length and width of roads and trails in a logged forest would be minimized, in order to decrease forest disturbance. Disturbed forest may become degraded and less resilient forest."
+setasidesandbufferzones,Set-asides and buffers,,,,Has the company or community set aside areas where no human activity is allowed? Such set-asides and buffer zones are particularly important around streams and on steep slopes.
+skiddingcost,Skidding cost,,,,How expensive has it been to get felled trees out of the forest?
+timberstock(sustainabilityofincome),Timber stock,,,,How many commercially interesting or useful trees are left in the forest for future harvest?
+totalcostofloggingoperations,Total cost of logging,,,,"The total costs of logging include everything from planning the logging operation, paying the logging crew, and transporting logs out of forest."
+treediversity,Tree diversity,,,,"Is there a difference in tree or plant diversity in terms of number of species, number of threatened or endangered species, or species abundance (population size)?"
+waterregulationerosionprevention,Water and soil,,,,"Forests are important in terms of regulating the water quality or quantity downstream, and in preventing erosion."
+workerproductivity,Worker productivity,,,,How many trees was the logging crew able to extract from the forest in a given day?
 AF,Afghanistan,33.93911,67.709953,,
 AX,Akrotiri,33.93911,67.709953,,
 AL,Albania,41.153332,20.168331,,
