@@ -167,7 +167,8 @@ dispatch.on("load.setup", function(){
     .text(function(d) {return d});
 
   // update "fullscreen" href
-  var url = window.location.origin + "/fullscreen/index.html?" + strategy;
+
+  var url = location.href.substring(0, location.href.lastIndexOf("/")+1) + "fullscreen/index.html?" + strategy;
   d3.select("a#fullscreen").attr("href",url);
 })
 
@@ -1221,6 +1222,3 @@ function toggleFullscreen() {
               : document.location.href;
   if (url.indexOf('fullscreen') > -1) $('a#fullscreen').hide();
 }
-
-// https://stackoverflow.com/questions/6941533/get-protocol-domain-and-port-from-url
-if (!window.location.origin) { window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');}
