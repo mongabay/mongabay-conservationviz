@@ -5,13 +5,6 @@
 // define the universe of strategies. These same acronyms are also expected in the url switch that tells the app which strategy to show, e.g. localhost:8000/?cfm
 var strategies = ["fsc","pes","cfm","pas"];
 
-// url to "full screen" version of app
-var fullscreen = {};
-fullscreen["fsc"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?fsc"
-fullscreen["pes"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?pes"
-fullscreen["cfm"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?cfm"
-fullscreen["pas"] = "https://mongabay-imgs.s3.amazonaws.com/vz/fullscreen/index.html?pas"
-
 // the link back to the article on mb.com
 var articlelink = {};
 articlelink["fsc"] = "https://news.mongabay.com/2017/09/does-forest-certification-really-work/";
