@@ -17,7 +17,7 @@ var articlelink = {};
 articlelink["fsc"] = "https://news.mongabay.com/2017/09/does-forest-certification-really-work/";
 articlelink["pes"] = "https://news.mongabay.com/2017/10/cash-for-conservation-do-payments-for-ecosystem-services-work/";
 articlelink["cfm"] = "https://news.mongabay.com/2017/11/does-community-based-forest-management-work-in-the-tropics";
-articlelink["pas"] = "https://news.mongabay.com/2017/11/does-community-based-forest-management-work-in-the-tropics";
+articlelink["pas"] = "https://news.mongabay.com/2017/12/do-protected-areas-work-in-the-tropics/";
 
 // keys to the column groups. These will be used below, and throughout to identify and organize groups from the data
 var colgroups = {};
