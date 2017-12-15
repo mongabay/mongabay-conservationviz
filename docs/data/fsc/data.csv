@@ -185,4 +185,4 @@ id,zb_id,valence,fips,strategy,theme,variable,type,conclusion
 184,1.53.3,1,MY,FSC,ENV,carbonstockemissions,type6,Above-ground biomass was higher in the FSC certified concession than in conventionally logged concession.
 185,1.7.1,1,MY,FSC,ENV,animaldiversity,type6,There was a significantly higher species richness of large bodied mammals in certified concession compared to conventional logging concessions.
 186,1.7.2,1,MY,FSC,ENV,carbonstockemissions,type6,Higher carbon density in above-ground vegetation can be attributed to sustainable forest management in certified concession.
-186,1.7.3,1,MY,FSC,ENV,setasidesandbufferzones,type6,Conservation areas (where no logging happens) were established in certified concessions but not in conventional logging concessions.
+187,1.7.3,1,MY,FSC,ENV,setasidesandbufferzones,type6,Conservation areas (where no logging happens) were established in certified concessions but not in conventional logging concessions.
