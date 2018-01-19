@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////
 
 // define the universe of strategies. These same acronyms are also expected in the url switch that tells the app which strategy to show, e.g. localhost:8000/?cfm
-var strategies = ["fsc","pes","cfm","pas"];
+var strategies = ["fsc","pes","cfm","pas","mpa"];
 
 // the link back to the article on mb.com
 var articlelink = {};
@@ -11,6 +11,7 @@ articlelink["fsc"] = "https://news.mongabay.com/2017/09/does-forest-certificatio
 articlelink["pes"] = "https://news.mongabay.com/2017/10/cash-for-conservation-do-payments-for-ecosystem-services-work/";
 articlelink["cfm"] = "https://news.mongabay.com/2017/11/does-community-based-forest-management-work-in-the-tropics";
 articlelink["pas"] = "https://news.mongabay.com/2017/12/do-protected-areas-work-in-the-tropics/";
+articlelink["mpa"] = "https://news.mongabay.com/";
 
 // keys to the column groups. These will be used below, and throughout to identify and organize groups from the data
 var colgroups = {};
@@ -18,6 +19,7 @@ colgroups["fsc"] = ["env", "soc", "econ"];
 colgroups["pes"] = ["env", "soc", "econ"];
 colgroups["cfm"] = ["env", "soc", "econ"];
 colgroups["pas"] = ["env", "soc", "econ"];
+colgroups["mpa"] = ["env", "soc", "econ"];
 
 // descriptive summaries for the theme groups
 var words = {};
@@ -37,6 +39,10 @@ words["pas"] = [];
 words["pas"][colgroups["pas"][0]] = "Mostly positive change";
 words["pas"][colgroups["pas"][1]] = "Inconclusive (insufficient evidence)";
 words["pas"][colgroups["pas"][2]] = "Inconclusive (insufficient evidence)";
+words["mpa"] = [];
+words["mpa"][colgroups["mpa"][0]] = "Mostly positive change";
+words["mpa"][colgroups["mpa"][1]] = "Inconclusive (insufficient evidence)";
+words["mpa"][colgroups["mpa"][2]] = "Inconclusive (insufficient evidence)";
 
 // fullscreen titles, subtitles
 var fullscreentitle = {};
@@ -44,11 +50,13 @@ fullscreentitle["fsc"] = "The scientific evidence on tropical forest certificati
 fullscreentitle["pes"] = "The scientific evidence on Payments for Ecosystem Services";
 fullscreentitle["cfm"] = "The scientific evidence on community-based forest management";
 fullscreentitle["pas"] = "The scientific evidence on protected areas";
+fullscreentitle["mpa"] = "The scientific evidence on marine protected areas";
 var fullscreensubtitle = {};
 fullscreensubtitle["fsc"] = "Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?";
 fullscreensubtitle["pes"] = "Is paying landowners in the tropics for providing ecosystem services better for the environment and the landowners than doing nothing?";
 fullscreensubtitle["cfm"] = "Is community-based forest management good for forests in countries that lie in the tropics, and the people who live near those forests?";
 fullscreensubtitle["pas"] = "Are protected areas good for forests in the tropics and the people who live near them?";
+fullscreensubtitle["mpa"] = "Are marine protected areas good?";
 
 // the description, below the map, to the left of the legend
 // Note: enter this as HTML. Also: use single quotes outside, and double-quotes inside (e.g. target="_blank")
@@ -57,6 +65,8 @@ description["fsc"] = '<h3>How to read this infographic</h3><p>The map shows coun
 description["pes"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of Payments for Ecosystem Services (PES). Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-PES/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 description["cfm"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of community forest management initiatives. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-does-community-based-forest-management-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 description["pas"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of strict protected areas. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-do-protected-areas-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
+description["mpa"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of strict protected areas. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-do-protected-areas-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
+
 
 // horizontal legend text
 var legend_text = {};
@@ -80,6 +90,11 @@ legend_text["pas"] = [
   "PA same as no PA",
   "PA worse than no PA"
 ];
+legend_text["map"] = [
+  "MPA better than no MPA",
+  "MPA same as no MPA",
+  "MPA worse than no MPA"
+];
 
 //////////////////////////////////////////////////////////
 // Global configuration of various element sizes, spacing
@@ -87,7 +102,7 @@ legend_text["pas"] = [
 
 // Min and Max map circle areas, in km2
 var circleareas = {
-  min: 15000, 
+  min: 15000,
   max: 1300000,
 }
 
@@ -98,7 +113,7 @@ var config = {
   sqsize:       17,    // width and hight of chart squares
   rowpadding:   15,    // padding between rows
   labelsize:    13,    // size of text label size in pixels
-  textwidth:    210,   // width of the text label "column"   
+  textwidth:    210,   // width of the text label "column"
   textpadding:  10,    // right side padding of text label
   toprowpad:    20,    // padding around the top "summary" row in each column
   buttonheight: 34,    // height of the button headers at top of row
