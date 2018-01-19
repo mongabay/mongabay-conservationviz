@@ -90,7 +90,7 @@ legend_text["pas"] = [
   "PA same as no PA",
   "PA worse than no PA"
 ];
-legend_text["map"] = [
+legend_text["mpa"] = [
   "MPA better than no MPA",
   "MPA same as no MPA",
   "MPA worse than no MPA"
