@@ -41,8 +41,8 @@ words["pas"][colgroups["pas"][1]] = "Inconclusive (insufficient evidence)";
 words["pas"][colgroups["pas"][2]] = "Inconclusive (insufficient evidence)";
 words["mpa"] = [];
 words["mpa"][colgroups["mpa"][0]] = "Mostly positive change";
-words["mpa"][colgroups["mpa"][1]] = "Inconclusive (insufficient evidence)";
-words["mpa"][colgroups["mpa"][2]] = "Inconclusive (insufficient evidence)";
+words["mpa"][colgroups["mpa"][1]] = "Inconclusive";
+words["mpa"][colgroups["mpa"][2]] = "Inconclusive";
 
 // fullscreen titles, subtitles
 var fullscreentitle = {};
@@ -50,13 +50,13 @@ fullscreentitle["fsc"] = "The scientific evidence on tropical forest certificati
 fullscreentitle["pes"] = "The scientific evidence on Payments for Ecosystem Services";
 fullscreentitle["cfm"] = "The scientific evidence on community-based forest management";
 fullscreentitle["pas"] = "The scientific evidence on protected areas";
-fullscreentitle["mpa"] = "The scientific evidence on marine protected areas";
+fullscreentitle["mpa"] = "A sample of the scientific evidence on marine protected areas";
 var fullscreensubtitle = {};
 fullscreensubtitle["fsc"] = "Is certified forest management really better than conventional logging for the environment, people, and logging companies’ bottom lines?";
 fullscreensubtitle["pes"] = "Is paying landowners in the tropics for providing ecosystem services better for the environment and the landowners than doing nothing?";
 fullscreensubtitle["cfm"] = "Is community-based forest management good for forests in countries that lie in the tropics, and the people who live near those forests?";
 fullscreensubtitle["pas"] = "Are protected areas good for forests in the tropics and the people who live near them?";
-fullscreensubtitle["mpa"] = "Are marine protected areas good?";
+fullscreensubtitle["mpa"] = "Are marine protected areas good for marine life and fisheries-dependent people?";
 
 // the description, below the map, to the left of the legend
 // Note: enter this as HTML. Also: use single quotes outside, and double-quotes inside (e.g. target="_blank")
@@ -65,7 +65,7 @@ description["fsc"] = '<h3>How to read this infographic</h3><p>The map shows coun
 description["pes"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of Payments for Ecosystem Services (PES). Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-story-on-PES/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 description["cfm"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of community forest management initiatives. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-does-community-based-forest-management-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
 description["pas"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of strict protected areas. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-do-protected-areas-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
-description["mpa"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of strict protected areas. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see <a href="https://news.mongabay.com/conservation-effectiveness/how-we-reviewed-the-evidence/" target="_blank">methods</a>). Each square (try clicking on one) represents one data point extracted from <a href="https://news.mongabay.com/conservation-effectiveness/references-for-do-protected-areas-work-in-the-tropics/" target="_blank">scientific, peer-reviewed literature</a>.</p>';
+description["mpa"] = '<h3>How to read this infographic</h3><p>The map shows countries where scientists have measured the effectiveness of marine protected areas. Try hovering or clicking on a circle — the more evidence there is, the larger the circle.</p><p>The squares below show the results of the studies we have reviewed (see methods, this is not an exhaustive list of the literature). Each square (try clicking on one) represents one data point extracted from scientific, peer-reviewed literature. Squares do not have equal value.</p>';
 
 
 // horizontal legend text

@@ -17,32 +17,34 @@ southandcentralamerica,South and Central America,,,,,
 asia,Asia,,,,,
 global,Global,,,,,
 pantropical,Pan-tropical,,,,,
-abundance,Abundance,,,,,
+abundance,Abundance,,,,"Is there a difference in terms of the abundance of particular species, groups of species or all species combined within the MPA since establishment or inside MPAs compared to outside?",ok
 accesstoland,Access to land,,,,"Has the community or household experienced a change in its legal access to forest, land, or forest resources, such as non-timber forest products or game animals?",
-accesstoresources,Access to resources,,,,ADD ME,
+accesstoresources,Access to resources,,,,"Has the MPA had an affect on the ability of local communities to access resources, such as fish?",ok
 animaldiversity,Animal diversity,,,,"Is there a difference in animal diversity in terms of number of species, number of threatened or endangered species, or species abundance (population size)?",
-areaandrepresentativeness,Area and representativeness,,,,ADD ME,
-awarenessempowermentparticipation,"Empowerment, participation",,,,"Do community members participate in making decisions about conservation and resource management, and do they feel empowered?",
-biomass,Biomass,,,,ADD ME,
+areaandrepresentativeness,Area and representativeness,,,,"Have MPAs met national or international objectives with regards to area or representativess? Is the proportion of jurisdictional waters, habitat types or conservation 
+priority areas incorporated within the MPA or MPA network deemed sufficient?
+",ok
+awarenessempowermentparticipation,"Empowerment, participation",,,,"Do community members participate in making decisions about conservation and resource management, and do they feel empowered?",ok
+biomass,Biomass,,,,"Is there a difference in terms of the biomass either of particular species, groups of species or all species combined within the MPA since establishment or inside MPAs compared to outside?",ok
 canopylossgapsize,Canopy loss,,,,Loss of individual trees from the forest leads to canopy loss and large gaps in the canopy. This can lead to forest degradation.,
 carbonstockemissions,Carbon stock,,,,"Forests store a lot of carbon, which helps combat climate change. Forests that are healthy store more carbon than degraded forests or agricultural land.",
 collateraldamage,Collateral damage,,,,"In selective logging, not every tree is extracted, but felling individual trees can still cause a lot of collateral damage to neighbouring trees, which should be avoided.",
-communitywellbeingandlivelihoods,Community wellbeing,,,,"There are many ways to measure wellbeing – from availability of drinking water, food security, lack of diseases and poverty, to having alternative livelihoods to fall back on.",
-compliancewithlawsandregulations,Compliance with law,,,,"Most countries have laws and regulations pertaining to logging or other resource use, for example harvest quotas, or labour laws, and these are not always complied with.",
-conflict,Conflict,,,,"There can be conflict within a community, between a community and a company, or between a community and government or NGOs.",
-coralcover,Coral cover,,,,ADD ME,
-coralhealth,Coral health,,,,ADD ME,
+communitywellbeingandlivelihoods,Community wellbeing,,,,"There are many ways to measure wellbeing – from availability of drinking water, food security, lack of diseases and poverty, to having alternative livelihoods to fall back on.",ok
+compliancewithlawsandregulations,Compliance with law,,,,"Most countries have laws and regulations pertaining to logging or other resource use, for example harvest quotas, or labour laws, and these are not always complied with.","ZB: suggested change to ""fishing"" instead of ""logging"""
+conflict,Conflict,,,,"There can be conflict within a community, between a community and a company, or between a community and government or NGOs.",ok
+coralcover,Coral cover,,,,Has the extent of coral cover changed since the establishment of the MPA or is there a difference in coral cover inside compared to outside the MPA?,ok (I think it's ok to leave coral health and cover as separate variables)
+coralhealth,Coral health,,,,Has coral health changed since the establishment of the MPA or is there a difference in coral cover inside compared to outside the MPA?,ok (I think it's ok to leave coral health and cover as separate variables)
 costofprotection,Cost of protection,,,,"For two alternative conservation strategies, which one is cheaper to implement?",
-cultureandtraditions,Culture and traditions,,,,ADD ME,
+cultureandtraditions,Culture and traditions,,,,Has the establishment of the MPA and the associated regulations had an affect on local cultural practices or traditions?,ok
 deforestationfragmentationanddegradation,Deforestation and degradation,,,,"One of the main goals of conservation is to stop the conversion of forest (deforestation) to other types of land, such as agricultural fields. Degraded forests have not yet been converted, but they are in some ways altered. For example, they can have many gaps in the canopy, all the animals may be hunted out, soil might be eroded.",
-density,Density,,,,ADD ME,
-directeconomicbenefits,Economic benefits,,,,"Is the community receiving direct financial benefits, for example fees paid by companies for extracting resources, or conservation payments?",
-diversity,Diversity,,,,ADD ME,
-economicvulnerability,Economic vulnerability,,,,ADD ME,
-equalityequitylessmarginalization,"Equality, equity",,,,"Are men and women affected and involved equally, do they share decision-making power? Are the poorer members of society further marginalized and made poorer, or does the inequality gap close?",
+density,Density,,,,Is there a difference in the density of species within the MPA since establishment or inside MPAs compared to outside?,
+directeconomicbenefits,Economic benefits,,,,"Is the community receiving direct financial benefits, for example fees paid by companies for extracting resources, or conservation payments?",ok
+diversity,Diversity,,,,Is there a difference in the number of species within the MPA since establishment or inside MPAs compared to outside?,ok
+economicvulnerability,Economic vulnerability,,,,Has the establishment of the MPA and the associated regulations had an affect on employment or the financial security of local communities?,
+equalityequitylessmarginalization,"Equality, equity",,,,"Are men and women affected and involved equally, do they share decision-making power? Are the poorer members of society further marginalized and made poorer, or does the inequality gap close?",ok
 grounddisturbance,Ground disturbance,,,,"In selective logging, trees are usually hauled out of the forest by skidding, which causes ground disturbance. A disturbed forest may become a degraded, less resilient forest.",
 harvestefficiency,Harvest efficiency,,,,How many trees are extracted per unit of time that the logging crew is working in the forest?,
-harvestablespecies,Harvestable species,,,,ADD ME,
+harvestablespecies,Harvestable species,,,,"Changes in catch size, abundance or biomass of species exploited by fisheries. Even though these changes may occur within the reserve, where fishing is not allowed, it is assumed that this has a positive spillover effect on fishing outside the reserve.",ZB: I added a sentence to explain this - please read to see if it makes sense.
 humanwildlifeconflict,Human-wildlife conflict,,,,"Where people live close to nature, there is often some conflict between people and wildlife: elephants sometimes raid crops, predators sometimes kill livestock or people.",
 illegalhuntingloggingmining,"Illegal hunting, logging",,,,"Illegal logging can happened both within a legal logging concession (for example more timber is extracted than allowed) or outside, in set-asides where logging is not allowed. Hunting is done sometimes for subsistence, cash income, as well as a leisure activity. Both have negative consequences for biodiversity.",
 infrastructureandinstitutions,Infrastructure and Institutions,,,,"This includes building new schools, roads, or water treatment plants, as well as institutions such as unions or community enterprises.",
@@ -52,21 +54,21 @@ livingandworkingconditionsofemployees,Employee wellbeing,,,,"Do the employees in
 managementandadministration,Management,,,,Is the management of the company or project efficient? Have administration costs increased?,
 marketaccess,Market access,,,,"Can the company sell its products at international markets that are more likely to be environmentally aware, and pay more for products?",
 opportunitycosts,Opportunity Cost,,,,Do the payments received make up for profit lost as a result of not carrying out a default (environmentally harmful) activity?,
-perceivedconservationcondition,Perceived conservation condition,,,,ADD ME,
+perceivedconservationcondition,Perceived conservation condition,,,,"Have local communities perceived a change in terms of species abundance, diversity or size, or in terms of habitat quality since the establishment of the MPA?","ZB: I suggest changing to ""Perceived condition"" in order to stick with the short , 1 line variable names."
 populationdisplacement,Population displacement,,,,"Has a community been displaced due to a conservation project, and if so, was this voluntary and appropriately compensated?",
 preloggingcosts,Pre-logging costs,,,,"When selective logging is carried out carefully, all trees are mapped out and identified and trails designed before the logging operation begins, which may cost additional money.",
 pricepremium,Price premium,,,,Are companies or enterprises that sell certified products able to sell them at a higher price – get a premium for responsible management?,
 profit,Profit,,,,Were the gains higher than costs?,
 reforestation,Reforestation,,,,"Planting new trees through reforestation is an important way to increase carbon stock, and provide other important ecosystem services, as well as timber or fuel wood.",
-reproductivesuccess,Reproductive success,,,,ADD ME,
+reproductivesuccess,Reproductive success,,,,Is there a difference in terms of the fecundity or the reproductive potential of organisms within the MPA since establishment or inside MPAs compared to outside?,ok
 roadandskidtraildensity,Road and trail density,,,,"Ideally, the length and width of roads and trails in a logged forest would be minimized, in order to decrease forest disturbance. Disturbed forest may become degraded and less resilient forest.",
 setasidesandbufferzones,Set-asides and buffers,,,,Has the company or community set aside areas where no human activity is allowed? Such set-asides and buffer zones are particularly important around streams and on steep slopes.,
-sizeoforganisms,Size of organisms,,,,ADD ME,
+sizeoforganisms,Size of organisms,,,,Is there a difference in the size of organisms within the MPA since establishment or inside MPAs compared to outside?,
 skiddingcost,Skidding cost,,,,How expensive has it been to get felled trees out of the forest?,
 timberstock(sustainabilityofincome),Timber stock,,,,How many commercially interesting or useful trees are left in the forest for future harvest?,
 totalcostofloggingoperations,Total cost of logging,,,,"The total costs of logging include everything from planning the logging operation, paying the logging crew, and transporting logs out of forest.",
 treediversity,Tree diversity,,,,"Is there a difference in tree or plant diversity in terms of number of species, number of threatened or endangered species, or species abundance (population size)?",
-waterquality,Water quality,,,,ADD ME,
+waterquality,Water quality,,,,Has the establishment of the MPA either directly (e.g. through regulations associated with the MPA) or indirectly (e.g. as a result of changes in the customs of the local community or economy) had an impact on water quality?,ok
 waterregulationerosionprevention,Water and soil,,,,"Forests are important in terms of regulating the water quality or quantity downstream, and in preventing erosion.",
 workerproductivity,Worker productivity,,,,How many trees was the logging crew able to extract from the forest in a given day?,
 AF,Afghanistan,33.93911,67.709953,,,
